@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Work+Sans:wght@100..900&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e4e9ea",
+            "surface-tint": "#5f5e5e",
+            "on-secondary-container": "#515252",
+            "surface-variant": "#dde4e5",
+            "secondary-fixed-dim": "#d4d4d4",
+            "surface-dim": "#d4dbdd",
+            "surface-bright": "#f9f9f9",
+            "primary-container": "#e5e2e1",
+            "on-error-container": "#752121",
+            "error-dim": "#4e0309",
+            "primary-fixed": "#e5e2e1",
+            "tertiary-container": "#d0ecff",
+            "secondary-dim": "#525353",
+            "on-primary": "#faf7f6",
+            "tertiary-fixed-dim": "#c2def0",
+            "on-primary-fixed-variant": "#5c5b5b",
+            "secondary-container": "#e3e2e2",
+            "surface-container-low": "#f2f4f4",
+            "on-tertiary-container": "#3e5868",
+            "secondary": "#5e5f5f",
+            "on-surface": "#2d3435",
+            "error-container": "#fe8983",
+            "on-error": "#fff7f6",
+            "outline": "#757c7d",
+            "on-tertiary-fixed": "#2c4655",
+            "surface-container": "#ebeeef",
+            "on-primary-fixed": "#403f3f",
+            "tertiary-dim": "#3c5666",
+            "secondary-fixed": "#e3e2e2",
+            "primary-dim": "#535252",
+            "on-surface-variant": "#5a6061",
+            "error": "#9f403d",
+            "primary": "#5f5e5e",
+            "surface-container-highest": "#dde4e5",
+            "on-tertiary-fixed-variant": "#486272",
+            "inverse-on-surface": "#9c9d9d",
+            "primary-fixed-dim": "#d6d4d3",
+            "on-secondary": "#f9f9f9",
+            "inverse-surface": "#0c0f0f",
+            "surface": "#f9f9f9",
+            "on-secondary-fixed": "#3e3f40",
+            "on-background": "#2d3435",
+            "background": "#f9f9f9",
+            "on-primary-container": "#525151",
+            "outline-variant": "#adb3b4",
+            "on-tertiary": "#f4faff",
+            "tertiary-fixed": "#d0ecff",
+            "on-secondary-fixed-variant": "#5a5c5c",
+            "tertiary": "#486272",
+            "inverse-primary": "#ffffff"
+          },
+          fontFamily: {
+            "headline": ["Newsreader"],
+            "body": ["Work Sans"],
+            "label": ["Work Sans"]
+          },
+          borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+        },
+      },
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+
+  <!-- TopNavBar -->
+  <nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl">
+    <div class="flex justify-between items-center w-full px-12 py-6 max-w-full">
+      <div class="flex items-center space-x-12">
+        <a class="text-2xl font-light tracking-[0.2em] text-neutral-800 dark:text-neutral-100 font-serif"
+          href="#">LUMIÈRE</a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a class="text-neutral-900 dark:text-white border-b border-neutral-400 pb-1 font-label text-[11px] tracking-[0.1em] uppercase transition-all duration-300 ease-in-out hover:text-neutral-800"
+            href="#">Collections</a>
+          <a class="text-neutral-500 dark:text-neutral-400 font-label text-[11px] tracking-[0.1em] uppercase transition-colors duration-300 hover:text-neutral-800"
+            href="#">Sustainability</a>
+          <a class="text-neutral-500 dark:text-neutral-400 font-label text-[11px] tracking-[0.1em] uppercase transition-colors duration-300 hover:text-neutral-800"
+            href="#">Journal</a>
+          <a class="text-neutral-500 dark:text-neutral-400 font-label text-[11px] tracking-[0.1em] uppercase transition-colors duration-300 hover:text-neutral-800"
+            href="#">Bespoke</a>
+        </div>
+      </div>
+      <div class="flex items-center space-x-6">
+        <span class="material-symbols-outlined text-neutral-600 cursor-pointer" id="search-open-btn">search</span>
+        <span class="material-symbols-outlined text-neutral-600 cursor-pointer" id="cart-open-btn"
+          data-icon="shopping_bag">shopping_bag</span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero Section: Artisan Craftsmanship -->
+    <section class="relative h-[921px] flex items-center px-8 md:px-20 overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <img alt="" class="w-full h-full object-cover" data-alt="Close up of artisan hands working on gold jewelry"
+          src="images/banner.jpg" />
+        <div class="absolute inset-0 bg-stone-900/20"></div>
+      </div>
+      <div class="relative z-10 max-w-3xl">
+        <span class="font-label tracking-[0.2em] uppercase text-xs text-white/90 mb-4 block">Est. 1924 • Florence</span>
+        <h1 class="font-headline text-5xl md:text-8xl text-white leading-[1.1] mb-8 tracking-tight">
+          The Soul of <br /><span class="serif-italic">Hand-Wrought</span> Gold
+        </h1>
+        <p class="text-white/80 text-lg md:text-xl max-w-lg mb-10 leading-relaxed">
+          Preserving the silent language of the goldsmith. Every piece at Aurelian Atelier is a testament to the patient
+          art of craftsmanship.
+        </p>
+        <div class="flex gap-6">
+          <button
+            class="hero-gradient px-8 py-4 text-on-primary text-sm font-label tracking-widest uppercase hover:shadow-lg transition-all">
+            Explore Atelier
+          </button>
+        </div>
+      </div>
+    </section>
+    <!-- The Heritage Story Editorial -->
+    <section class="py-32 px-8 md:px-20 bg-surface">
+      <div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+        <div class="md:col-span-5 relative">
+          <div class="bg-surface-container-low p-4 aspect-[3/4]">
+            <img alt="" class="w-full h-full object-cover grayscale brightness-90"
+              data-alt="Vintage photograph of a traditional jewelry workshop"
+              src="images/image-01.jpg" />
+          </div>
+          <div class="absolute -bottom-8 -right-8 w-48 h-48 bg-surface-container-lowest p-2 hidden md:block shadow-sm">
+            <img alt="" class="w-full h-full object-cover" data-alt="Macrophotography of a gold ring detail"
+              src="images/image-02.jpg" />
+          </div>
+        </div>
+        <div class="md:col-span-6 md:col-start-7">
+          <span class="text-primary font-label tracking-[0.2em] uppercase text-xs mb-4 block">The Heritage Story</span>
+          <h2 class="font-headline text-4xl md:text-6xl text-on-surface mb-8 leading-tight">A Century of <span
+              class="serif-italic">Unseen</span> Details</h2>
+          <div class="space-y-6 text-on-surface-variant leading-relaxed text-lg">
+            <p>At Aurelian Atelier, we believe jewelry should carry the weight of time. Not in heaviness, but in
+              history. Our artisans employ techniques unchanged since the Renaissance—hand-engraving, wax casting, and
+              secret alloy blends that give our gold its distinct moonlit glow.</p>
+            <p>We do not mass-produce. We curate. Each month, only a handful of "Masterpieces" leave our benches,
+              destined for those who understand that true luxury is found in the artist's touch.</p>
+          </div>
+          <div class="mt-12 flex items-center gap-4">
+            <a class="text-primary font-label tracking-widest uppercase text-sm border-b border-primary/30 pb-1"
+              href="#">Our Philosophy</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Featured Masterpieces Grid -->
+    <section class="py-24 px-8 md:px-20 bg-surface-container-low">
+      <div class="max-w-screen-2xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <div>
+            <span class="text-primary font-label tracking-[0.2em] uppercase text-xs mb-2 block">Curated Selection</span>
+            <h2 class="font-headline text-4xl md:text-5xl text-on-surface">Featured <span
+                class="serif-italic">Masterpieces</span></h2>
+          </div>
+          <a class="text-on-surface-variant font-label text-xs tracking-widest uppercase hover:text-primary transition-colors"
+            href="#">View All Collections</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <!-- Product 1 -->
+          <div class="group">
+            <div class="bg-surface-container-lowest aspect-square p-12 flex items-center justify-center relative mb-8">
+              <img alt=""
+                class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                data-alt="Handcrafted hammered gold ring with diamond"
+                src="images/product-thumb-01.jpg" />
+              <span
+                class="absolute top-6 right-6 bg-surface-container-high px-3 py-1 rounded-full text-[10px] font-label tracking-widest uppercase">One
+                of One</span>
+            </div>
+            <h3 class="font-headline text-2xl text-on-surface mb-2">The Aurelian Sigil</h3>
+            <p class="text-on-surface-variant font-body text-sm mb-4">18K Hammered Gold with Raw Diamond</p>
+            <p class="font-headline text-primary text-xl">$4,200</p>
+          </div>
+          <!-- Product 2 -->
+          <div class="group translate-y-0 md:translate-y-12">
+            <div class="bg-surface-container-lowest aspect-square p-12 flex items-center justify-center relative mb-8">
+              <img alt=""
+                class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                data-alt="Elegant pearl drop earrings on gold hooks"
+                src="images/product-thumb-02.jpg" />
+            </div>
+            <h3 class="font-headline text-2xl text-on-surface mb-2">Tuscan Mist Drops</h3>
+            <p class="text-on-surface-variant font-body text-sm mb-4">South Sea Pearls, Venetian Gold Wire</p>
+            <p class="font-headline text-primary text-xl">$2,850</p>
+          </div>
+          <!-- Product 3 -->
+          <div class="group">
+            <div class="bg-surface-container-lowest aspect-square p-12 flex items-center justify-center relative mb-8">
+              <img alt=""
+                class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                data-alt="Intricate gold bangle with artisan etchings"
+                src="images/product-thumb-03.jpg" />
+            </div>
+            <h3 class="font-headline text-2xl text-on-surface mb-2">Etruscan Bangle</h3>
+            <p class="text-on-surface-variant font-body text-sm mb-4">Engraved 22K Solid Gold</p>
+            <p class="font-headline text-primary text-xl">$6,400</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Historic Atelier Section -->
+    <section class="py-32 px-8 md:px-20 bg-background overflow-hidden">
+      <div class="max-w-screen-2xl mx-auto flex flex-col lg:flex-row gap-16 items-center">
+        <div class="w-full lg:w-1/2">
+          <span class="text-primary font-label tracking-[0.2em] uppercase text-xs mb-4 block">Visit the Source</span>
+          <h2 class="font-headline text-4xl md:text-6xl text-on-surface mb-8 leading-tight">Visit Our <span
+              class="serif-italic">Historic</span> Atelier</h2>
+          <p class="text-on-surface-variant text-lg mb-10 max-w-lg leading-relaxed">
+            Located in the heart of Florence, our atelier is more than a showroom—it is a living archive. Witness the
+            creation process and consult with our Master Jeweler for bespoke commissions.
+          </p>
+          <div class="space-y-8 border-l border-outline-variant/30 pl-8 mb-12">
+            <div>
+              <p class="font-label tracking-widest text-[10px] uppercase text-on-surface-variant mb-1">Location</p>
+              <p class="font-headline text-xl">Via de' Tornabuoni, 14, 50123 Firenze FI</p>
+            </div>
+            <div>
+              <p class="font-label tracking-widest text-[10px] uppercase text-on-surface-variant mb-1">Hours</p>
+              <p class="font-headline text-xl">Mon — Sat: 10:00 - 19:00</p>
+            </div>
+          </div>
+          <button
+            class="bg-on-surface text-background px-10 py-5 text-sm font-label tracking-widest uppercase hover:bg-primary transition-colors">
+            Book Private Appointment
+          </button>
+        </div>
+        <div class="w-full lg:w-1/2 relative">
+          <div class="bg-surface-container overflow-hidden">
+            <img alt="" class="w-full h-full object-cover" data-alt="Interior of a luxury antique jewelry atelier"
+              data-location="Florence, Italy"
+              src="images/image-03.jpg" />
+          </div>
+          <div
+            class="absolute -top-12 -left-12 p-8 bg-surface-container-lowest/90 backdrop-blur-md hidden md:block border border-outline-variant/10">
+            <div class="flex flex-col gap-1">
+              <span class="font-headline text-4xl text-primary">4.9</span>
+              <div class="flex gap-1 text-primary">
+                <span class="material-symbols-outlined scale-75" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined scale-75" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined scale-75" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined scale-75" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="material-symbols-outlined scale-75" style="font-variation-settings: 'FILL' 1;">star</span>
+              </div>
+              <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mt-2">Atelier
+                Reviews</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- Footer -->
+  <footer class="w-full mt-20 bg-stone-100 dark:bg-stone-900">
+    <div
+      class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-16 border-t border-stone-200/50 dark:border-stone-800/50 max-w-screen-2xl mx-auto">
+      <div class="md:col-span-1">
+        <div class="text-xl font-serif text-stone-800 dark:text-stone-200 mb-6">Aurelian Atelier</div>
+        <p class="text-stone-500 dark:text-stone-400 text-sm leading-relaxed mb-8">
+          Custodians of traditional goldsmithing. Dedicated to the preservation of craftsmanship and the beauty of gold.
+        </p>
+        <div class="flex gap-4">
+          <span
+            class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary transition-colors">public</span>
+          <span
+            class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary transition-colors">history</span>
+          <span
+            class="material-symbols-outlined text-stone-400 cursor-pointer hover:text-primary transition-colors">mail</span>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-label text-xs tracking-widest uppercase text-stone-900 dark:text-stone-50 font-semibold mb-6">
+          Services</h4>
+        <ul class="space-y-4">
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Bespoke Design</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Restoration</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Engraving</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Gifting</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-label text-xs tracking-widest uppercase text-stone-900 dark:text-stone-50 font-semibold mb-6">
+          Journal</h4>
+        <ul class="space-y-4">
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Atelier Diaries</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Gold Ethics</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">History of Pearling</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Exhibitions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-label text-xs tracking-widest uppercase text-stone-900 dark:text-stone-50 font-semibold mb-6">
+          Inquiries</h4>
+        <ul class="space-y-4">
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Sustainability</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Shipping</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Returns</a></li>
+          <li><a
+              class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400 hover:text-amber-700 transition-colors"
+              href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div
+      class="px-12 py-8 border-t border-stone-200/50 dark:border-stone-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400">© 2026 Lumiere Jewels. Free HTML Template by <a href="https://templatesjungle.com/" target="_blank">TemplatesJungle.com</a>.</p>
+      <div class="flex gap-8">
+        <a class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400" href="#">Instagram</a>
+        <a class="font-sans text-xs tracking-widest uppercase text-stone-500 dark:text-stone-400" href="#">Pinterest</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Search Popup -->
+  <div
+    class="fixed inset-0 z-[100] bg-white/90 backdrop-blur-xl flex items-center justify-center hidden opacity-0 transition-opacity duration-200"
+    id="search-popup">
+    <button class="absolute top-8 right-12 text-neutral-800 hover:text-neutral-500 transition-colors"
+      id="search-close-btn">
+      <span class="material-symbols-outlined text-3xl">close</span>
+    </button>
+    <div class="w-full max-w-3xl px-12">
+      <input
+        class="w-full bg-transparent border-b border-neutral-300 py-6 text-4xl md:text-6xl font-headline italic outline-none focus:border-neutral-800 transition-colors placeholder:text-neutral-300"
+        placeholder="Search our collections..." type="text" id="search-input" />
+      <p class="mt-8 font-label text-[10px] tracking-[0.3em] uppercase text-neutral-400">Press enter to search
+        (demo alert)</p>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-200" id="cart-drawer">
+    <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" id="cart-overlay"></div>
+    <div
+      class="absolute right-0 top-0 h-full w-full max-w-md bg-surface shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out"
+      id="cart-panel">
+      <div class="p-8 border-b border-outline/10 flex justify-between items-center">
+        <h2 class="font-headline italic text-2xl">Your Bag</h2>
+        <button class="text-neutral-800 hover:text-neutral-500 transition-colors" id="cart-close-btn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-8 space-y-8" id="cart-items-container">
+        <div class="flex gap-6" data-cart-index="0">
+          <div class="w-24 aspect-[4/5] bg-surface-container overflow-hidden">
+            <img class="w-full h-full object-cover"
+              src="images/product-thumb-04.jpg">
+          </div>
+          <div class="flex-1">
+            <h3 class="font-label text-xs uppercase tracking-widest mb-1">Éclat Sculptural Ring</h3>
+            <p class="text-xs text-on-surface-variant mb-2">Size: EU 52</p>
+            <div class="flex justify-between items-center">
+              <span class="font-body text-sm">£420.00</span>
+              <div class="flex items-center gap-2">
+                <button class="text-xs text-outline hover:text-on-surface decrement-qty" data-idx="0">-</button>
+                <span class="text-sm">1</span>
+                <button class="text-xs text-outline hover:text-on-surface increment-qty" data-idx="0">+</button>
+                <button class="text-error text-xs ml-2 remove-item" data-idx="0">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-8 bg-surface-container-low space-y-6" id="cart-footer">
+        <div class="flex justify-between items-center">
+          <span class="font-label text-xs uppercase tracking-widest">Subtotal</span>
+          <span class="font-headline italic text-xl" id="cart-subtotal">£0.00</span>
+        </div>
+        <div class="space-y-3">
+          <button
+            class="w-full py-4 bg-primary text-on-primary font-label text-xs tracking-[0.2em] uppercase hover:bg-primary-dim transition-colors">Checkout</button>
+          <button
+            class="w-full py-4 bg-transparent border border-outline/30 text-on-surface font-label text-xs tracking-[0.2em] uppercase hover:bg-surface-container transition-colors"
+            id="view-bag-close">View Bag & Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Painel | Adornatta</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  >
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+
+<body>
+
+
+  <!-- TOPBAR -->
+
+  <div class="topbar py-2">
+
+    <div class="container d-flex justify-content-center">
+
+      <span>
+        Área administrativa da loja
+      </span>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- NAVBAR -->
+
+  <nav
+    class="navbar navbar-expand-lg main-navbar sticky-top"
+    id="mainNavbar"
+  >
+
+    <div class="container">
+
+
+      <a
+        class="navbar-brand brand"
+        href="../index.html"
+      >
+        ADORNATTA
+      </a>
+
+
+      <button
+        class="navbar-toggler border-0 shadow-none"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainMenu"
+        aria-controls="mainMenu"
+        aria-expanded="false"
+        aria-label="Abrir menu"
+      >
+
+        <i class="bi bi-list fs-3"></i>
+
+      </button>
+
+
+
+      <div
+        class="collapse navbar-collapse"
+        id="mainMenu"
+      >
+
+
+        <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link active"
+              href="painel.html"
+            >
+              Painel
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link"
+              href="estoque.html"
+            >
+              Estoque
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link"
+              href="pedidos.html"
+            >
+              Pedidos
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link"
+              href="vendas.html"
+            >
+              Vendas
+            </a>
+
+          </li>
+
+
+        </ul>
+
+
+
+        <div
+          class="d-flex align-items-center justify-content-center gap-1"
+        >
+
+
+          <!-- VOLTAR PARA A LOJA -->
+
+          <a
+            class="nav-icon"
+            href="../index.html"
+            title="Voltar para a loja"
+            aria-label="Voltar para a loja"
+          >
+
+            <i class="bi bi-shop"></i>
+
+          </a>
+
+
+
+          <!-- CONTA -->
+
+          <div class="dropdown">
+
+
+            <button
+              class="nav-icon"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="Conta do administrador"
+              title="Conta"
+            >
+
+              <i class="bi bi-person"></i>
+
+            </button>
+
+
+            <ul
+              class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-0 p-2"
+            >
+
+
+              <li>
+
+                <span class="dropdown-item-text small text-muted">
+                  Administrador
+                </span>
+
+              </li>
+
+
+              <li>
+
+                <hr class="dropdown-divider">
+
+              </li>
+
+
+              <li>
+
+                <a
+                  class="dropdown-item py-2"
+                  href="../index.html"
+                >
+
+                  <i class="bi bi-shop me-2"></i>
+
+                  Voltar para a loja
+
+                </a>
+
+              </li>
+
+
+              <li>
+
+                <a
+                  class="dropdown-item py-2"
+                  href="../login.html"
+                >
+
+                  <i class="bi bi-box-arrow-right me-2"></i>
+
+                  Sair
+
+                </a>
+
+              </li>
+
+
+            </ul>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+
+  <!-- CONTEÚDO -->
+
+  <main>
+
+
+    <!-- CABEÇALHO -->
+
+    <section class="section pb-4">
+
+      <div class="container">
+
+
+        <div class="section-label">
+          Área da loja
+        </div>
+
+
+        <h1 class="section-title mb-3">
+          Painel
+        </h1>
+
+
+        <p class="section-text mb-0">
+
+          Acompanhe os principais dados da Adornatta
+          e tenha uma visão geral da loja.
+
+        </p>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- RESUMO -->
+
+    <section class="pb-5">
+
+      <div class="container">
+
+
+        <div class="row g-3">
+
+
+          <!-- VENDAS -->
+
+          <div class="col-md-6 col-xl-3">
+
+            <div class="admin-summary-card">
+
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-currency-dollar"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Vendas do mês
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  R$ 42.850,00
+                </h3>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PEDIDOS -->
+
+          <div class="col-md-6 col-xl-3">
+
+            <div class="admin-summary-card">
+
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-receipt"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Pedidos
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  24
+                </h3>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PRODUTOS -->
+
+          <div class="col-md-6 col-xl-3">
+
+            <div class="admin-summary-card">
+
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-box-seam"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Produtos cadastrados
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  32
+                </h3>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ESTOQUE -->
+
+          <div class="col-md-6 col-xl-3">
+
+            <div class="admin-summary-card">
+
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-boxes"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Itens em estoque
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  148
+                </h3>
+
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- CONTEÚDO DO PAINEL -->
+
+    <section class="section-soft py-5">
+
+      <div class="container">
+
+
+        <div class="row g-4">
+
+
+          <!-- PEDIDOS RECENTES -->
+
+          <div class="col-lg-8">
+
+
+            <div class="bg-white border p-4 h-100">
+
+
+              <div
+                class="d-flex justify-content-between align-items-center mb-4"
+              >
+
+
+                <div>
+
+                  <div class="section-label mb-1">
+                    Pedidos
+                  </div>
+
+
+                  <h2 class="display-font mb-0">
+                    Pedidos recentes
+                  </h2>
+
+                </div>
+
+
+                <a
+                  href="pedidos.html"
+                  class="btn btn-outline-dark rounded-0 btn-sm"
+                >
+
+                  Ver todos
+
+                </a>
+
+
+              </div>
+
+
+
+              <div class="table-responsive">
+
+
+                <table class="table align-middle mb-0">
+
+
+                  <thead>
+
+                    <tr>
+
+                      <th>
+                        Pedido
+                      </th>
+
+                      <th>
+                        Cliente
+                      </th>
+
+                      <th>
+                        Total
+                      </th>
+
+                      <th>
+                        Status
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+
+                    <tr>
+
+                      <td>
+                        <strong>#1024</strong>
+                      </td>
+
+                      <td>
+                        Mariana Costa
+                      </td>
+
+                      <td>
+                        R$ 7.050,00
+                      </td>
+
+                      <td>
+
+                        <span class="badge text-bg-warning">
+                          Pendente
+                        </span>
+
+                      </td>
+
+                    </tr>
+
+
+
+                    <tr>
+
+                      <td>
+                        <strong>#1023</strong>
+                      </td>
+
+                      <td>
+                        João Almeida
+                      </td>
+
+                      <td>
+                        R$ 4.200,00
+                      </td>
+
+                      <td>
+
+                        <span class="badge text-bg-secondary">
+                          Em preparação
+                        </span>
+
+                      </td>
+
+                    </tr>
+
+
+
+                    <tr>
+
+                      <td>
+                        <strong>#1022</strong>
+                      </td>
+
+                      <td>
+                        Ana Souza
+                      </td>
+
+                      <td>
+                        R$ 6.400,00
+                      </td>
+
+                      <td>
+
+                        <span class="badge text-bg-info">
+                          Enviado
+                        </span>
+
+                      </td>
+
+                    </tr>
+
+
+
+                    <tr>
+
+                      <td>
+                        <strong>#1021</strong>
+                      </td>
+
+                      <td>
+                        Beatriz Lima
+                      </td>
+
+                      <td>
+                        R$ 3.750,00
+                      </td>
+
+                      <td>
+
+                        <span class="badge text-bg-success">
+                          Entregue
+                        </span>
+
+                      </td>
+
+                    </tr>
+
+
+                  </tbody>
+
+
+                </table>
+
+
+              </div>
+
+
+            </div>
+
+
+          </div>
+
+
+
+          <!-- ESTOQUE BAIXO -->
+
+          <div class="col-lg-4">
+
+
+            <div class="bg-white border p-4 h-100">
+
+
+              <div
+                class="d-flex justify-content-between align-items-center mb-4"
+              >
+
+
+                <div>
+
+                  <div class="section-label mb-1">
+                    Estoque
+                  </div>
+
+
+                  <h2 class="display-font mb-0">
+                    Estoque baixo
+                  </h2>
+
+                </div>
+
+
+                <i
+                  class="bi bi-exclamation-triangle fs-4 text-warning"
+                ></i>
+
+
+              </div>
+
+
+
+              <div class="d-flex flex-column gap-3">
+
+
+                <div
+                  class="d-flex justify-content-between align-items-center border-bottom pb-3"
+                >
+
+                  <div>
+
+                    <strong>
+                      Anel Verona
+                    </strong>
+
+                    <small class="d-block text-muted">
+                      Anéis
+                    </small>
+
+                  </div>
+
+
+                  <span class="fw-semibold">
+                    2 un.
+                  </span>
+
+                </div>
+
+
+
+                <div
+                  class="d-flex justify-content-between align-items-center border-bottom pb-3"
+                >
+
+                  <div>
+
+                    <strong>
+                      Colar Toscana
+                    </strong>
+
+                    <small class="d-block text-muted">
+                      Colares
+                    </small>
+
+                  </div>
+
+
+                  <span class="fw-semibold">
+                    3 un.
+                  </span>
+
+                </div>
+
+
+
+                <div
+                  class="d-flex justify-content-between align-items-center border-bottom pb-3"
+                >
+
+                  <div>
+
+                    <strong>
+                      Brincos Verona
+                    </strong>
+
+                    <small class="d-block text-muted">
+                      Brincos
+                    </small>
+
+                  </div>
+
+
+                  <span class="fw-semibold">
+                    2 un.
+                  </span>
+
+                </div>
+
+
+              </div>
+
+
+
+              <a
+                href="estoque.html"
+                class="btn btn-outline-dark rounded-0 w-100 mt-4"
+              >
+
+                Gerenciar estoque
+
+              </a>
+
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ACESSOS RÁPIDOS -->
+
+    <section class="section">
+
+      <div class="container">
+
+
+        <div class="section-label">
+          Atalhos
+        </div>
+
+
+        <h2 class="display-font mb-4">
+          Acessos rápidos
+        </h2>
+
+
+
+        <div class="row g-4">
+
+
+          <!-- ESTOQUE -->
+
+          <div class="col-md-4">
+
+
+            <a
+              href="estoque.html"
+              class="text-decoration-none"
+            >
+
+
+              <div class="service-card">
+
+
+                <i
+                  class="bi bi-box-seam fs-2 mb-4 d-block"
+                ></i>
+
+
+                <h4 class="display-font">
+                  Estoque
+                </h4>
+
+
+                <p class="text-muted mb-4">
+
+                  Gerencie as joias cadastradas,
+                  quantidades e tipos de produtos.
+
+                </p>
+
+
+                <span class="fw-semibold">
+
+                  Acessar estoque
+
+                  <i class="bi bi-arrow-right ms-1"></i>
+
+                </span>
+
+
+              </div>
+
+
+            </a>
+
+
+          </div>
+
+
+
+          <!-- PEDIDOS -->
+
+          <div class="col-md-4">
+
+
+            <a
+              href="pedidos.html"
+              class="text-decoration-none"
+            >
+
+
+              <div class="service-card">
+
+
+                <i
+                  class="bi bi-receipt fs-2 mb-4 d-block"
+                ></i>
+
+
+                <h4 class="display-font">
+                  Pedidos
+                </h4>
+
+
+                <p class="text-muted mb-4">
+
+                  Consulte os pedidos realizados
+                  pelos clientes e atualize seus status.
+
+                </p>
+
+
+                <span class="fw-semibold">
+
+                  Acessar pedidos
+
+                  <i class="bi bi-arrow-right ms-1"></i>
+
+                </span>
+
+
+              </div>
+
+
+            </a>
+
+
+          </div>
+
+
+
+          <!-- VENDAS -->
+
+          <div class="col-md-4">
+
+
+            <a
+              href="vendas.html"
+              class="text-decoration-none"
+            >
+
+
+              <div class="service-card">
+
+
+                <i
+                  class="bi bi-cart-check fs-2 mb-4 d-block"
+                ></i>
+
+
+                <h4 class="display-font">
+                  Vendas
+                </h4>
+
+
+                <p class="text-muted mb-4">
+
+                  Registre vendas realizadas e
+                  consulte o histórico da loja.
+
+                </p>
+
+
+                <span class="fw-semibold">
+
+                  Acessar vendas
+
+                  <i class="bi bi-arrow-right ms-1"></i>
+
+                </span>
+
+
+              </div>
+
+
+            </a>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+
+    <div class="container">
+
+
+      <div class="row g-5">
+
+
+        <div class="col-lg-5">
+
+
+          <div class="brand mb-3">
+            ADORNATTA
+          </div>
+
+
+          <p class="text-muted mb-0">
+
+            Área administrativa da loja Adornatta.
+            Gerencie estoque, pedidos e vendas.
+
+          </p>
+
+
+        </div>
+
+
+
+        <div class="col-6 col-lg-3">
+
+
+          <h6>
+            Área da loja
+          </h6>
+
+
+          <ul class="list-unstyled">
+
+
+            <li>
+              <a href="painel.html">
+                Painel
+              </a>
+            </li>
+
+
+            <li>
+              <a href="estoque.html">
+                Estoque
+              </a>
+            </li>
+
+
+            <li>
+              <a href="pedidos.html">
+                Pedidos
+              </a>
+            </li>
+
+
+            <li>
+              <a href="vendas.html">
+                Vendas
+              </a>
+            </li>
+
+
+          </ul>
+
+
+        </div>
+
+
+
+        <div class="col-6 col-lg-4">
+
+
+          <h6>
+            Loja
+          </h6>
+
+
+          <ul class="list-unstyled">
+
+
+            <li>
+              <a href="../index.html">
+                Página inicial
+              </a>
+            </li>
+
+
+            <li>
+              <a href="../produtos.html">
+                Catálogo
+              </a>
+            </li>
+
+
+            <li>
+              <a href="../contato.html">
+                Contato
+              </a>
+            </li>
+
+
+          </ul>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="footer-bottom mt-5 pt-4 border-top">
+
+
+        <small class="text-muted">
+
+          © 2026 Adornatta. Todos os direitos reservados.
+
+        </small>
+
+
+      </div>
+
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- BOOTSTRAP JS -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+
+
+  <!-- JAVASCRIPT -->
+
+  <script>
+
+
+    // Navbar com sombra ao rolar
+
+    const navbar =
+      document.getElementById("mainNavbar");
+
+
+    window.addEventListener("scroll", () => {
+
+      if (window.scrollY > 20) {
+
+        navbar.classList.add("scrolled");
+
+      } else {
+
+        navbar.classList.remove("scrolled");
+
+      }
+
+    });
+
+
+  </script>
+
+
+</body>
+
+</html>

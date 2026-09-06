@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Pedidos | Adornatta</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  >
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+
+<body>
+
+
+  <!-- TOPBAR -->
+
+  <div class="topbar py-2">
+
+    <div class="container d-flex justify-content-center">
+
+      <span>
+        Área administrativa da loja
+      </span>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- NAVBAR -->
+
+  <nav
+    class="navbar navbar-expand-lg main-navbar sticky-top"
+    id="mainNavbar"
+  >
+
+    <div class="container">
+
+
+      <a
+        class="navbar-brand brand"
+        href="../index.html"
+      >
+        ADORNATTA
+      </a>
+
+
+      <button
+        class="navbar-toggler border-0 shadow-none"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainMenu"
+        aria-controls="mainMenu"
+        aria-expanded="false"
+        aria-label="Abrir menu"
+      >
+
+        <i class="bi bi-list fs-3"></i>
+
+      </button>
+
+
+
+      <div
+        class="collapse navbar-collapse"
+        id="mainMenu"
+      >
+
+
+        <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link"
+              href="painel.html"
+            >
+              Painel
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link"
+              href="estoque.html"
+            >
+              Estoque
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link active"
+              href="pedidos.html"
+            >
+              Pedidos
+            </a>
+
+          </li>
+
+
+          <li class="nav-item">
+
+            <a
+              class="nav-link"
+              href="vendas.html"
+            >
+              Vendas
+            </a>
+
+          </li>
+
+
+        </ul>
+
+
+
+        <div
+          class="d-flex align-items-center justify-content-center gap-1"
+        >
+
+
+          <!-- VOLTAR PARA A LOJA -->
+
+          <a
+            class="nav-icon"
+            href="../index.html"
+            title="Voltar para a loja"
+            aria-label="Voltar para a loja"
+          >
+
+            <i class="bi bi-shop"></i>
+
+          </a>
+
+
+
+          <!-- CONTA -->
+
+          <div class="dropdown">
+
+
+            <button
+              class="nav-icon"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="Conta do administrador"
+              title="Conta"
+            >
+
+              <i class="bi bi-person"></i>
+
+            </button>
+
+
+            <ul
+              class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-0 p-2"
+            >
+
+
+              <li>
+
+                <span class="dropdown-item-text small text-muted">
+                  Administrador
+                </span>
+
+              </li>
+
+
+              <li>
+
+                <hr class="dropdown-divider">
+
+              </li>
+
+
+              <li>
+
+                <a
+                  class="dropdown-item py-2"
+                  href="../index.html"
+                >
+
+                  <i class="bi bi-shop me-2"></i>
+
+                  Voltar para a loja
+
+                </a>
+
+              </li>
+
+
+              <li>
+
+                <a
+                  class="dropdown-item py-2"
+                  href="../login.html"
+                >
+
+                  <i class="bi bi-box-arrow-right me-2"></i>
+
+                  Sair
+
+                </a>
+
+              </li>
+
+
+            </ul>
+
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+
+  <!-- CONTEÚDO -->
+
+  <main>
+
+
+    <!-- CABEÇALHO -->
+
+    <section class="section pb-4">
+
+      <div class="container">
+
+
+        <div
+          class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-4"
+        >
+
+
+          <div>
+
+            <div class="section-label">
+              Área da loja
+            </div>
+
+
+            <h1 class="section-title mb-3">
+              Pedidos
+            </h1>
+
+
+            <p class="section-text mb-0">
+
+              Consulte os pedidos realizados pelos clientes
+              e acompanhe o andamento de cada compra.
+
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- RESUMO -->
+
+    <section class="pb-5">
+
+      <div class="container">
+
+
+        <div class="row g-3">
+
+
+          <!-- TODOS -->
+
+          <div class="col-md-3">
+
+            <div class="admin-summary-card">
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-receipt"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Total de pedidos
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  24
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PENDENTES -->
+
+          <div class="col-md-3">
+
+            <div class="admin-summary-card">
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-clock"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Pendentes
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  5
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PROCESSANDO -->
+
+          <div class="col-md-3">
+
+            <div class="admin-summary-card">
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-box-seam"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Em preparação
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  7
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ENVIADOS -->
+
+          <div class="col-md-3">
+
+            <div class="admin-summary-card">
+
+              <div class="admin-summary-icon">
+
+                <i class="bi bi-truck"></i>
+
+              </div>
+
+
+              <div>
+
+                <span class="text-muted small">
+                  Enviados
+                </span>
+
+
+                <h3 class="mb-0 mt-1">
+                  12
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- PEDIDOS -->
+
+    <section class="section-soft py-5">
+
+      <div class="container">
+
+
+        <div
+          class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+        >
+
+
+          <div>
+
+            <div class="section-label">
+              Gerenciamento
+            </div>
+
+
+            <h2 class="display-font mb-0">
+              Pedidos realizados
+            </h2>
+
+          </div>
+
+
+
+          <!-- PESQUISA -->
+
+          <div class="admin-search">
+
+            <i class="bi bi-search"></i>
+
+
+            <input
+              type="search"
+              class="form-control"
+              id="orderSearch"
+              placeholder="Pesquisar pedido..."
+            >
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- TABELA -->
+
+        <div class="table-responsive bg-white">
+
+
+          <table class="table admin-table align-middle mb-0">
+
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Pedido
+                </th>
+
+                <th>
+                  Cliente
+                </th>
+
+                <th>
+                  Data
+                </th>
+
+                <th>
+                  Total
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th class="text-end">
+                  Ações
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+
+            <tbody id="orderTable">
+
+
+              <!-- PEDIDO 1024 -->
+
+              <tr>
+
+
+                <td>
+
+                  <strong>
+                    #1024
+                  </strong>
+
+                </td>
+
+
+                <td>
+
+                  <div>
+
+                    <strong>
+                      Mariana Costa
+                    </strong>
+
+                    <small class="d-block text-muted">
+                      mariana@email.com
+                    </small>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+                  05/09/2026
+                </td>
+
+
+                <td>
+                  R$ 7.050,00
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="badge bg-warning-subtle text-warning-emphasis"
+                  >
+                    Pendente
+                  </span>
+
+                </td>
+
+
+                <td class="text-end">
+
+
+                  <button
+                    class="btn btn-sm btn-outline-dark"
+                    title="Ver detalhes"
+                    data-bs-toggle="modal"
+                    data-bs-target="#pedidoModal"
+                    onclick="showOrder(
+                      '#1024',
+                      'Mariana Costa',
+                      'mariana@email.com',
+                      '05/09/2026',
+                      'R$ 7.050,00',
+                      'Pendente',
+                      'Anel Aurelian x1, Brincos Tuscan Mist x1'
+                    )"
+                  >
+
+                    <i class="bi bi-eye"></i>
+
+                  </button>
+
+
+                </td>
+
+
+              </tr>
+
+
+
+              <!-- PEDIDO 1023 -->
+
+              <tr>
+
+
+                <td>
+
+                  <strong>
+                    #1023
+                  </strong>
+
+                </td>
+
+
+                <td>
+
+                  <div>
+
+                    <strong>
+                      João Almeida
+                    </strong>
+
+                    <small class="d-block text-muted">
+                      joao@email.com
+                    </small>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+                  04/09/2026
+                </td>
+
+
+                <td>
+                  R$ 4.200,00
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="badge bg-primary-subtle text-primary"
+                  >
+                    Em preparação
+                  </span>
+
+                </td>
+
+
+                <td class="text-end">
+
+
+                  <button
+                    class="btn btn-sm btn-outline-dark"
+                    title="Ver detalhes"
+                    data-bs-toggle="modal"
+                    data-bs-target="#pedidoModal"
+                    onclick="showOrder(
+                      '#1023',
+                      'João Almeida',
+                      'joao@email.com',
+                      '04/09/2026',
+                      'R$ 4.200,00',
+                      'Em preparação',
+                      'Anel Aurelian x1'
+                    )"
+                  >
+
+                    <i class="bi bi-eye"></i>
+
+                  </button>
+
+
+                </td>
+
+
+              </tr>
+
+
+
+              <!-- PEDIDO 1022 -->
+
+              <tr>
+
+
+                <td>
+
+                  <strong>
+                    #1022
+                  </strong>
+
+                </td>
+
+
+                <td>
+
+                  <div>
+
+                    <strong>
+                      Ana Souza
+                    </strong>
+
+                    <small class="d-block text-muted">
+                      ana@email.com
+                    </small>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+                  03/09/2026
+                </td>
+
+
+                <td>
+                  R$ 6.400,00
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="badge bg-info-subtle text-info-emphasis"
+                  >
+                    Enviado
+                  </span>
+
+                </td>
+
+
+                <td class="text-end">
+
+
+                  <button
+                    class="btn btn-sm btn-outline-dark"
+                    title="Ver detalhes"
+                    data-bs-toggle="modal"
+                    data-bs-target="#pedidoModal"
+                    onclick="showOrder(
+                      '#1022',
+                      'Ana Souza',
+                      'ana@email.com',
+                      '03/09/2026',
+                      'R$ 6.400,00',
+                      'Enviado',
+                      'Pulseira Etruscan x1'
+                    )"
+                  >
+
+                    <i class="bi bi-eye"></i>
+
+                  </button>
+
+
+                </td>
+
+
+              </tr>
+
+
+
+              <!-- PEDIDO 1021 -->
+
+              <tr>
+
+
+                <td>
+
+                  <strong>
+                    #1021
+                  </strong>
+
+                </td>
+
+
+                <td>
+
+                  <div>
+
+                    <strong>
+                      Beatriz Lima
+                    </strong>
+
+                    <small class="d-block text-muted">
+                      beatriz@email.com
+                    </small>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+                  02/09/2026
+                </td>
+
+
+                <td>
+                  R$ 3.750,00
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="badge bg-success-subtle text-success"
+                  >
+                    Entregue
+                  </span>
+
+                </td>
+
+
+                <td class="text-end">
+
+
+                  <button
+                    class="btn btn-sm btn-outline-dark"
+                    title="Ver detalhes"
+                    data-bs-toggle="modal"
+                    data-bs-target="#pedidoModal"
+                    onclick="showOrder(
+                      '#1021',
+                      'Beatriz Lima',
+                      'beatriz@email.com',
+                      '02/09/2026',
+                      'R$ 3.750,00',
+                      'Entregue',
+                      'Colar Aurelia x1'
+                    )"
+                  >
+
+                    <i class="bi bi-eye"></i>
+
+                  </button>
+
+
+                </td>
+
+
+              </tr>
+
+
+            </tbody>
+
+          </table>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- MODAL DETALHES DO PEDIDO -->
+
+  <div
+    class="modal fade"
+    id="pedidoModal"
+    tabindex="-1"
+    aria-labelledby="pedidoModalLabel"
+    aria-hidden="true"
+  >
+
+
+    <div
+      class="modal-dialog modal-lg modal-dialog-centered"
+    >
+
+
+      <div
+        class="modal-content rounded-0 border-0"
+      >
+
+
+        <div class="modal-header border-bottom">
+
+
+          <div>
+
+            <div class="section-label mb-1">
+              Pedido
+            </div>
+
+
+            <h5
+              class="modal-title display-font"
+              id="pedidoModalLabel"
+            >
+              Detalhes do pedido
+            </h5>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Fechar"
+          ></button>
+
+
+        </div>
+
+
+
+        <div class="modal-body p-4">
+
+
+          <!-- INFORMAÇÕES -->
+
+          <div class="row g-4 mb-4">
+
+
+            <div class="col-md-6">
+
+              <span class="text-muted small">
+                Número do pedido
+              </span>
+
+              <strong
+                class="d-block mt-1"
+                id="orderNumber"
+              >
+                #1024
+              </strong>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+              <span class="text-muted small">
+                Data
+              </span>
+
+              <strong
+                class="d-block mt-1"
+                id="orderDate"
+              >
+                05/09/2026
+              </strong>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+              <span class="text-muted small">
+                Cliente
+              </span>
+
+              <strong
+                class="d-block mt-1"
+                id="orderCustomer"
+              >
+                Mariana Costa
+              </strong>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+              <span class="text-muted small">
+                E-mail
+              </span>
+
+              <strong
+                class="d-block mt-1"
+                id="orderEmail"
+              >
+                mariana@email.com
+              </strong>
+
+            </div>
+
+
+          </div>
+
+
+
+          <!-- PRODUTOS -->
+
+          <div class="border-top pt-4 mb-4">
+
+
+            <h6 class="mb-3">
+              Produtos
+            </h6>
+
+
+            <div
+              class="p-3 bg-light"
+              id="orderProducts"
+            >
+              Anel Aurelian x1, Brincos Tuscan Mist x1
+            </div>
+
+
+          </div>
+
+
+
+          <!-- TOTAL -->
+
+          <div class="border-top pt-4">
+
+
+            <div
+              class="d-flex justify-content-between align-items-center"
+            >
+
+              <span>
+                Total do pedido
+              </span>
+
+
+              <strong
+                class="fs-5"
+                id="orderTotal"
+              >
+                R$ 7.050,00
+              </strong>
+
+            </div>
+
+
+          </div>
+
+
+
+          <!-- STATUS -->
+
+          <div class="mt-4">
+
+
+            <label
+              for="orderStatus"
+              class="form-label"
+            >
+              Status do pedido
+            </label>
+
+
+            <select
+              class="form-select"
+              id="orderStatus"
+            >
+
+              <option value="Pendente">
+                Pendente
+              </option>
+
+              <option value="Em preparação">
+                Em preparação
+              </option>
+
+              <option value="Enviado">
+                Enviado
+              </option>
+
+              <option value="Entregue">
+                Entregue
+              </option>
+
+              <option value="Cancelado">
+                Cancelado
+              </option>
+
+            </select>
+
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="modal-footer border-top">
+
+
+          <button
+            type="button"
+            class="btn btn-outline-dark rounded-0"
+            data-bs-dismiss="modal"
+          >
+            Fechar
+          </button>
+
+
+          <button
+            type="button"
+            class="btn btn-gold"
+            onclick="updateOrderStatus()"
+          >
+
+            <i class="bi bi-check2 me-1"></i>
+
+            Atualizar status
+
+          </button>
+
+
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+
+    <div class="container">
+
+
+      <div class="row g-5">
+
+
+        <div class="col-lg-5">
+
+
+          <div class="brand mb-3">
+            ADORNATTA
+          </div>
+
+
+          <p class="text-muted mb-0">
+
+            Área administrativa da loja Adornatta.
+            Gerencie os pedidos realizados pelos clientes.
+
+          </p>
+
+
+        </div>
+
+
+
+        <div class="col-6 col-lg-3">
+
+
+          <h6>
+            Área da loja
+          </h6>
+
+
+          <ul class="list-unstyled">
+
+
+            <li>
+              <a href="painel.html">
+                Painel
+              </a>
+            </li>
+
+
+            <li>
+              <a href="estoque.html">
+                Estoque
+              </a>
+            </li>
+
+
+            <li>
+              <a href="pedidos.html">
+                Pedidos
+              </a>
+            </li>
+
+
+            <li>
+              <a href="vendas.html">
+                Vendas
+              </a>
+            </li>
+
+
+          </ul>
+
+
+        </div>
+
+
+
+        <div class="col-6 col-lg-4">
+
+
+          <h6>
+            Loja
+          </h6>
+
+
+          <ul class="list-unstyled">
+
+
+            <li>
+              <a href="../index.html">
+                Página inicial
+              </a>
+            </li>
+
+
+            <li>
+              <a href="../produtos.html">
+                Catálogo
+              </a>
+            </li>
+
+
+            <li>
+              <a href="../contato.html">
+                Contato
+              </a>
+            </li>
+
+
+          </ul>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="footer-bottom mt-5 pt-4 border-top">
+
+
+        <small class="text-muted">
+
+          © 2026 Adornatta. Todos os direitos reservados.
+
+        </small>
+
+
+      </div>
+
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- BOOTSTRAP JS -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+
+
+  <!-- JAVASCRIPT -->
+
+  <script>
+
+
+    // Navbar com sombra ao rolar
+
+    const navbar =
+      document.getElementById("mainNavbar");
+
+
+    window.addEventListener("scroll", () => {
+
+      if (window.scrollY > 20) {
+
+        navbar.classList.add("scrolled");
+
+      } else {
+
+        navbar.classList.remove("scrolled");
+
+      }
+
+    });
+
+
+
+    // Mostrar detalhes do pedido
+
+    function showOrder(
+      number,
+      customer,
+      email,
+      date,
+      total,
+      status,
+      products
+    ) {
+
+
+      document.getElementById(
+        "orderNumber"
+      ).textContent = number;
+
+
+      document.getElementById(
+        "orderCustomer"
+      ).textContent = customer;
+
+
+      document.getElementById(
+        "orderEmail"
+      ).textContent = email;
+
+
+      document.getElementById(
+        "orderDate"
+      ).textContent = date;
+
+
+      document.getElementById(
+        "orderTotal"
+      ).textContent = total;
+
+
+      document.getElementById(
+        "orderProducts"
+      ).textContent = products;
+
+
+      document.getElementById(
+        "orderStatus"
+      ).value = status;
+
+    }
+
+
+
+    // Atualizar status
+
+    function updateOrderStatus() {
+
+
+      const status =
+        document.getElementById(
+          "orderStatus"
+        ).value;
+
+
+      alert(
+        "Status do pedido atualizado para: " +
+        status
+      );
+
+
+      const modal =
+        bootstrap.Modal.getInstance(
+          document.getElementById(
+            "pedidoModal"
+          )
+        );
+
+
+      modal.hide();
+
+    }
+
+
+
+    // Pesquisa
+
+    document
+      .getElementById("orderSearch")
+      .addEventListener(
+        "input",
+        function() {
+
+
+          const search =
+            this.value.toLowerCase();
+
+
+          document
+            .querySelectorAll("#orderTable tr")
+            .forEach(row => {
+
+
+              const text =
+                row.textContent.toLowerCase();
+
+
+              row.style.display =
+                text.includes(search)
+                  ? ""
+                  : "none";
+
+
+            });
+
+
+        }
+      );
+
+
+  </script>
+
+
+</body>
+
+</html>
