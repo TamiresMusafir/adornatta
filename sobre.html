@@ -1,1334 +1,707 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Adornatta | Sobre a Loja</title>
+	<title>Adornatta | Sobre a Loja</title>
 
-<!-- Bootstrap -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
->
+	<!-- Bootstrap -->
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+		rel="stylesheet"
+	>
 
-<!-- Bootstrap Icons -->
-<link
-	rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
->
+	<!-- Bootstrap Icons -->
+	<link
+		rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+	>
 
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link
-	href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
-	rel="stylesheet"
->
+	<link
+		href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+		rel="stylesheet"
+	>
 
-<!-- CSS -->
-<link rel="stylesheet" href="css/style.css">
-
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<!-- =========================
-	BARRA SUPERIOR
-========================= -->
-
-<div class="topbar py-2">
-
-	<div class="container d-flex justify-content-center">
-
-		<span>
-			Frete grátis para compras acima de R$ 399
-		</span>
-
+	<!-- TOPBAR -->
+	<div class="topbar py-2">
+		<div class="container text-center">
+			<span>
+				Elegância em cada detalhe · Descubra a coleção Adornatta
+			</span>
+		</div>
 	</div>
 
-</div>
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-expand-lg main-navbar sticky-top">
+		<div class="container">
+			<a class="navbar-brand brand" href="index.html">
+				ADORNATTA
+			</a>
 
+			<button
+				class="navbar-toggler border-0 shadow-none"
+				type="button"
+				data-bs-toggle="collapse"
+				data-bs-target="#mainMenu"
+				aria-controls="mainMenu"
+				aria-expanded="false"
+				aria-label="Abrir menu"
+			>
+				<i class="bi bi-list fs-3"></i>
+			</button>
 
-<!-- =========================
-	NAVBAR
-========================= -->
+			<div class="collapse navbar-collapse" id="mainMenu">
 
-<nav
-	class="navbar navbar-expand-lg main-navbar sticky-top"
-	id="mainNavbar"
->
+				<!-- MENUS PRINCIPAIS -->
+				<ul class="navbar-nav mx-auto mb-3 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Início</a>
+					</li>
 
-	<div class="container">
+					<li class="nav-item">
+						<a class="nav-link active" href="sobre.html">Sobre nós</a>
+					</li>
 
+					<li class="nav-item">
+						<a class="nav-link" href="produtos.html">Produtos</a>
+					</li>
 
-		<a
-			class="navbar-brand brand"
-			href="index.html"
-		>
-			ADORNATTA
-		</a>
+					<li class="nav-item dropdown">
+						<a
+							class="nav-link dropdown-toggle"
+							href="#"
+							role="button"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+						>
+							Categorias
+						</a>
 
+						<ul class="dropdown-menu border-0 shadow-lg rounded-0 p-2">
+							<li>
+								<a class="dropdown-item py-2" href="categorias.html">
+									Anéis
+								</a>
+							</li>
 
-		<button
-			class="navbar-toggler border-0 shadow-none"
-			type="button"
-			data-bs-toggle="collapse"
-			data-bs-target="#mainMenu"
-			aria-controls="mainMenu"
-			aria-expanded="false"
-			aria-label="Abrir menu"
-		>
+							<li>
+								<a class="dropdown-item py-2" href="categorias.html">
+									Colares
+								</a>
+							</li>
 
-			<i class="bi bi-list fs-3"></i>
+							<li>
+								<a class="dropdown-item py-2" href="categorias.html">
+									Brincos
+								</a>
+							</li>
 
-		</button>
+							<li>
+								<a class="dropdown-item py-2" href="categorias.html">
+									Pulseiras
+								</a>
+							</li>
 
+							<li>
+								<a class="dropdown-item py-2" href="categorias.html">
+									Conjuntos
+								</a>
+							</li>
 
-		<div
-			class="collapse navbar-collapse"
-			id="mainMenu"
-		>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
 
+							<li>
+								<a class="dropdown-item py-2 fw-semibold" href="categorias.html">
+									Ver todas as categorias
+									<i class="bi bi-arrow-right ms-1"></i>
+								</a>
+							</li>
+						</ul>
+					</li>
 
-			<!-- =========================
-				MENUS PRINCIPAIS
-			========================= -->
+					<li class="nav-item">
+						<a class="nav-link" href="contato.html">Contato</a>
+					</li>
+				</ul>
 
-			<ul class="navbar-nav mx-auto mb-3 mb-lg-0">
+				<!-- AÇÕES DO CLIENTE -->
+				<div class="d-flex align-items-center justify-content-center gap-1">
 
-
-				<li class="nav-item">
-
-					<a
-						class="nav-link"
-						href="index.html"
+					<!-- PESQUISA -->
+					<button
+						class="nav-icon"
+						type="button"
+						data-bs-toggle="offcanvas"
+						data-bs-target="#searchCanvas"
+						aria-label="Pesquisar"
+						title="Pesquisar produtos"
 					>
-						Início
+						<i class="bi bi-search"></i>
+					</button>
+
+					<!-- CONTA -->
+					<div class="dropdown">
+						<button
+							class="nav-icon"
+							type="button"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+							aria-label="Minha conta"
+							title="Minha conta"
+						>
+							<i class="bi bi-person"></i>
+						</button>
+
+						<ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-0 p-2">
+							<li>
+								<a class="dropdown-item py-2" href="login.html">
+									<i class="bi bi-box-arrow-in-right me-2"></i>
+									Entrar
+								</a>
+							</li>
+
+							<li>
+								<a class="dropdown-item py-2" href="cadastro.html">
+									<i class="bi bi-person-plus me-2"></i>
+									Cadastrar-se
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<!-- LISTA DE DESEJOS -->
+					<a
+						class="nav-icon"
+						href="lista-desejos.html"
+						title="Lista de desejos"
+						aria-label="Lista de desejos"
+					>
+						<i class="bi bi-heart"></i>
+						<span class="icon-badge">2</span>
 					</a>
 
-				</li>
-
-
-				<li class="nav-item">
-
-					<a
-						class="nav-link active"
-						href="sobre.html"
+					<!-- CARRINHO -->
+					<button
+						class="nav-icon"
+						type="button"
+						data-bs-toggle="offcanvas"
+						data-bs-target="#cartCanvas"
+						aria-label="Carrinho"
+						title="Carrinho"
 					>
-						Sobre a loja
-					</a>
+						<i class="bi bi-bag"></i>
+						<span class="icon-badge" id="cartBadge">2</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</nav>
 
-				</li>
+	<main>
 
+		<!-- CABEÇALHO DA PÁGINA -->
+		<section class="section section-soft">
+			<div class="container">
+				<div class="row justify-content-center text-center">
+					<div class="col-lg-8">
+						<div class="section-label">
+							Nossa história
+						</div>
 
-				<li class="nav-item">
+						<h1 class="section-title mb-4">
+							Tradição, cuidado e beleza em cada detalhe.
+						</h1>
 
-					<a
-						class="nav-link"
-						href="produtos.html"
-					>
-						Produtos
-					</a>
+						<p class="section-text mb-0">
+							Conheça a história da Adornatta e os valores que
+							estão presentes em cada escolha, desde a seleção
+							de uma joia até a experiência de nossos clientes.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
 
-				</li>
+		<!-- NOSSA HISTÓRIA -->
+		<section class="section">
+			<div class="container">
+				<div class="row align-items-center g-5">
 
+					<div class="col-lg-6">
+						<div class="about-image">
+							<img
+								src="images/image-03.jpg"
+								alt="Ateliê de joias Adornatta"
+							>
 
-				<!-- Categorias -->
+							<div class="about-detail">
+								<strong>100+</strong>
 
-				<li class="nav-item dropdown">
+								<p class="small text-muted mb-0">
+									anos de tradição e cuidado.
+								</p>
+							</div>
+						</div>
+					</div>
 
-					<a
-						class="nav-link dropdown-toggle"
-						href="#"
-						role="button"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-					>
-						Categorias
-					</a>
+					<div class="col-lg-5 offset-lg-1">
+						<div class="section-label">
+							A Adornatta
+						</div>
 
+						<h2 class="section-title mb-4">
+							Joias feitas para permanecer.
+						</h2>
 
-					<ul class="dropdown-menu border-0 shadow-lg rounded-0 p-2">
+						<p class="section-text mb-4">
+							A Adornatta nasceu com o propósito de aproximar
+							pessoas de joias que representam momentos
+							especiais. Nossa loja valoriza peças que
+							combinam beleza, qualidade e personalidade.
+						</p>
 
+						<p class="section-text mb-4">
+							Ao longo de nossa trajetória, construímos uma
+							proposta baseada na seleção cuidadosa dos
+							produtos e em uma experiência de compra
+							simples, elegante e segura.
+						</p>
 
-						<li>
+						<p class="section-text mb-0">
+							Para nós, uma joia não é apenas um acessório.
+							É uma forma de expressar estilo, celebrar
+							conquistas e guardar lembranças.
+						</p>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- NOSSA ESSÊNCIA -->
+		<section class="section section-soft">
+			<div class="container">
+				<div class="row justify-content-center text-center mb-5">
+					<div class="col-lg-7">
+						<div class="section-label">
+							Nossa essência
+						</div>
+
+						<h2 class="section-title mb-3">
+							O que guia a Adornatta.
+						</h2>
+
+						<p class="section-text">
+							Nossa proposta vai além de oferecer produtos.
+							Buscamos construir uma experiência de compra
+							baseada em confiança, qualidade e atenção aos
+							detalhes.
+						</p>
+					</div>
+				</div>
+
+				<div class="row g-4">
+
+					<div class="col-md-4">
+						<div class="service-card">
+							<i class="bi bi-gem service-icon"></i>
+
+							<h3>
+								Qualidade
+							</h3>
+
+							<p>
+								Selecionamos nossas peças pensando em
+								materiais, acabamento e durabilidade,
+								buscando oferecer produtos que possam
+								acompanhar nossos clientes por muitos anos.
+							</p>
+						</div>
+					</div>
+
+					<!-- CUIDADO -->
+					<div class="col-md-4">
+						<div class="service-card">
+							<i class="bi bi-heart service-icon"></i>
+
+							<h3>
+								Cuidado
+							</h3>
+
+							<p>
+								Cada etapa da experiência é pensada com
+								atenção, desde a escolha dos produtos até
+								o atendimento e o acompanhamento dos pedidos.
+							</p>
+						</div>
+					</div>
+
+					<!-- ELEGÂNCIA -->
+					<div class="col-md-4">
+						<div class="service-card">
+							<i class="bi bi-stars service-icon"></i>
+
+							<h3>
+								Elegância
+							</h3>
+
+							<p>
+								Valorizamos peças atemporais e versáteis,
+								que possam representar diferentes estilos
+								e fazer parte de momentos importantes.
+							</p>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- EXPERIÊNCIA -->
+		<section class="section">
+			<div class="container">
+				<div class="row align-items-center g-5">
+
+					<div class="col-lg-5">
+						<div class="section-label">
+							Mais do que uma loja
+						</div>
+
+						<h2 class="section-title mb-4">
+							Uma experiência pensada para você.
+						</h2>
+
+						<p class="section-text mb-4">
+							A Adornatta foi desenvolvida para tornar a busca
+							por uma joia mais prática e agradável.
+						</p>
+
+						<p class="section-text mb-0">
+							Em nossa plataforma, o cliente pode pesquisar
+							produtos, conhecer diferentes categorias,
+							salvar seus favoritos, realizar compras e
+							acompanhá-las de maneira simples.
+						</p>
+					</div>
+
+					<div class="col-lg-6 offset-lg-1">
+						<div class="row g-4">
+
+							<!-- PESQUISAR -->
+							<div class="col-sm-6">
+								<div class="service-card">
+									<i class="bi bi-search service-icon"></i>
+
+									<h3>
+										Encontre sua joia
+									</h3>
+
+									<p>
+										Pesquise produtos por nome,
+										categoria ou tipo.
+									</p>
+								</div>
+							</div>
+
+							<!-- FAVORITOS -->
+							<div class="col-sm-6">
+								<div class="service-card">
+									<i class="bi bi-heart service-icon"></i>
+
+									<h3>
+										Salve seus favoritos
+									</h3>
+
+									<p>
+										Monte sua lista de desejos e
+										consulte suas escolhas quando quiser.
+									</p>
+								</div>
+							</div>
+
+							<!-- PEDIDOS -->
+							<div class="col-sm-6">
+								<div class="service-card">
+									<i class="bi bi-bag-check service-icon"></i>
+
+									<h3>
+										Acompanhe seus pedidos
+									</h3>
+
+									<p>
+										Consulte suas compras e acompanhe
+										o andamento dos pedidos.
+									</p>
+								</div>
+							</div>
+
+							<!-- ATENDIMENTO -->
+							<div class="col-sm-6">
+								<div class="service-card">
+									<i class="bi bi-headset service-icon"></i>
+
+									<h3>
+										Conte com nosso atendimento
+									</h3>
+
+									<p>
+										Entre em contato com nossa equipe
+										sempre que precisar.
+									</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- CHAMADA FINAL -->
+		<section class="section section-soft">
+			<div class="container">
+				<div class="row justify-content-center text-center align-items-center">
+					<div class="col-lg-7">
+
+						<div class="section-label">
+							Conheça a Adornatta
+						</div>
+
+						<h2 class="section-title mb-3">
+							Encontre uma joia para marcar seu momento.
+						</h2>
+
+						<p class="section-text mb-4">
+							Explore nossas coleções e descubra peças
+							selecionadas para diferentes estilos e ocasiões.
+						</p>
+
+						<div class="d-flex justify-content-center flex-wrap gap-3">
+							<a
+								href="produtos.html"
+								class="btn btn-gold d-inline-flex align-items-center justify-content-center"
+							>
+								Explorar produtos
+								<i class="bi bi-arrow-right ms-2"></i>
+							</a>
 
 							<a
-								class="dropdown-item py-2"
+								href="contato.html"
+								class="btn btn-outline-dark rounded-0 px-4 py-3 d-inline-flex align-items-center justify-content-center"
+							>
+								Entrar em contato
+							</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<!-- FOOTER -->
+	<footer class="pt-5 pb-4">
+		<div class="container">
+			<div class="row g-5">
+
+				<div class="col-lg-5">
+					<div class="footer-brand mb-3">
+						ADORNATTA
+					</div>
+
+					<p class="mb-0">
+						Joias escolhidas com cuidado para acompanhar
+						momentos especiais.
+					</p>
+				</div>
+
+				<div class="col-6 col-lg-2">
+					<div class="footer-title">
+						Navegação
+					</div>
+
+					<p class="mb-2">
+						<a href="index.html">Início</a>
+					</p>
+
+					<p class="mb-2">
+						<a href="produtos.html">Produtos</a>
+					</p>
+
+					<p class="mb-2">
+						<a href="categorias.html">Categorias</a>
+					</p>
+
+					<p class="mb-2">
+						<a href="sobre.html">Sobre nós</a>
+					</p>
+				</div>
+
+				<div class="col-6 col-lg-2">
+					<div class="footer-title">
+						Atendimento
+					</div>
+
+					<p class="mb-2">
+						<a href="contato.html">Contato</a>
+					</p>
+
+					<p class="mb-2">
+						<a href="lista-desejos.html">Lista de desejos</a>
+					</p>
+
+					<p class="mb-2">
+						<a href="login.html">Minha conta</a>
+					</p>
+				</div>
+
+				<div class="col-lg-3">
+					<div class="footer-title">
+						Contato
+					</div>
+
+					<p class="mb-2">
+						<i class="bi bi-envelope me-2"></i>
+						contato@adornatta.com
+					</p>
+
+					<p class="mb-2">
+						<i class="bi bi-telephone me-2"></i>
+						(21) 99999-9999
+					</p>
+				</div>
+
+			</div>
+
+			<hr class="border-secondary opacity-25 my-4">
+
+			<div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+				<p class="mb-0">
+					© 2026 Adornatta. Todos os direitos reservados.
+				</p>
+			</div>
+		</div>
+	</footer>
+
+	<!-- SEARCH OFFCANVAS -->
+	<div
+		class="offcanvas offcanvas-top search-modal"
+		tabindex="-1"
+		id="searchCanvas"
+		style="height: 100vh;"
+	>
+		<div class="container py-4">
+
+			<div class="d-flex justify-content-between align-items-center mb-5">
+				<span class="brand">
+					ADORNATTA
+				</span>
+
+				<button
+					type="button"
+					class="btn-close shadow-none"
+					data-bs-dismiss="offcanvas"
+					aria-label="Fechar"
+				></button>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col-lg-9">
+
+					<div class="section-label">
+						Pesquisar produtos
+					</div>
+
+					<div class="input-group">
+						<input
+							type="search"
+							class="form-control search-input py-4"
+							placeholder="O que você está procurando?"
+							aria-label="Pesquisar"
+							id="searchInput"
+						>
+
+						<button class="btn btn-dark px-4" type="button">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+
+					<div class="mt-5">
+						<p class="text-muted small mb-3">
+							Sugestões
+						</p>
+
+						<div class="d-flex flex-wrap gap-2">
+							<a
 								href="#"
+								class="btn btn-sm btn-outline-secondary rounded-pill"
 							>
 								Anéis
 							</a>
 
-						</li>
-
-
-						<li>
-
 							<a
-								class="dropdown-item py-2"
 								href="#"
+								class="btn btn-sm btn-outline-secondary rounded-pill"
 							>
 								Colares
 							</a>
 
-						</li>
-
-
-						<li>
-
 							<a
-								class="dropdown-item py-2"
 								href="#"
+								class="btn btn-sm btn-outline-secondary rounded-pill"
 							>
 								Brincos
 							</a>
 
-						</li>
-
-
-						<li>
-
 							<a
-								class="dropdown-item py-2"
 								href="#"
+								class="btn btn-sm btn-outline-secondary rounded-pill"
 							>
-								Pulseiras
+								Ouro
 							</a>
 
-						</li>
-
-
-						<li>
-
 							<a
-								class="dropdown-item py-2"
 								href="#"
+								class="btn btn-sm btn-outline-secondary rounded-pill"
 							>
-								Conjuntos
+								Pérolas
 							</a>
-
-						</li>
-
-
-						<li>
-
-							<hr class="dropdown-divider">
-
-						</li>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2 fw-semibold"
-								href="produtos.html"
-							>
-
-								Ver todas as categorias
-
-								<i class="bi bi-arrow-right ms-1"></i>
-
-							</a>
-
-						</li>
-
-
-					</ul>
-
-				</li>
-
-
-				<!-- Contato -->
-
-				<li class="nav-item">
-
-					<a
-						class="nav-link"
-						href="contato.html"
-					>
-						Contato
-					</a>
-
-				</li>
-
-
-				<!-- Área da loja -->
-
-				<li class="nav-item dropdown">
-
-					<a
-						class="nav-link dropdown-toggle"
-						href="#"
-						role="button"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-					>
-						Área da loja
-					</a>
-
-
-					<ul class="dropdown-menu border-0 shadow-lg rounded-0 p-2">
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="#"
-							>
-
-								<i class="bi bi-speedometer2 me-2"></i>
-
-								Painel da loja
-
-							</a>
-
-						</li>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="#"
-							>
-
-								<i class="bi bi-box-seam me-2"></i>
-
-								Gerenciar estoque
-
-							</a>
-
-						</li>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="#"
-							>
-
-								<i class="bi bi-receipt me-2"></i>
-
-								Gerenciar pedidos
-
-							</a>
-
-						</li>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="#"
-							>
-
-								<i class="bi bi-cart-check me-2"></i>
-
-								Registrar venda
-
-							</a>
-
-						</li>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="#"
-							>
-
-								<i class="bi bi-bar-chart-line me-2"></i>
-
-								Relatórios de vendas
-
-							</a>
-
-						</li>
-
-
-						<li>
-
-							<hr class="dropdown-divider">
-
-						</li>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="#"
-							>
-
-								<i class="bi bi-tags me-2"></i>
-
-								Registrar tipos de joias
-
-							</a>
-
-						</li>
-
-
-					</ul>
-
-				</li>
-
-
-			</ul>
-
-
-			<!-- =========================
-				AÇÕES DO CLIENTE
-			========================= -->
-
-			<div
-				class="d-flex align-items-center justify-content-center gap-1"
-			>
-
-
-				<!-- Pesquisa -->
-
-				<button
-					class="nav-icon"
-					type="button"
-					data-bs-toggle="offcanvas"
-					data-bs-target="#searchCanvas"
-					aria-label="Pesquisar"
-					title="Pesquisar produtos"
-				>
-
-					<i class="bi bi-search"></i>
-
-				</button>
-
-
-				<!-- Conta -->
-
-				<div class="dropdown">
-
-
-					<button
-						class="nav-icon"
-						type="button"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-						aria-label="Minha conta"
-						title="Minha conta"
-					>
-
-						<i class="bi bi-person"></i>
-
-					</button>
-
-
-					<ul
-						class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-0 p-2"
-					>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="login.html"
-							>
-
-								<i class="bi bi-box-arrow-in-right me-2"></i>
-
-								Entrar
-
-							</a>
-
-						</li>
-
-
-						<li>
-
-							<a
-								class="dropdown-item py-2"
-								href="cadastro.html"
-							>
-
-								<i class="bi bi-person-plus me-2"></i>
-
-								Cadastrar-se
-
-							</a>
-
-						</li>
-
-
-					</ul>
-
+						</div>
+					</div>
 
 				</div>
-
-
-				<!-- Lista de desejos -->
-
-				<a
-					class="nav-icon"
-					href="lista-desejos.html"
-					title="Lista de desejos"
-					aria-label="Lista de desejos"
-				>
-
-					<i class="bi bi-heart"></i>
-
-					<span class="icon-badge">
-						2
-					</span>
-
-				</a>
-
-
-				<!-- Carrinho -->
-
-				<button
-					class="nav-icon"
-					type="button"
-					data-bs-toggle="offcanvas"
-					data-bs-target="#cartCanvas"
-					aria-label="Carrinho"
-					title="Carrinho"
-				>
-
-					<i class="bi bi-bag"></i>
-
-					<span
-						class="icon-badge"
-						id="cartBadge"
-					>
-						2
-					</span>
-
-				</button>
-
-
 			</div>
 
-
 		</div>
-
-
 	</div>
 
-</nav>
-
-
-<main>
-
-
-	<!-- =========================
-		CABEÇALHO DA PÁGINA
-	========================= -->
-
-	<section class="section section-soft">
-
-		<div class="container">
-
-			<div class="row justify-content-center text-center">
-
-				<div class="col-lg-8">
-
-
-					<div class="section-label">
-						Nossa história
-					</div>
-
-
-					<h1 class="section-title mb-4">
-						Tradição, cuidado e beleza em cada detalhe.
-					</h1>
-
-
-					<p class="section-text mb-0">
-
-						Conheça a história da Adornatta e os valores que
-						estão presentes em cada escolha, desde a seleção
-						de uma joia até a experiência de nossos clientes.
-
-					</p>
-
-
-				</div>
-
-			</div>
-
-		</div>
-
-	</section>
-
-
-	<!-- =========================
-		NOSSA HISTÓRIA
-	========================= -->
-
-	<section class="section">
-
-		<div class="container">
-
-			<div class="row align-items-center g-5">
-
-
-				<div class="col-lg-6">
-
-					<div class="about-image">
-
-
-						<img
-							src="images/image-03.jpg"
-							alt="Ateliê de joias Adornatta"
-						>
-
-
-						<div class="about-detail">
-
-							<strong>
-								100+
-							</strong>
-
-							<p class="small text-muted mb-0">
-								anos de tradição e cuidado.
-							</p>
-
-						</div>
-
-
-					</div>
-
-				</div>
-
-
-				<div class="col-lg-5 offset-lg-1">
-
-
-					<div class="section-label">
-						A Adornatta
-					</div>
-
-
-					<h2 class="section-title mb-4">
-						Joias feitas para permanecer.
-					</h2>
-
-
-					<p class="section-text mb-4">
-
-						A Adornatta nasceu com o propósito de aproximar
-						pessoas de joias que representam momentos
-						especiais. Nossa loja valoriza peças que
-						combinam beleza, qualidade e personalidade.
-
-					</p>
-
-
-					<p class="section-text mb-4">
-
-						Ao longo de nossa trajetória, construímos uma
-						proposta baseada na seleção cuidadosa dos
-						produtos e em uma experiência de compra
-						simples, elegante e segura.
-
-					</p>
-
-
-					<p class="section-text mb-0">
-
-						Para nós, uma joia não é apenas um acessório.
-						É uma forma de expressar estilo, celebrar
-						conquistas e guardar lembranças.
-
-					</p>
-
-
-				</div>
-
-
-			</div>
-
-		</div>
-
-	</section>
-
-
-	<!-- =========================
-		NOSSA ESSÊNCIA
-	========================= -->
-
-	<section class="section section-soft">
-
-		<div class="container">
-
-
-			<div class="row justify-content-center text-center mb-5">
-
-				<div class="col-lg-7">
-
-
-					<div class="section-label">
-						Nossa essência
-					</div>
-
-
-					<h2 class="section-title mb-3">
-						O que guia a Adornatta.
-					</h2>
-
-
-					<p class="section-text">
-
-						Nossa proposta vai além de oferecer produtos.
-						Buscamos construir uma experiência de compra
-						baseada em confiança, qualidade e atenção aos
-						detalhes.
-
-					</p>
-
-
-				</div>
-
-			</div>
-
-
-			<div class="row g-4">
-
-
-				<!-- Qualidade -->
-
-				<div class="col-md-4">
-
-					<div class="service-card">
-
-
-						<i class="bi bi-gem service-icon"></i>
-
-
-						<h3>
-							Qualidade
-						</h3>
-
-
-						<p>
-
-							Selecionamos nossas peças pensando em
-							materiais, acabamento e durabilidade,
-							buscando oferecer produtos que possam
-							acompanhar nossos clientes por muitos anos.
-
-						</p>
-
-
-					</div>
-
-				</div>
-
-
-				<!-- Cuidado -->
-
-				<div class="col-md-4">
-
-					<div class="service-card">
-
-
-						<i class="bi bi-heart service-icon"></i>
-
-
-						<h3>
-							Cuidado
-						</h3>
-
-
-						<p>
-
-							Cada etapa da experiência é pensada com
-							atenção, desde a escolha dos produtos até
-							o atendimento e o acompanhamento dos pedidos.
-
-						</p>
-
-
-					</div>
-
-				</div>
-
-
-				<!-- Elegância -->
-
-				<div class="col-md-4">
-
-					<div class="service-card">
-
-
-						<i class="bi bi-stars service-icon"></i>
-
-
-						<h3>
-							Elegância
-						</h3>
-
-
-						<p>
-
-							Valorizamos peças atemporais e versáteis,
-							que possam representar diferentes estilos
-							e fazer parte de momentos importantes.
-
-						</p>
-
-
-					</div>
-
-				</div>
-
-
-			</div>
-
-		</div>
-
-	</section>
-
-
-	<!-- =========================
-		EXPERIÊNCIA
-	========================= -->
-
-	<section class="section">
-
-		<div class="container">
-
-			<div class="row align-items-center g-5">
-
-
-				<div class="col-lg-5">
-
-
-					<div class="section-label">
-						Mais do que uma loja
-					</div>
-
-
-					<h2 class="section-title mb-4">
-						Uma experiência pensada para você.
-					</h2>
-
-
-					<p class="section-text mb-4">
-
-						A Adornatta foi desenvolvida para tornar a busca
-						por uma joia mais prática e agradável.
-
-					</p>
-
-
-					<p class="section-text mb-0">
-
-						Em nossa plataforma, o cliente pode pesquisar
-						produtos, conhecer diferentes categorias,
-						salvar seus favoritos, realizar compras e
-						acompanhá-las de maneira simples.
-
-					</p>
-
-
-				</div>
-
-
-				<div class="col-lg-6 offset-lg-1">
-
-
-					<div class="row g-4">
-
-
-						<!-- Pesquisar -->
-
-						<div class="col-sm-6">
-
-							<div class="service-card">
-
-
-								<i class="bi bi-search service-icon"></i>
-
-
-								<h3>
-									Encontre sua joia
-								</h3>
-
-
-								<p>
-
-									Pesquise produtos por nome,
-									categoria ou tipo.
-
-								</p>
-
-
-							</div>
-
-						</div>
-
-
-						<!-- Favoritos -->
-
-						<div class="col-sm-6">
-
-							<div class="service-card">
-
-
-								<i class="bi bi-heart service-icon"></i>
-
-
-								<h3>
-									Salve seus favoritos
-								</h3>
-
-
-								<p>
-
-									Monte sua lista de desejos e
-									consulte suas escolhas quando quiser.
-
-								</p>
-
-
-							</div>
-
-						</div>
-
-
-						<!-- Pedidos -->
-
-						<div class="col-sm-6">
-
-							<div class="service-card">
-
-
-								<i class="bi bi-bag-check service-icon"></i>
-
-
-								<h3>
-									Acompanhe seus pedidos
-								</h3>
-
-
-								<p>
-
-									Consulte suas compras e acompanhe
-									o andamento dos pedidos.
-
-								</p>
-
-
-							</div>
-
-						</div>
-
-
-						<!-- Atendimento -->
-
-						<div class="col-sm-6">
-
-							<div class="service-card">
-
-
-								<i class="bi bi-headset service-icon"></i>
-
-
-								<h3>
-									Conte com nosso atendimento
-								</h3>
-
-
-								<p>
-
-									Entre em contato com nossa equipe
-									sempre que precisar.
-
-								</p>
-
-
-							</div>
-
-						</div>
-
-
-					</div>
-
-				</div>
-
-
-			</div>
-
-		</div>
-
-	</section>
-
-
-	<!-- =========================
-		CHAMADA FINAL
-	========================= -->
-
-	<section class="section section-soft">
-
-		<div class="container">
-
-			<div
-				class="row justify-content-center text-center align-items-center"
-			>
-
-				<div class="col-lg-7">
-
-
-					<div class="section-label">
-						Conheça a Adornatta
-					</div>
-
-
-					<h2 class="section-title mb-3">
-						Encontre uma joia para marcar seu momento.
-					</h2>
-
-
-					<p class="section-text mb-4">
-
-						Explore nossas coleções e descubra peças
-						selecionadas para diferentes estilos e ocasiões.
-
-					</p>
-
-
-					<div
-						class="d-flex justify-content-center flex-wrap gap-3"
-					>
-
-
-						<a
-							href="produtos.html"
-							class="btn btn-gold d-inline-flex align-items-center justify-content-center"
-						>
-
-							Explorar produtos
-
-							<i class="bi bi-arrow-right ms-2"></i>
-
-						</a>
-
-
-						<a
-							href="contato.html"
-							class="btn btn-outline-dark rounded-0 px-4 py-3 d-inline-flex align-items-center justify-content-center"
-						>
-
-							Entrar em contato
-
-						</a>
-
-
-					</div>
-
-
-				</div>
-
-			</div>
-
-		</div>
-
-	</section>
-
-
-</main>
-
-
-<!-- =========================
-	FOOTER
-========================= -->
-
-<footer class="pt-5">
-
-
-	<div class="container py-5">
-
-		<div class="row g-5">
-
-
-			<!-- Marca -->
-
-			<div class="col-lg-4">
-
-
-				<div class="footer-brand mb-3">
-					ADORNATTA
-				</div>
-
-
-				<p class="mb-4">
-
-					Joias selecionadas para acompanhar momentos
-					que merecem ser lembrados.
-
-				</p>
-
-
-				<div class="d-flex gap-2">
-
-
-					<a
-						href="#"
-						class="nav-icon text-white"
-					>
-						<i class="bi bi-instagram"></i>
-					</a>
-
-
-					<a
-						href="#"
-						class="nav-icon text-white"
-					>
-						<i class="bi bi-facebook"></i>
-					</a>
-
-
-					<a
-						href="#"
-						class="nav-icon text-white"
-					>
-						<i class="bi bi-envelope"></i>
-					</a>
-
-
-				</div>
-
-
-			</div>
-
-
-			<!-- Loja -->
-
-			<div class="col-6 col-lg-2">
-
-
-				<div class="footer-title">
-					Loja
-				</div>
-
-
-				<div class="d-flex flex-column gap-2">
-
-
-					<a href="produtos.html">
-						Produtos
-					</a>
-
-
-					<a href="categorias.html">
-						Categorias
-					</a>
-
-
-					<a href="#">
-						Ofertas
-					</a>
-
-
-					<a href="#">
-						Novidades
-					</a>
-
-
-				</div>
-
-
-			</div>
-
-
-			<!-- Minha conta -->
-
-			<div class="col-6 col-lg-2">
-
-
-				<div class="footer-title">
-					Minha conta
-				</div>
-
-
-				<div class="d-flex flex-column gap-2">
-
-
-					<a href="#">
-						Meu perfil
-					</a>
-
-
-					<a href="#">
-						Meus pedidos
-					</a>
-
-
-					<a href="lista-desejos.html">
-						Lista de desejos
-					</a>
-
-
-					<a href="#">
-						Carrinho
-					</a>
-
-
-				</div>
-
-
-			</div>
-
-
-			<!-- Atendimento -->
-
-			<div class="col-6 col-lg-2">
-
-
-				<div class="footer-title">
-					Atendimento
-				</div>
-
-
-				<div class="d-flex flex-column gap-2">
-
-
-					<a href="contato.html">
-						Contato
-					</a>
-
-
-					<a href="#">
-						Trocas e devoluções
-					</a>
-
-
-					<a href="#">
-						Formas de pagamento
-					</a>
-
-
-					<a href="#">
-						Perguntas frequentes
-					</a>
-
-
-				</div>
-
-
-			</div>
-
-
-			<!-- Adornatta -->
-
-			<div class="col-6 col-lg-2">
-
-
-				<div class="footer-title">
-					Adornatta
-				</div>
-
-
-				<div class="d-flex flex-column gap-2">
-
-
-					<a href="sobre.html">
-						Sobre nós
-					</a>
-
-
-					<a href="#">
-						Política de privacidade
-					</a>
-
-
-					<a href="#">
-						Termos de uso
-					</a>
-
-
-					<a href="#">
-						Login administrativo
-					</a>
-
-
-				</div>
-
-
-			</div>
-
-
-		</div>
-
-	</div>
-
-
-	<!-- Copyright -->
-
-	<div class="border-top border-secondary border-opacity-25">
-
-		<div class="container py-3">
-
-
-			<div
-				class="d-flex flex-column flex-md-row justify-content-between gap-2"
-			>
-
-
-				<p class="mb-0">
-					© 2026 Adornatta. Todos os direitos reservados.
-				</p>
-
-
-				<p class="mb-0">
-					Projeto de sistema de joias
-				</p>
-
-
-			</div>
-
-
-		</div>
-
-	</div>
-
-
-</footer>
-
-
-<!-- =========================
-	SEARCH OFFCANVAS
-========================= -->
-
-<div
-	class="offcanvas offcanvas-top search-modal"
-	tabindex="-1"
-	id="searchCanvas"
-	style="height: 100vh;"
->
-
-
-	<div class="container py-4">
-
-
-		<div
-			class="d-flex justify-content-between align-items-center mb-5"
-		>
-
-
-			<span class="brand">
-				ADORNATTA
-			</span>
-
+	<!-- CARRINHO OFFCANVAS -->
+	<div
+		class="offcanvas offcanvas-end"
+		tabindex="-1"
+		id="cartCanvas"
+		aria-labelledby="cartCanvasLabel"
+	>
+		<div class="offcanvas-header border-bottom">
+			<h5 class="offcanvas-title display-font" id="cartCanvasLabel">
+				Seu carrinho
+			</h5>
 
 			<button
 				type="button"
@@ -1336,317 +709,109 @@
 				data-bs-dismiss="offcanvas"
 				aria-label="Fechar"
 			></button>
-
-
 		</div>
 
+		<div class="offcanvas-body d-flex flex-column">
 
-		<div class="row justify-content-center">
+			<div id="cartItems">
 
-
-			<div class="col-lg-9">
-
-
-				<div class="section-label">
-					Pesquisar produtos
-				</div>
-
-
-				<div class="input-group">
-
-
-					<input
-						type="search"
-						class="form-control search-input py-4"
-						placeholder="O que você está procurando?"
-						aria-label="Pesquisar"
-						id="searchInput"
+				<!-- PRODUTO 1 -->
+				<div class="d-flex gap-3 border-bottom pb-3 mb-3 cart-item">
+					<div
+						class="bg-light d-flex align-items-center justify-content-center"
+						style="width: 85px; height: 85px;"
 					>
+						<i class="bi bi-gem fs-2 text-secondary"></i>
+					</div>
 
+					<div class="flex-grow-1">
+						<h6 class="mb-1">
+							Anel Aurelian
+						</h6>
 
-					<button
-						class="btn btn-dark px-4"
-						type="button"
+						<small class="text-muted">
+							Quantidade: 1
+						</small>
+
+						<div class="fw-semibold mt-2">
+							R$ 4.200,00
+						</div>
+					</div>
+				</div>
+
+				<!-- PRODUTO 2 -->
+				<div class="d-flex gap-3 border-bottom pb-3 mb-3 cart-item">
+					<div
+						class="bg-light d-flex align-items-center justify-content-center"
+						style="width: 85px; height: 85px;"
 					>
-
-						<i class="bi bi-search"></i>
-
-					</button>
-
-
-				</div>
-
-
-				<div class="mt-5">
-
-
-					<p class="text-muted small mb-3">
-						Sugestões
-					</p>
-
-
-					<div class="d-flex flex-wrap gap-2">
-
-
-						<a
-							href="#"
-							class="btn btn-sm btn-outline-secondary rounded-pill"
-						>
-							Anéis
-						</a>
-
-
-						<a
-							href="#"
-							class="btn btn-sm btn-outline-secondary rounded-pill"
-						>
-							Colares
-						</a>
-
-
-						<a
-							href="#"
-							class="btn btn-sm btn-outline-secondary rounded-pill"
-						>
-							Brincos
-						</a>
-
-
-						<a
-							href="#"
-							class="btn btn-sm btn-outline-secondary rounded-pill"
-						>
-							Ouro
-						</a>
-
-
-						<a
-							href="#"
-							class="btn btn-sm btn-outline-secondary rounded-pill"
-						>
-							Pérolas
-						</a>
-
-
+						<i class="bi bi-gem fs-2 text-secondary"></i>
 					</div>
 
+					<div class="flex-grow-1">
+						<h6 class="mb-1">
+							Brincos Tuscan Mist
+						</h6>
 
+						<small class="text-muted">
+							Quantidade: 1
+						</small>
+
+						<div class="fw-semibold mt-2">
+							R$ 2.850,00
+						</div>
+					</div>
 				</div>
-
 
 			</div>
 
-		</div>
+			<div class="mt-auto pt-4">
+				<div class="d-flex justify-content-between mb-3">
+					<span class="text-muted">
+						Subtotal
+					</span>
 
+					<strong id="cartTotal">
+						R$ 7.050,00
+					</strong>
+				</div>
 
-	</div>
-
-</div>
-
-
-<!-- =========================
-	CARRINHO OFFCANVAS
-========================= -->
-
-<div
-	class="offcanvas offcanvas-end"
-	tabindex="-1"
-	id="cartCanvas"
-	aria-labelledby="cartCanvasLabel"
->
-
-
-	<div class="offcanvas-header border-bottom">
-
-
-		<h5
-			class="offcanvas-title display-font"
-			id="cartCanvasLabel"
-		>
-			Seu carrinho
-		</h5>
-
-
-		<button
-			type="button"
-			class="btn-close shadow-none"
-			data-bs-dismiss="offcanvas"
-			aria-label="Fechar"
-		></button>
-
-
-	</div>
-
-
-	<div class="offcanvas-body d-flex flex-column">
-
-
-		<div id="cartItems">
-
-
-			<!-- Produto 1 -->
-
-			<div
-				class="d-flex gap-3 border-bottom pb-3 mb-3 cart-item"
-			>
-
-
-				<div
-					class="bg-light d-flex align-items-center justify-content-center"
-					style="width: 85px; height: 85px;"
+				<a
+					href="#"
+					class="btn btn-gold w-100 py-3 mb-2"
 				>
+					Finalizar compra
+				</a>
 
-					<i class="bi bi-gem fs-2 text-secondary"></i>
-
-				</div>
-
-
-				<div class="flex-grow-1">
-
-
-					<h6 class="mb-1">
-						Anel Aurelian
-					</h6>
-
-
-					<small class="text-muted">
-						Quantidade: 1
-					</small>
-
-
-					<div class="fw-semibold mt-2">
-						R$ 4.200,00
-					</div>
-
-
-				</div>
-
-
-			</div>
-
-
-			<!-- Produto 2 -->
-
-			<div
-				class="d-flex gap-3 border-bottom pb-3 mb-3 cart-item"
-			>
-
-
-				<div
-					class="bg-light d-flex align-items-center justify-content-center"
-					style="width: 85px; height: 85px;"
+				<a
+					href="carrinho.html"
+					class="btn btn-gold w-100"
 				>
-
-					<i class="bi bi-gem fs-2 text-secondary"></i>
-
-				</div>
-
-
-				<div class="flex-grow-1">
-
-
-					<h6 class="mb-1">
-						Brincos Tuscan Mist
-					</h6>
-
-
-					<small class="text-muted">
-						Quantidade: 1
-					</small>
-
-
-					<div class="fw-semibold mt-2">
-						R$ 2.850,00
-					</div>
-
-
-				</div>
-
-
+					Ver carrinho
+				</a>
 			</div>
 
-
 		</div>
-
-
-		<div class="mt-auto pt-4">
-
-
-			<div class="d-flex justify-content-between mb-3">
-
-
-				<span class="text-muted">
-					Subtotal
-				</span>
-
-
-				<strong id="cartTotal">
-					R$ 7.050,00
-				</strong>
-
-
-			</div>
-
-
-			<a
-				href="#"
-				class="btn btn-gold w-100 py-3 mb-2"
-			>
-				Finalizar compra
-			</a>
-
-
-			<a
-				href="#"
-				class="btn btn-outline-dark rounded-0 w-100 py-3"
-			>
-				Ver carrinho
-			</a>
-
-
-		</div>
-
-
 	</div>
 
-</div>
+	<!-- BOOTSTRAP JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+	></script>
 
+	<!-- SCRIPTS -->
+	<script>
+		// NAVBAR
+		const navbar = document.getElementById("mainNavbar");
 
-<!-- =========================
-	BOOTSTRAP JS
-========================= -->
-
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-></script>
-
-
-<!-- =========================
-	SCRIPTS
-========================= -->
-
-<script>
-
-	// Navbar com sombra ao rolar
-
-	const navbar = document.getElementById("mainNavbar");
-
-	window.addEventListener("scroll", () => {
-
-		if (window.scrollY > 20) {
-
-			navbar.classList.add("scrolled");
-
-		} else {
-
-			navbar.classList.remove("scrolled");
-
-		}
-
-	});
-
-</script>
+		window.addEventListener("scroll", () => {
+			if (window.scrollY > 20) {
+				navbar.classList.add("scrolled");
+			} else {
+				navbar.classList.remove("scrolled");
+			}
+		});
+	</script>
 
 </body>
-
 </html>
