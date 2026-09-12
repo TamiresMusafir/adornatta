@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Entrar | Adornatta</title>
+
+	<title>Lista de desejos | Adornatta</title>
 
 	<!-- Bootstrap -->
 	<link
@@ -20,13 +21,14 @@
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 	<link
-		href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+		href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
 		rel="stylesheet"
 	>
 
 	<!-- CSS -->
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -180,147 +182,130 @@
 		</div>
 	</nav>
 
-	<!-- LOGIN -->
+	<!-- CONTEÚDO -->
 	<main>
 		<section class="section">
 			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col-lg-5 col-xl-4">
 
-						<!-- CABEÇALHO -->
-						<div class="text-center mb-5">
-							<div class="section-label">
-								Minha conta
+				<!-- CABEÇALHO -->
+				<div class="text-center mb-5">
+					<div class="section-label">Seus favoritos</div>
+
+					<h1 class="section-title mb-3">
+						Lista de desejos
+					</h1>
+
+					<p class="section-text mx-auto" style="max-width: 650px;">
+						Guarde suas peças favoritas para encontrá-las
+						novamente quando quiser.
+					</p>
+				</div>
+
+				<!-- PRODUTOS -->
+				<div class="row g-4">
+
+					<!-- ANEL AURELIAN -->
+					<div class="col-md-6 col-lg-4">
+						<div class="product-card h-100">
+							<div class="product-image position-relative">
+								<img
+									src="../images/product-thumb-01.jpg"
+									alt="Anel Aurelian"
+									class="img-fluid w-100"
+								>
+
+								<button
+									type="button"
+									class="product-wishlist active"
+									aria-label="Remover Anel Aurelian da lista de desejos"
+									title="Remover dos favoritos"
+								>
+									<i class="bi bi-heart-fill"></i>
+								</button>
 							</div>
 
-							<h1 class="section-title mb-3">
-								Bem-vindo de volta
-							</h1>
+							<div class="p-4">
+								<div class="small text-muted mb-2">Anéis</div>
 
-							<p class="section-text">
-								Entre na sua conta para acompanhar seus
-								pedidos e acessar seus favoritos.
-							</p>
-						</div>
+								<h4 class="mb-2">
+									Anel Aurelian
+								</h4>
 
-						<!-- FORMULÁRIO -->
-						<div
-							class="p-4 p-md-5"
-							style="
-								background: #fff;
-								border: 1px solid var(--border);
-							"
-						>
-							<form id="loginForm">
-
-								<!-- E-MAIL -->
-								<div class="mb-4">
-									<label
-										for="email"
-										class="form-label fw-semibold"
-									>
-										E-mail
-									</label>
-
-									<input
-										type="email"
-										class="form-control rounded-0 py-3"
-										id="email"
-										name="email"
-										placeholder="seuemail@email.com"
-										required
-									>
+								<div class="fw-semibold mb-4">
+									R$ 4.200,00
 								</div>
 
-								<!-- SENHA -->
-								<div class="mb-3">
-									<label
-										for="password"
-										class="form-label fw-semibold"
-									>
-										Senha
-									</label>
-
-									<div class="input-group">
-										<input
-											type="password"
-											class="form-control rounded-0 py-3"
-											id="password"
-											name="password"
-											placeholder="Digite sua senha"
-											required
-										>
-
-										<button
-											class="btn btn-outline-secondary rounded-0"
-											type="button"
-											id="togglePassword"
-											aria-label="Mostrar senha"
-										>
-											<i class="bi bi-eye"></i>
-										</button>
-									</div>
-								</div>
-
-								<!-- LEMBRAR / ESQUECI -->
-								<div class="d-flex justify-content-between align-items-center mb-4">
-									<div class="form-check">
-										<input
-											class="form-check-input"
-											type="checkbox"
-											id="remember"
-										>
-
-										<label
-											class="form-check-label small text-muted"
-											for="remember"
-										>
-											Lembrar de mim
-										</label>
-									</div>
-
-									<a
-										href="#"
-										class="small text-decoration-none"
-									>
-										Esqueci minha senha
-									</a>
-								</div>
-
-								<!-- BOTÃO -->
 								<button
-									type="submit"
-									class="btn btn-gold w-100 py-3"
+									type="button"
+									class="btn btn-gold w-100 add-cart"
 								>
-									Entrar
+									<i class="bi bi-bag me-2"></i>
+									Adicionar ao carrinho
 								</button>
+							</div>
+						</div>
+					</div>
 
-								<!-- CADASTRO -->
-								<div class="text-center mt-4">
-									<span class="text-muted">
-										Ainda não possui uma conta?
-									</span>
+					<!-- BRINCOS TUSCAN MIST -->
+					<div class="col-md-6 col-lg-4">
+						<div class="product-card h-100">
+							<div class="product-image position-relative">
+								<img
+									src="../images/product-thumb-02.jpg"
+									alt="Brincos Tuscan Mist"
+									class="img-fluid w-100"
+								>
 
-									<a
-										href="cadastro.html"
-										class="fw-semibold text-decoration-none"
-									>
-										Cadastrar-se
-									</a>
+								<button
+									type="button"
+									class="product-wishlist active"
+									aria-label="Remover Brincos Tuscan Mist da lista de desejos"
+									title="Remover dos favoritos"
+								>
+									<i class="bi bi-heart-fill"></i>
+								</button>
+							</div>
+
+							<div class="p-4">
+								<div class="small text-muted mb-2">Brincos</div>
+
+								<h4 class="mb-2">
+									Brincos Tuscan Mist
+								</h4>
+
+								<div class="fw-semibold mb-4">
+									R$ 2.850,00
 								</div>
 
-							</form>
+								<button
+									type="button"
+									class="btn btn-gold w-100 add-cart"
+								>
+									<i class="bi bi-bag me-2"></i>
+									Adicionar ao carrinho
+								</button>
+							</div>
 						</div>
-
-						<!-- SEGURANÇA -->
-						<div class="text-center mt-4">
-							<small class="text-muted">
-								<i class="bi bi-shield-check me-1"></i>
-								Seus dados estão protegidos.
-							</small>
-						</div>
-
 					</div>
+
+					<!-- ESTADO VAZIO -->
+					<div id="emptyWishlist" class="col-12 text-center py-5 d-none">
+						<i class="bi bi-heart fs-1 text-muted"></i>
+
+						<h3 class="display-font mt-4 mb-3">
+							Sua lista está vazia
+						</h3>
+
+						<p class="text-muted mb-4">
+							Adicione suas peças favoritas para encontrá-las
+							facilmente depois.
+						</p>
+
+						<a href="produtos.html" class="btn btn-gold">
+							Explorar produtos
+						</a>
+					</div>
+
 				</div>
 			</div>
 		</section>
@@ -424,9 +409,7 @@
 
 			<div class="row justify-content-center">
 				<div class="col-lg-9">
-					<div class="section-label">
-						Pesquisar produtos
-					</div>
+					<div class="section-label">Pesquisar produtos</div>
 
 					<div class="input-group">
 						<input
@@ -437,18 +420,13 @@
 							id="searchInput"
 						>
 
-						<button
-							class="btn btn-dark px-4"
-							type="button"
-						>
+						<button class="btn btn-dark px-4" type="button">
 							<i class="bi bi-search"></i>
 						</button>
 					</div>
 
 					<div class="mt-5">
-						<p class="text-muted small mb-3">
-							Sugestões
-						</p>
+						<p class="text-muted small mb-3">Sugestões</p>
 
 						<div class="d-flex flex-wrap gap-2">
 							<a
@@ -500,10 +478,7 @@
 		aria-labelledby="cartCanvasLabel"
 	>
 		<div class="offcanvas-header border-bottom">
-			<h5
-				class="offcanvas-title display-font"
-				id="cartCanvasLabel"
-			>
+			<h5 class="offcanvas-title display-font" id="cartCanvasLabel">
 				Seu carrinho
 			</h5>
 
@@ -527,13 +502,8 @@
 					</div>
 
 					<div class="flex-grow-1">
-						<h6 class="mb-1">
-							Anel Aurelian
-						</h6>
-
-						<small class="text-muted">
-							Quantidade: 1
-						</small>
+						<h6 class="mb-1">Anel Aurelian</h6>
+						<small class="text-muted">Quantidade: 1</small>
 
 						<div class="fw-semibold mt-2">
 							R$ 4.200,00
@@ -550,13 +520,8 @@
 					</div>
 
 					<div class="flex-grow-1">
-						<h6 class="mb-1">
-							Brincos Tuscan Mist
-						</h6>
-
-						<small class="text-muted">
-							Quantidade: 1
-						</small>
+						<h6 class="mb-1">Brincos Tuscan Mist</h6>
+						<small class="text-muted">Quantidade: 1</small>
 
 						<div class="fw-semibold mt-2">
 							R$ 2.850,00
@@ -568,13 +533,8 @@
 
 			<div class="mt-auto pt-4">
 				<div class="d-flex justify-content-between mb-3">
-					<span class="text-muted">
-						Subtotal
-					</span>
-
-					<strong>
-						R$ 7.050,00
-					</strong>
+					<span class="text-muted">Subtotal</span>
+					<strong id="cartTotal">R$ 7.050,00</strong>
 				</div>
 
 				<a
@@ -585,7 +545,7 @@
 				</a>
 
 				<a
-					href="carrinho.html"
+					href="#"
 					class="btn btn-outline-dark rounded-0 w-100 py-3"
 				>
 					Ver carrinho
@@ -595,11 +555,9 @@
 	</div>
 
 	<!-- BOOTSTRAP JS -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-	></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-	<!-- JS -->
+	<!-- SCRIPTS -->
 	<script>
 		// NAVBAR
 		const navbar = document.getElementById("mainNavbar");
@@ -612,29 +570,42 @@
 			}
 		});
 
-		// MOSTRAR / ESCONDER SENHA
-		const togglePassword = document.getElementById("togglePassword");
-		const password = document.getElementById("password");
+		// LISTA DE DESEJOS
+		document.querySelectorAll(".product-wishlist").forEach((button) => {
+			button.addEventListener("click", () => {
+				button.classList.toggle("active");
 
-		togglePassword.addEventListener("click", () => {
-			const isPassword = password.type === "password";
+				const icon = button.querySelector("i");
 
-			password.type = isPassword ? "text" : "password";
-
-			const icon = togglePassword.querySelector("i");
-
-			icon.classList.toggle("bi-eye", !isPassword);
-			icon.classList.toggle("bi-eye-slash", isPassword);
+				if (button.classList.contains("active")) {
+					icon.classList.remove("bi-heart");
+					icon.classList.add("bi-heart-fill");
+				} else {
+					icon.classList.remove("bi-heart-fill");
+					icon.classList.add("bi-heart");
+				}
+			});
 		});
 
-		// LOGIN DEMONSTRATIVO
-		document
-			.getElementById("loginForm")
-			.addEventListener("submit", (event) => {
-				event.preventDefault();
+		// CARRINHO DEMONSTRATIVO
+		let cartCount = 2;
 
-				alert("Login realizado com sucesso!");
+		document.querySelectorAll(".add-cart").forEach((button) => {
+			button.addEventListener("click", () => {
+				cartCount++;
+
+				document.getElementById("cartBadge").textContent = cartCount;
+
+				const originalText = button.innerHTML;
+
+				button.innerHTML =
+					'<i class="bi bi-check2 me-1"></i> Adicionado';
+
+				setTimeout(() => {
+					button.innerHTML = originalText;
+				}, 1500);
 			});
+		});
 	</script>
 
 </body>
