@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Hero() {
     return (
         <section className="hero">
@@ -21,16 +23,19 @@ function Hero() {
                     </p>
 
                     <div className="d-flex gap-3">
-                        <a href="/produtos" className="btn btn-gold">
+                        <Link
+                            to="/produtos"
+                            className="btn btn-gold"
+                        >
                             Ver produtos
-                        </a>
+                        </Link>
 
-                        <a
-                            href="/sobre"
+                        <Link
+                            to="/sobre"
                             className="btn btn-outline-light-custom"
                         >
                             Conheça a Adornatta
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

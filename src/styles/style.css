@@ -219,7 +219,7 @@ a {
             rgba(30, 27, 23, .72),
             rgba(30, 27, 23, .16)
         ),
-        url("../../assets/images/banner.jpg") center / cover;
+        url("../../assets/images/banner.jpg") center / auto;
 }
 
 .hero-content {
