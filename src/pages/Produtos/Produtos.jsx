@@ -22,7 +22,7 @@ function Produtos() {
             descricao:
                 "Delicadeza e versatilidade em uma única peça.",
             preco: "R$ 39,99",
-            imagem: "/assets/images/image-01.jpg",
+            imagem: "/assets/images/brinco_2_em_1.jpeg",
             tag: "Destaque"
         },
         {
@@ -32,7 +32,7 @@ function Produtos() {
             descricao:
                 "Uma peça delicada para completar seu estilo.",
             preco: "R$ 24,99",
-            imagem: "/assets/images/image-02.jpg"
+            imagem: "/assets/images/brinco_flores.jpeg"
         },
         {
             id: 3,
@@ -41,7 +41,7 @@ function Produtos() {
             descricao:
                 "Elegância e significado em uma combinação especial.",
             preco: "R$ 49,99",
-            imagem: "/assets/images/image-03.jpg"
+            imagem: "/assets/images/conjunto_cruz.jpeg"
         },
         {
             id: 4,
@@ -50,7 +50,7 @@ function Produtos() {
             descricao:
                 "Delicadeza e brilho para diferentes ocasiões.",
             preco: "R$ 59,99",
-            imagem: "/assets/images/image-01.jpg"
+            imagem: "/assets/images/conjunto_ponto_de_luz.jpeg"
         },
         {
             id: 5,
@@ -59,7 +59,7 @@ function Produtos() {
             descricao:
                 "Um toque delicado de brilho para o seu visual.",
             preco: "R$ 34,99",
-            imagem: "/assets/images/image-02.jpg"
+            imagem: "/assets/images/pulseira_ponto_de_luz.jpeg"
         },
         {
             id: 6,
@@ -68,7 +68,7 @@ function Produtos() {
             descricao:
                 "Uma peça delicada e versátil para o dia a dia.",
             preco: "R$ 34,99",
-            imagem: "/assets/images/image-03.jpg"
+            imagem: "/assets/images/bracelete_fino.jpeg"
         },
         {
             id: 7,
@@ -77,7 +77,7 @@ function Produtos() {
             descricao:
                 "Delicadeza e feminilidade em uma peça especial.",
             preco: "R$ 24,99",
-            imagem: "/assets/images/image-01.jpg"
+            imagem: "/assets/images/brinco_flor.jpeg"
         },
         {
             id: 8,
@@ -86,7 +86,7 @@ function Produtos() {
             descricao:
                 "Um modelo moderno para destacar seu estilo.",
             preco: "R$ 34,99",
-            imagem: "/assets/images/image-02.jpg"
+            imagem: "/assets/images/brinco_argola_tripla.jpeg"
         },
         {
             id: 9,
@@ -95,7 +95,7 @@ function Produtos() {
             descricao:
                 "Design minimalista e elegante.",
             preco: "R$ 59,99",
-            imagem: "/assets/images/image-03.jpg"
+            imagem: "/assets/images/bracelete_liso.jpeg"
         },
         {
             id: 10,
@@ -104,7 +104,7 @@ function Produtos() {
             descricao:
                 "Uma peça moderna para complementar diferentes looks.",
             preco: "R$ 39,99",
-            imagem: "/assets/images/image-01.jpg"
+            imagem: "/assets/images/choker_medalhas.jpeg"
         },
         {
             id: 11,
@@ -113,7 +113,7 @@ function Produtos() {
             descricao:
                 "Delicadeza e personalidade em um design especial.",
             preco: "R$ 44,99",
-            imagem: "/assets/images/image-02.jpg"
+            imagem: "/assets/images/gravatinha_medalhas.jpeg"
         }
     ];
 

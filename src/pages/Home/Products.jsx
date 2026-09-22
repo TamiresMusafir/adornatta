@@ -7,7 +7,7 @@ function Products() {
             nome: "Brinco 2 em 1",
             descricao: "Delicadeza e versatilidade em uma única peça.",
             preco: "R$ 39,99",
-            imagem: "/assets/images/image-01.jpg",
+            imagem: "/assets/images/brinco_2_em_1.jpeg",
             tag: "Destaque"
         },
         {
@@ -15,14 +15,14 @@ function Products() {
             nome: "Brinco Flores",
             descricao: "Uma peça delicada para completar seu estilo.",
             preco: "R$ 24,99",
-            imagem: "/assets/images/image-02.jpg"
+            imagem: "/assets/images/brinco_flores.jpeg"
         },
         {
             id: 3,
             nome: "Conjunto Cruz",
             descricao: "Elegância e significado em uma combinação especial.",
             preco: "R$ 49,99",
-            imagem: "/assets/images/image-03.jpg"
+            imagem: "/assets/images/conjunto_cruz.jpeg"
         }
     ];
 

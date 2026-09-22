@@ -28,7 +28,7 @@ function Highlight() {
 
                     <div className="col-lg-6">
                         <img
-                            src="/assets/images/image-01.jpg"
+                            src="/assets/images/colecao_02.jpeg"
                             alt="Coleção em destaque"
                             className="img-fluid w-100"
                         />

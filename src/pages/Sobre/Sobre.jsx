@@ -103,14 +103,6 @@ function Sobre() {
                                         alt="Semijoias Adornatta"
                                     />
 
-                                    <div className="about-detail">
-                                        <strong>Adornatta</strong>
-
-                                        <p className="small text-muted mb-0">
-                                            Beleza, cuidado e personalidade em cada peça.
-                                        </p>
-                                    </div>
-
                                 </div>
                             </div>
 

@@ -8,17 +8,9 @@ function About() {
                     <div className="col-lg-6">
                         <div className="about-image">
                             <img
-                                src="/assets/images/image-03.jpg"
+                                src="/assets/images/colecao_01.jpg"
                                 alt="Semijoias Adornatta"
                             />
-
-                            <div className="about-detail">
-                                <strong>Adornatta</strong>
-
-                                <p className="small text-muted mb-0">
-                                    Beleza, cuidado e personalidade em cada peça.
-                                </p>
-                            </div>
                         </div>
                     </div>
 
