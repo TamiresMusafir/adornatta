@@ -479,6 +479,48 @@ a {
 
 
 /* =========================
+   FILTRO DE CATEGORIAS
+========================= */
+
+.product-filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-bottom: 3rem;
+}
+
+.product-filter {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--brown);
+    padding: .7rem 1.4rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: all .25s ease;
+}
+
+.product-filter:hover {
+    background: var(--cream);
+    color: var(--gold-dark);
+    border-color: var(--gold);
+}
+
+.product-filter.active {
+    background: var(--brown);
+    color: #fff;
+    border-color: var(--brown);
+}
+
+.product-filter.active:hover {
+    background: var(--gold-dark);
+    border-color: var(--gold-dark);
+}
+
+
+/* =========================
    ABOUT / SOBRE
 ========================= */
 
@@ -507,6 +549,23 @@ a {
     font-size: 2.3rem;
     font-weight: 400;
     color: var(--gold-dark);
+}
+
+
+/* =========================
+   PÁGINA SOBRE
+========================= */
+
+.about-page .section-soft {
+    background: var(--cream);
+}
+
+.about-page .section-text {
+    line-height: 1.8;
+}
+
+.about-page .section-label {
+    margin-bottom: .8rem;
 }
 
 
@@ -544,6 +603,30 @@ a {
     font-size: .88rem;
     line-height: 1.7;
     margin: 0;
+}
+
+
+/* =========================
+   EXPERIÊNCIA
+========================= */
+
+.about-experience .service-card {
+    min-height: 100%;
+}
+
+
+/* =========================
+   CHAMADA FINAL
+========================= */
+
+.about-cta {
+    text-align: center;
+}
+
+.about-cta .section-text {
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
@@ -637,6 +720,10 @@ footer a {
     .about-detail {
         right: 15px;
     }
+
+    .about-image img {
+        height: 500px;
+    }
 }
 
 
@@ -656,5 +743,31 @@ footer a {
 
     .category-card {
         height: 300px;
+    }
+
+    .about-image img {
+        height: 400px;
+    }
+
+    .about-detail {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        margin-top: -1px;
+    }
+
+    .service-card {
+        padding: 1.5rem;
+    }
+
+    .product-filters {
+        gap: .5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .product-filter {
+        padding: .65rem 1rem;
+        font-size: .68rem;
     }
 }

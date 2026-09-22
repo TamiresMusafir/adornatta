@@ -23,10 +23,7 @@ function Hero() {
                     </p>
 
                     <div className="d-flex gap-3">
-                        <Link
-                            to="/produtos"
-                            className="btn btn-gold"
-                        >
+                        <Link to="/produtos" className="btn btn-gold">
                             Ver produtos
                         </Link>
 

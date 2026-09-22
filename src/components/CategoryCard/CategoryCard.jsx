@@ -1,7 +1,12 @@
+import { Link } from "react-router-dom";
+
 function CategoryCard({ numero, nome, imagem }) {
     return (
         <article className="col-md-4">
-            <a href="/produtos" className="category-card">
+            <Link
+                to={`/produtos?categoria=${nome}`}
+                className="category-card"
+            >
                 <img
                     src={imagem}
                     alt={nome}
@@ -17,7 +22,7 @@ function CategoryCard({ numero, nome, imagem }) {
                         <i className="bi bi-arrow-right ms-1"></i>
                     </span>
                 </div>
-            </a>
+            </Link>
         </article>
     );
 }
