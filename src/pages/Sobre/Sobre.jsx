@@ -99,7 +99,7 @@ function Sobre() {
                                 <div className="about-image">
 
                                     <img
-                                        src="/assets/images/image-03.jpg"
+                                        src="/assets/images/colecao_01.jpg"
                                         alt="Semijoias Adornatta"
                                     />
 
