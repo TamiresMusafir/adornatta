@@ -8,20 +8,20 @@ function Header() {
         <>
             <header>
 
-                <section className="topbar">
+                {/* <section className="topbar">
                     <p>
                       
                     </p>
-                </section>
+                </section> */}
 
                 <nav
                     className="navbar navbar-expand-lg main-navbar sticky-top"
                     aria-label="Navegação principal"
                 >
-                    <section className="container">
+                    <section className="container-fluid d-flex align-items-center justify-content-between px-3 px-lg-4">
 
                         <Link
-                            className="navbar-brand"
+                            className="navbar-brand brand mb-0"
                             to="/"
                         >
                             Adornatta
@@ -40,11 +40,11 @@ function Header() {
                         </button>
 
                         <section
-                            className="collapse navbar-collapse"
+                            className="collapse navbar-collapse justify-content-between align-items-center"
                             id="navbarContent"
                         >
 
-                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            <ul className="navbar-nav mx-auto mb-0 align-items-center">
 
                                 <li className="nav-item">
                                     <Link
@@ -66,15 +66,16 @@ function Header() {
 
                                 <li className="nav-item dropdown">
                                     <button
-                                        className="nav-link dropdown-toggle"
+                                        className="nav-link dropdown-toggle categories-dropdown-btn"
                                         type="button"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                     >
-                                        Categorias
+                                        <span>Categorias</span>
+                                        <i className="bi bi-chevron-down dropdown-arrow"></i>
                                     </button>
 
-                                    <ul className="dropdown-menu">
+                                    <ul className="dropdown-menu categories-menu border-0 shadow-sm">
                                         <li>
                                             <Link
                                                 className="dropdown-item"
@@ -133,11 +134,11 @@ function Header() {
 
                             </ul>
 
-                            <section className="d-flex align-items-center gap-3">
+                            <section className="d-flex align-items-center gap-1">
 
                                 <button
                                     type="button"
-                                    className="btn btn-link"
+                                    className="nav-icon"
                                     data-bs-toggle="offcanvas"
                                     data-bs-target="#searchOffcanvas"
                                     aria-controls="searchOffcanvas"
@@ -148,7 +149,7 @@ function Header() {
 
                                 <Link
                                     to="/login"
-                                    className="btn btn-link"
+                                    className="nav-icon"
                                     aria-label="Minha conta"
                                 >
                                     <i className="bi bi-person"></i>
@@ -156,7 +157,7 @@ function Header() {
 
                                 <Link
                                     to="/listaDesejo"
-                                    className="btn btn-link"
+                                    className="nav-icon"
                                     aria-label="Lista de desejos"
                                 >
                                     <i className="bi bi-heart"></i>
@@ -164,7 +165,7 @@ function Header() {
 
                                 <button
                                     type="button"
-                                    className="btn btn-link position-relative"
+                                    className="nav-icon"
                                     data-bs-toggle="offcanvas"
                                     data-bs-target="#cartOffcanvas"
                                     aria-controls="cartOffcanvas"
