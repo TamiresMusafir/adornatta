@@ -2,7 +2,7 @@
 
 ## Informações do Projeto
 
-**Nome do projeto:**Loja Virtual Adornatta
+**Nome do projeto:** Loja Virtual Adornatta
 
 **Descrição:**  
 A Adornatta é uma loja virtual de semijoias desenvolvida para oferecer uma experiência de compra simples e organizada. A aplicação permite consultar o catálogo de produtos, visualizar informações das peças, navegar por categorias e filtrar os produtos disponíveis. A proposta da marca é unir beleza, qualidade, personalidade, conforto e elegância.
