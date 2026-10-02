@@ -1,13 +1,36 @@
+import { Link } from "react-router-dom";
+
+import { useWishlist } from "../../context/WishlistContext";
+
 function ProductCard({
+    id,
     nome,
     descricao,
     preco,
     imagem,
     tag
 }) {
+    const {
+        alternarFavorito,
+        estaNosFavoritos
+    } = useWishlist();
+
+    const favorito = estaNosFavoritos(id);
+
+    function alternarProdutoFavorito() {
+        alternarFavorito({
+            id,
+            nome,
+            descricao,
+            preco,
+            imagem,
+            tag
+        });
+    }
+
     return (
-        <article className="col-md-4">
-            <div className="product-card">
+        <div className="col-md-4">
+            <article className="product-card">
 
                 <div className="product-image">
 
@@ -18,11 +41,24 @@ function ProductCard({
                     )}
 
                     <button
-                        className="product-wishlist"
+                        className={`product-wishlist ${
+                            favorito ? "active" : ""
+                        }`}
                         type="button"
-                        aria-label={`Adicionar ${nome} aos favoritos`}
+                        aria-label={
+                            favorito
+                                ? `Remover ${nome} dos favoritos`
+                                : `Adicionar ${nome} aos favoritos`
+                        }
+                        onClick={alternarProdutoFavorito}
                     >
-                        <i className="bi bi-heart"></i>
+                        <i
+                            className={
+                                favorito
+                                    ? "bi bi-heart-fill"
+                                    : "bi bi-heart"
+                            }
+                        ></i>
                     </button>
 
                     <img
@@ -40,12 +76,20 @@ function ProductCard({
                     {descricao}
                 </p>
 
-                <span className="product-price">
+                <span className="product-price d-block mb-3">
                     {preco}
                 </span>
 
-            </div>
-        </article>
+                <Link
+                    to={`/produtos/${id}`}
+                    className="btn btn-outline-dark rounded-0"
+                >
+                    Ver detalhes
+                    <i className="bi bi-arrow-right ms-2"></i>
+                </Link>
+
+            </article>
+        </div>
     );
 }
 

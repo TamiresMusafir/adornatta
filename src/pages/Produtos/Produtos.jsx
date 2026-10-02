@@ -120,6 +120,7 @@ function Produtos() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const categoriaDaUrl = searchParams.get("categoria");
+    const buscaDaUrl = searchParams.get("busca") || "";
 
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(
         categorias.includes(categoriaDaUrl)
@@ -140,22 +141,38 @@ function Produtos() {
     function selecionarCategoria(categoria) {
         setCategoriaSelecionada(categoria);
 
-        if (categoria === "Todos") {
-            setSearchParams({});
-            return;
+        const novosParametros = {};
+
+        if (categoria !== "Todos") {
+            novosParametros.categoria = categoria;
         }
 
-        setSearchParams({
-            categoria: categoria
-        });
+        if (buscaDaUrl) {
+            novosParametros.busca = buscaDaUrl;
+        }
+
+        setSearchParams(novosParametros);
     }
 
-    const produtosFiltrados = produtos.filter((produto) => {
-        if (categoriaSelecionada === "Todos") {
-            return true;
-        }
+    const buscaNormalizada = buscaDaUrl
+        .toLowerCase()
+        .trim();
 
-        return produto.categoria === categoriaSelecionada;
+    const produtosFiltrados = produtos.filter((produto) => {
+        const correspondeCategoria =
+            categoriaSelecionada === "Todos" ||
+            produto.categoria === categoriaSelecionada;
+
+        const correspondeBusca =
+            !buscaNormalizada ||
+            produto.nome.toLowerCase().includes(buscaNormalizada) ||
+            produto.descricao.toLowerCase().includes(buscaNormalizada) ||
+            produto.categoria.toLowerCase().includes(buscaNormalizada);
+
+        return (
+            correspondeCategoria &&
+            correspondeBusca
+        );
     });
 
     return (
@@ -181,6 +198,17 @@ function Produtos() {
                             </p>
                         </header>
 
+                        {buscaDaUrl && (
+                            <div className="text-center mb-4">
+                                <p className="section-text mb-0">
+                                    Resultados para:
+                                    <strong className="ms-2">
+                                        "{buscaDaUrl}"
+                                    </strong>
+                                </p>
+                            </div>
+                        )}
+
                         <nav
                             className="product-filters"
                             aria-label="Filtrar produtos por categoria"
@@ -203,21 +231,51 @@ function Produtos() {
                             ))}
                         </nav>
 
-                        <section
-                            className="row g-4"
-                            aria-label="Lista de produtos"
-                        >
-                            {produtosFiltrados.map((produto) => (
-                                <ProductCard
-                                    key={produto.id}
-                                    nome={produto.nome}
-                                    descricao={produto.descricao}
-                                    preco={produto.preco}
-                                    imagem={produto.imagem}
-                                    tag={produto.tag}
-                                />
-                            ))}
-                        </section>
+                        {produtosFiltrados.length > 0 ? (
+                            <section
+                                className="row g-4"
+                                aria-label="Lista de produtos"
+                            >
+                                {produtosFiltrados.map((produto) => (
+                                    <ProductCard
+                                        key={produto.id}
+                                        id={produto.id}
+                                        nome={produto.nome}
+                                        descricao={produto.descricao}
+                                        preco={produto.preco}
+                                        imagem={produto.imagem}
+                                        tag={produto.tag}
+                                    />
+                                ))}
+                            </section>
+                        ) : (
+                            <section className="text-center py-5">
+
+                                <span className="section-label">
+                                    Nenhum resultado
+                                </span>
+
+                                <h2 className="section-title mb-3">
+                                    Não encontramos produtos.
+                                </h2>
+
+                                <p className="section-text mb-4">
+                                    Tente pesquisar por outro termo ou
+                                    selecione uma categoria diferente.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-gold"
+                                    onClick={() =>
+                                        setSearchParams({})
+                                    }
+                                >
+                                    Ver todos os produtos
+                                </button>
+
+                            </section>
+                        )}
 
                     </div>
                 </section>

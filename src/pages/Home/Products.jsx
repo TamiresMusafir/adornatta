@@ -39,19 +39,13 @@ function Products() {
                             Peças para você
                         </h2>
                     </div>
-
-                    <div className="col-lg-5">
-                        <p className="section-text mb-0">
-                            Conheça algumas das nossas peças e encontre
-                            aquela que combina com seu estilo.
-                        </p>
-                    </div>
                 </div>
 
                 <div className="row g-4">
                     {produtos.map((produto) => (
                         <ProductCard
                             key={produto.id}
+                            id={produto.id}
                             nome={produto.nome}
                             descricao={produto.descricao}
                             preco={produto.preco}
