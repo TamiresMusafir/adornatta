@@ -192,5 +192,14 @@
       "quantidade": 1,
       "id": "sAQ8wFODlmE"
     }
-  ]
+  ],
+  "usuarios": [
+    {
+        "id": "1",
+        "nome": "Administrador",
+        "email": "admin@adornatta.com",
+        "senha": "123456",
+        "perfil": "admin"
+    }
+]
 }

@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 import Home from "./pages/Home/Home";
 import Sobre from "./pages/Sobre/Sobre";
@@ -14,57 +16,76 @@ import Checkout from "./pages/Checkout/Checkout";
 import Contato from "./pages/Contato/Contato";
 import AcompanharPedido from "./pages/AcompanharPedido/AcompanharPedido";
 
+import Login from "./pages/Login/Login";
+import Dashboard from "./pages/Admin/Dashboard/Dashboard";
+
 function App() {
     return (
-        <WishlistProvider>
-            <CartProvider>
-                <BrowserRouter>
-                    <ScrollToTop />
+        <AuthProvider>
+            <WishlistProvider>
+                <CartProvider>
+                    <BrowserRouter>
+                        <ScrollToTop />
 
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<Home />}
-                        />
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={<Home />}
+                            />
 
-                        <Route
-                            path="/sobre"
-                            element={<Sobre />}
-                        />
+                            <Route
+                                path="/sobre"
+                                element={<Sobre />}
+                            />
 
-                        <Route
-                            path="/produtos"
-                            element={<Produtos />}
-                        />
+                            <Route
+                                path="/produtos"
+                                element={<Produtos />}
+                            />
 
-                        <Route
-                            path="/produtos/:id"
-                            element={<ProdutoDetalhes />}
-                        />
+                            <Route
+                                path="/produtos/:id"
+                                element={<ProdutoDetalhes />}
+                            />
 
-                        <Route
-                            path="/listaDesejo"
-                            element={<ListaDesejo />}
-                        />
+                            <Route
+                                path="/listaDesejo"
+                                element={<ListaDesejo />}
+                            />
 
-                        <Route
-                            path="/checkout"
-                            element={<Checkout />}
-                        />
+                            <Route
+                                path="/checkout"
+                                element={<Checkout />}
+                            />
 
-                        <Route
-                            path="/contato"
-                            element={<Contato />}
-                        />
+                            <Route
+                                path="/contato"
+                                element={<Contato />}
+                            />
 
-                        <Route
-                            path="/pedidos/:id"
-                            element={<AcompanharPedido />}
-                        />
-                    </Routes>
-                </BrowserRouter>
-            </CartProvider>
-        </WishlistProvider>
+                            <Route
+                                path="/pedidos/:id"
+                                element={<AcompanharPedido />}
+                            />
+
+                            <Route
+                                path="/login"
+                                element={<Login />}
+                            />
+
+                            <Route
+                                path="/admin"
+                                element={
+                                    <ProtectedRoute>
+                                        <Dashboard />
+                                    </ProtectedRoute>
+                                }
+                            />
+                        </Routes>
+                    </BrowserRouter>
+                </CartProvider>
+            </WishlistProvider>
+        </AuthProvider>
     );
 }
 
