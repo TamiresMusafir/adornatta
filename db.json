@@ -153,6 +153,18 @@
       "valorTotal": 24.99,
       "status": "Em análise",
       "id": "bsPHAunjABo"
+    },
+    {
+      "data": "2026-10-03T16:52:01.166Z",
+      "valorTotal": 39.99,
+      "status": "Em análise",
+      "id": "XnroB1OoV_M"
+    },
+    {
+      "data": "2026-10-03T17:12:43.077Z",
+      "valorTotal": 24.99,
+      "status": "Em análise",
+      "id": "9CXcFZMfD9E"
     }
   ],
   "itensPedido": [
@@ -167,7 +179,18 @@
       "produtoId": "2",
       "quantidade": 1,
       "id": "oX2Y4rsVNWM"
+    },
+    {
+      "pedidoId": "XnroB1OoV_M",
+      "produtoId": "1",
+      "quantidade": 1,
+      "id": "-B0kiJbITKk"
+    },
+    {
+      "pedidoId": "9CXcFZMfD9E",
+      "produtoId": "2",
+      "quantidade": 1,
+      "id": "sAQ8wFODlmE"
     }
   ]
-  
 }

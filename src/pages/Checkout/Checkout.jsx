@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -12,32 +13,22 @@ import {
     criarItemPedido
 } from "../../services/api";
 
+import checkoutSchema from "../../schemas/checkoutSchema";
+
 function Checkout() {
+    const { carrinho } = useCart();
     const navigate = useNavigate();
 
+    const [enviandoPedido, setEnviandoPedido] = useState(false);
+    const [erroPedido, setErroPedido] = useState("");
+
     const {
-        carrinho
-    } = useCart();
-
-    const [enviandoPedido, setEnviandoPedido] =
-        useState(false);
-
-    const [erroPedido, setErroPedido] =
-        useState("");
-
-    const [dadosCliente, setDadosCliente] =
-        useState({
-            nome: "",
-            email: "",
-            telefone: "",
-            cep: "",
-            endereco: "",
-            numero: "",
-            complemento: "",
-            cidade: "",
-            estado: "",
-            pagamento: "Pix"
-        });
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm({
+        resolver: zodResolver(checkoutSchema)
+    });
 
     const total = carrinho.reduce(
         (soma, produto) =>
@@ -47,31 +38,7 @@ function Checkout() {
         0
     );
 
-    function formatarPreco(preco) {
-        return Number(preco).toLocaleString(
-            "pt-BR",
-            {
-                style: "currency",
-                currency: "BRL"
-            }
-        );
-    }
-
-    function alterarCampo(event) {
-        const {
-            name,
-            value
-        } = event.target;
-
-        setDadosCliente((dadosAtuais) => ({
-            ...dadosAtuais,
-            [name]: value
-        }));
-    }
-
-    async function finalizarPedido(event) {
-        event.preventDefault();
-
+    async function finalizarPedido() {
         setEnviandoPedido(true);
         setErroPedido("");
 
@@ -101,42 +68,41 @@ function Checkout() {
         }
     }
 
+    function formatarPreco(preco) {
+        return Number(preco).toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
+    }
+
     if (carrinho.length === 0) {
         return (
             <>
                 <Header />
 
-                <main>
-                    <section className="section">
-                        <div className="container">
+                <main className="container py-5">
+                    <div className="text-center py-5">
+                        <i className="bi bi-cart-x display-4"></i>
 
-                            <div className="text-center py-5">
+                        <h1 className="mt-3">
+                            Seu carrinho está vazio
+                        </h1>
 
-                                <span className="section-label">
-                                    Checkout
-                                </span>
+                        <p className="text-muted">
+                            Adicione produtos ao carrinho
+                            antes de finalizar seu pedido.
+                        </p>
 
-                                <h1 className="section-title mb-3">
-                                    Seu carrinho está vazio.
-                                </h1>
-
-                                <p className="section-text mb-4">
-                                    Adicione pelo menos um produto
-                                    antes de finalizar seu pedido.
-                                </p>
-
-                                <Link
-                                    to="/produtos"
-                                    className="btn btn-gold"
-                                >
-                                    Ver produtos
-                                    <i className="bi bi-arrow-right ms-2"></i>
-                                </Link>
-
-                            </div>
-
-                        </div>
-                    </section>
+                        <Link
+                            to="/produtos"
+                            className="btn btn-dark mt-3"
+                        >
+                            Ver produtos
+                        </Link>
+                    </div>
                 </main>
 
                 <Footer />
@@ -148,417 +114,305 @@ function Checkout() {
         <>
             <Header />
 
-            <main>
+            <main className="container py-5">
+                <div className="mb-5">
+                    <h1>Finalizar pedido</h1>
+                    <p className="text-muted">
+                        Preencha seus dados para concluir
+                        seu pedido.
+                    </p>
+                </div>
 
-                <section className="section">
-                    <div className="container">
+                {erroPedido && (
+                    <div
+                        className="alert alert-danger"
+                        role="alert"
+                    >
+                        {erroPedido}
+                    </div>
+                )}
 
-                        <header className="text-center mb-5">
+                <div className="row g-5">
+                    <div className="col-lg-7">
+                        <form
+                            onSubmit={handleSubmit(
+                                finalizarPedido
+                            )}
+                        >
+                            <h2 className="h4 mb-4">
+                                Dados para entrega
+                            </h2>
 
-                            <span className="section-label">
-                                Finalização
-                            </span>
-
-                            <h1 className="section-title">
-                                Finalize seu pedido
-                            </h1>
-
-                            <p className="section-text">
-                                Confira seus produtos e preencha
-                                os dados para finalizar a compra.
-                            </p>
-
-                        </header>
-
-                        <div className="row g-5">
-
-                            <div className="col-lg-7">
-
-                                <form
-                                    className="checkout-form"
-                                    onSubmit={finalizarPedido}
+                            <div className="mb-3">
+                                <label
+                                    htmlFor="nome"
+                                    className="form-label"
                                 >
+                                    Nome completo
+                                </label>
 
-                                    <section className="checkout-section">
+                                <input
+                                    id="nome"
+                                    type="text"
+                                    className={`form-control ${
+                                        errors.nome
+                                            ? "is-invalid"
+                                            : ""
+                                    }`}
+                                    {...register("nome")}
+                                />
 
-                                        <h2>
-                                            Dados pessoais
-                                        </h2>
-
-                                        <div className="row g-3">
-
-                                            <div className="col-12">
-
-                                                <label
-                                                    htmlFor="nome"
-                                                    className="form-label"
-                                                >
-                                                    Nome completo
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="nome"
-                                                    name="nome"
-                                                    value={
-                                                        dadosCliente.nome
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                            <div className="col-md-6">
-
-                                                <label
-                                                    htmlFor="email"
-                                                    className="form-label"
-                                                >
-                                                    E-mail
-                                                </label>
-
-                                                <input
-                                                    type="email"
-                                                    className="form-control"
-                                                    id="email"
-                                                    name="email"
-                                                    value={
-                                                        dadosCliente.email
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                            <div className="col-md-6">
-
-                                                <label
-                                                    htmlFor="telefone"
-                                                    className="form-label"
-                                                >
-                                                    Telefone
-                                                </label>
-
-                                                <input
-                                                    type="tel"
-                                                    className="form-control"
-                                                    id="telefone"
-                                                    name="telefone"
-                                                    value={
-                                                        dadosCliente.telefone
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                        </div>
-
-                                    </section>
-
-                                    <section className="checkout-section">
-
-                                        <h2>
-                                            Endereço de entrega
-                                        </h2>
-
-                                        <div className="row g-3">
-
-                                            <div className="col-md-4">
-
-                                                <label
-                                                    htmlFor="cep"
-                                                    className="form-label"
-                                                >
-                                                    CEP
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="cep"
-                                                    name="cep"
-                                                    value={
-                                                        dadosCliente.cep
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                            <div className="col-md-8">
-
-                                                <label
-                                                    htmlFor="endereco"
-                                                    className="form-label"
-                                                >
-                                                    Endereço
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="endereco"
-                                                    name="endereco"
-                                                    value={
-                                                        dadosCliente.endereco
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                            <div className="col-md-4">
-
-                                                <label
-                                                    htmlFor="numero"
-                                                    className="form-label"
-                                                >
-                                                    Número
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="numero"
-                                                    name="numero"
-                                                    value={
-                                                        dadosCliente.numero
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                            <div className="col-md-8">
-
-                                                <label
-                                                    htmlFor="complemento"
-                                                    className="form-label"
-                                                >
-                                                    Complemento
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="complemento"
-                                                    name="complemento"
-                                                    value={
-                                                        dadosCliente.complemento
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                />
-
-                                            </div>
-
-                                            <div className="col-md-8">
-
-                                                <label
-                                                    htmlFor="cidade"
-                                                    className="form-label"
-                                                >
-                                                    Cidade
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="cidade"
-                                                    name="cidade"
-                                                    value={
-                                                        dadosCliente.cidade
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                            <div className="col-md-4">
-
-                                                <label
-                                                    htmlFor="estado"
-                                                    className="form-label"
-                                                >
-                                                    Estado
-                                                </label>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="estado"
-                                                    name="estado"
-                                                    value={
-                                                        dadosCliente.estado
-                                                    }
-                                                    onChange={
-                                                        alterarCampo
-                                                    }
-                                                    required
-                                                />
-
-                                            </div>
-
-                                        </div>
-
-                                    </section>
-
-                                    <section className="checkout-section">
-
-                                        <h2>
-                                            Forma de pagamento
-                                        </h2>
-
-                                        <div>
-
-                                            <label
-                                                htmlFor="pagamento"
-                                                className="form-label"
-                                            >
-                                                Escolha uma opção
-                                            </label>
-
-                                            <select
-                                                className="form-select"
-                                                id="pagamento"
-                                                name="pagamento"
-                                                value={
-                                                    dadosCliente.pagamento
-                                                }
-                                                onChange={
-                                                    alterarCampo
-                                                }
-                                            >
-                                                <option value="Pix">
-                                                    Pix
-                                                </option>
-
-                                                <option value="Cartão de crédito">
-                                                    Cartão de crédito
-                                                </option>
-
-                                                <option value="Boleto">
-                                                    Boleto
-                                                </option>
-                                            </select>
-
-                                        </div>
-
-                                    </section>
-
-                                    {erroPedido && (
-                                        <div
-                                            className="alert alert-danger"
-                                            role="alert"
-                                        >
-                                            {erroPedido}
-                                        </div>
-                                    )}
-
-                                    <button
-                                        type="submit"
-                                        className="btn btn-gold w-100"
-                                        disabled={enviandoPedido}
-                                    >
-                                        {enviandoPedido
-                                            ? "Registrando pedido..."
-                                            : "Finalizar pedido"}
-
-                                        {!enviandoPedido && (
-                                            <i className="bi bi-check-lg ms-2"></i>
-                                        )}
-                                    </button>
-
-                                </form>
-
+                                {errors.nome && (
+                                    <div className="invalid-feedback">
+                                        {
+                                            errors.nome
+                                                .message
+                                        }
+                                    </div>
+                                )}
                             </div>
 
-                            <aside className="col-lg-5">
+                            <div className="mb-3">
+                                <label
+                                    htmlFor="email"
+                                    className="form-label"
+                                >
+                                    E-mail
+                                </label>
 
-                                <section className="checkout-summary">
+                                <input
+                                    id="email"
+                                    type="email"
+                                    className={`form-control ${
+                                        errors.email
+                                            ? "is-invalid"
+                                            : ""
+                                    }`}
+                                    {...register("email")}
+                                />
 
-                                    <h2>
-                                        Resumo do pedido
-                                    </h2>
-
-                                    <div className="checkout-products">
-
-                                        {carrinho.map((produto) => (
-                                            <article
-                                                className="checkout-product"
-                                                key={produto.id}
-                                            >
-
-                                                <img
-                                                    src={produto.imagem}
-                                                    alt={produto.nome}
-                                                />
-
-                                                <div>
-
-                                                    <h3>
-                                                        {produto.nome}
-                                                    </h3>
-
-                                                    <p>
-                                                        {produto.quantidade}x{" "}
-                                                        {formatarPreco(
-                                                            produto.preco
-                                                        )}
-                                                    </p>
-
-                                                </div>
-
-                                            </article>
-                                        ))}
-
+                                {errors.email && (
+                                    <div className="invalid-feedback">
+                                        {
+                                            errors.email
+                                                .message
+                                        }
                                     </div>
+                                )}
+                            </div>
 
-                                    <div className="checkout-total">
+                            <div className="mb-3">
+                                <label
+                                    htmlFor="telefone"
+                                    className="form-label"
+                                >
+                                    Telefone
+                                </label>
 
-                                        <span>
-                                            Total
-                                        </span>
+                                <input
+                                    id="telefone"
+                                    type="tel"
+                                    className={`form-control ${
+                                        errors.telefone
+                                            ? "is-invalid"
+                                            : ""
+                                    }`}
+                                    {...register("telefone")}
+                                />
 
+                                {errors.telefone && (
+                                    <div className="invalid-feedback">
+                                        {
+                                            errors.telefone
+                                                .message
+                                        }
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-3">
+                                <label
+                                    htmlFor="endereco"
+                                    className="form-label"
+                                >
+                                    Endereço
+                                </label>
+
+                                <input
+                                    id="endereco"
+                                    type="text"
+                                    className={`form-control ${
+                                        errors.endereco
+                                            ? "is-invalid"
+                                            : ""
+                                    }`}
+                                    {...register("endereco")}
+                                />
+
+                                {errors.endereco && (
+                                    <div className="invalid-feedback">
+                                        {
+                                            errors.endereco
+                                                .message
+                                        }
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="row g-3">
+                                <div className="col-md-8">
+                                    <label
+                                        htmlFor="cidade"
+                                        className="form-label"
+                                    >
+                                        Cidade
+                                    </label>
+
+                                    <input
+                                        id="cidade"
+                                        type="text"
+                                        className={`form-control ${
+                                            errors.cidade
+                                                ? "is-invalid"
+                                                : ""
+                                        }`}
+                                        {...register(
+                                            "cidade"
+                                        )}
+                                    />
+
+                                    {errors.cidade && (
+                                        <div className="invalid-feedback">
+                                            {
+                                                errors
+                                                    .cidade
+                                                    .message
+                                            }
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="col-md-4">
+                                    <label
+                                        htmlFor="estado"
+                                        className="form-label"
+                                    >
+                                        Estado
+                                    </label>
+
+                                    <input
+                                        id="estado"
+                                        type="text"
+                                        className={`form-control ${
+                                            errors.estado
+                                                ? "is-invalid"
+                                                : ""
+                                        }`}
+                                        {...register(
+                                            "estado"
+                                        )}
+                                    />
+
+                                    {errors.estado && (
+                                        <div className="invalid-feedback">
+                                            {
+                                                errors
+                                                    .estado
+                                                    .message
+                                            }
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="mt-3 mb-4">
+                                <label
+                                    htmlFor="cep"
+                                    className="form-label"
+                                >
+                                    CEP
+                                </label>
+
+                                <input
+                                    id="cep"
+                                    type="text"
+                                    className={`form-control ${
+                                        errors.cep
+                                            ? "is-invalid"
+                                            : ""
+                                    }`}
+                                    {...register("cep")}
+                                />
+
+                                {errors.cep && (
+                                    <div className="invalid-feedback">
+                                        {
+                                            errors.cep
+                                                .message
+                                        }
+                                    </div>
+                                )}
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="btn btn-dark w-100"
+                                disabled={enviandoPedido}
+                            >
+                                {enviandoPedido
+                                    ? "Finalizando pedido..."
+                                    : "Finalizar pedido"}
+                            </button>
+                        </form>
+                    </div>
+
+                    <div className="col-lg-5">
+                        <div className="border rounded p-4">
+                            <h2 className="h4 mb-4">
+                                Resumo do pedido
+                            </h2>
+
+                            {carrinho.map((produto) => (
+                                <div
+                                    key={produto.id}
+                                    className="d-flex justify-content-between gap-3 mb-3"
+                                >
+                                    <div>
                                         <strong>
-                                            {formatarPreco(total)}
+                                            {produto.nome}
                                         </strong>
 
+                                        <div className="text-muted small">
+                                            Quantidade:{" "}
+                                            {
+                                                produto.quantidade
+                                            }
+                                        </div>
                                     </div>
 
-                                </section>
+                                    <span>
+                                        {formatarPreco(
+                                            Number(
+                                                produto.preco
+                                            ) *
+                                                produto.quantidade
+                                        )}
+                                    </span>
+                                </div>
+                            ))}
 
-                            </aside>
+                            <hr />
 
+                            <div className="d-flex justify-content-between">
+                                <strong>Total</strong>
+
+                                <strong>
+                                    {formatarPreco(total)}
+                                </strong>
+                            </div>
                         </div>
-
                     </div>
-                </section>
-
+                </div>
             </main>
 
             <Footer />
