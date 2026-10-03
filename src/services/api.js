@@ -182,6 +182,75 @@ async function criarUsuario(usuario) {
     return resposta.json();
 }
 
+async function buscarPedidos() {
+    const resposta = await fetch(`${API_URL}/pedidos`);
+
+    if (!resposta.ok) {
+        throw new Error(
+            "Não foi possível carregar os pedidos."
+        );
+    }
+
+    return resposta.json();
+}
+
+async function atualizarPedido(id, dados) {
+    const resposta = await fetch(
+        `${API_URL}/pedidos/${id}`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        }
+    );
+
+    if (!resposta.ok) {
+        throw new Error(
+            "Não foi possível atualizar o pedido."
+        );
+    }
+
+    return resposta.json();
+}
+
+async function buscarVendas() {
+    const resposta = await fetch(
+        `${API_URL}/vendas`
+    );
+
+    if (!resposta.ok) {
+        throw new Error(
+            "Não foi possível carregar as vendas."
+        );
+    }
+
+    return resposta.json();
+}
+
+
+async function criarVenda(venda) {
+    const resposta = await fetch(
+        `${API_URL}/vendas`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(venda)
+        }
+    );
+
+    if (!resposta.ok) {
+        throw new Error(
+            "Não foi possível registrar a venda."
+        );
+    }
+
+    return resposta.json();
+}
+
 export {
     buscarProdutos,
     buscarProdutoPorId,
@@ -195,5 +264,9 @@ export {
     criarUsuario,
     atualizarProduto,
     criarProduto,
-    excluirProduto
+    excluirProduto,
+    buscarPedidos,
+    atualizarPedido,
+    buscarVendas,
+    criarVenda
 };

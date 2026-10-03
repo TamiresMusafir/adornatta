@@ -25,7 +25,7 @@
       "preco": 39.99,
       "material": "Semijoia",
       "tipoBanho": "Ouro 18K",
-      "quantidadeDisponivel": 1,
+      "quantidadeDisponivel": 0,
       "imagem": "/assets/images/brinco_2_em_1.jpeg",
       "categoriaId": 1,
       "tag": "Destaque"
@@ -207,6 +207,19 @@
       "senha": "123456",
       "perfil": "cliente",
       "id": "O47a1BFJTRg"
+    }
+  ],
+  "vendas": [
+    {
+      "cliente": "Jubileu",
+      "data": "2026-10-03",
+      "produtoId": "1",
+      "quantidade": 1,
+      "formaPagamento": "Pix",
+      "valorUnitario": 39.99,
+      "valorTotal": 39.99,
+      "observacoes": "",
+      "id": "Yxlpl_h59ZM"
     }
   ]
 }
