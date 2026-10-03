@@ -1,22 +1,34 @@
-import { createContext, useContext, useState } from "react";
+import {
+    createContext,
+    useContext,
+    useState
+} from "react";
+
 import { buscarUsuario } from "../services/api";
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
     const [usuario, setUsuario] = useState(() => {
-        const usuarioSalvo = localStorage.getItem("adornattaUsuario");
+        const usuarioSalvo =
+            localStorage.getItem(
+                "adornattaUsuario"
+            );
 
-        return usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+        return usuarioSalvo
+            ? JSON.parse(usuarioSalvo)
+            : null;
     });
 
     async function login(email, senha) {
-        const usuarioEncontrado = await buscarUsuario(email, senha);
-
-        console.log("Usuário encontrado:", usuarioEncontrado);
+        const usuarioEncontrado =
+            await buscarUsuario(
+                email,
+                senha
+            );
 
         if (!usuarioEncontrado) {
-            return false;
+            return null;
         }
 
         setUsuario(usuarioEncontrado);
@@ -26,12 +38,15 @@ function AuthProvider({ children }) {
             JSON.stringify(usuarioEncontrado)
         );
 
-        return true;
+        return usuarioEncontrado;
     }
 
     function logout() {
         setUsuario(null);
-        localStorage.removeItem("adornattaUsuario");
+
+        localStorage.removeItem(
+            "adornattaUsuario"
+        );
     }
 
     return (
@@ -52,4 +67,7 @@ function useAuth() {
     return useContext(AuthContext);
 }
 
-export { AuthProvider, useAuth };
+export {
+    AuthProvider,
+    useAuth
+};

@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-
 import { useAuth } from "../../context/AuthContext";
 
 const loginSchema = z.object({
@@ -21,17 +20,26 @@ const loginSchema = z.object({
 
 function Login() {
     const navigate = useNavigate();
+
     const { login } = useAuth();
 
-    const [erroLogin, setErroLogin] = useState("");
-    const [entrando, setEntrando] = useState(false);
+    const [erroLogin, setErroLogin] =
+        useState("");
+
+    const [entrando, setEntrando] =
+        useState(false);
 
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm({
-        resolver: zodResolver(loginSchema)
+        resolver: zodResolver(loginSchema),
+
+        defaultValues: {
+            email: "",
+            senha: ""
+        }
     });
 
     async function realizarLogin(dados) {
@@ -39,23 +47,29 @@ function Login() {
         setErroLogin("");
 
         try {
-            const sucesso = await login(
+            const usuario = await login(
                 dados.email,
                 dados.senha
             );
 
-            if (!sucesso) {
+            if (!usuario) {
                 setErroLogin(
                     "E-mail ou senha inválidos."
                 );
+
                 return;
             }
 
-            navigate("/admin");
+            if (usuario.perfil === "admin") {
+                navigate("/admin");
+                return;
+            }
+
+            navigate("/");
         } catch (erro) {
             setErroLogin(
                 erro.message ||
-                "Não foi possível realizar o login."
+                    "Não foi possível realizar o login."
             );
         } finally {
             setEntrando(false);
@@ -72,17 +86,18 @@ function Login() {
                         <div className="border bg-white p-4 p-md-5">
                             <div className="text-center mb-4">
                                 <div className="section-label mb-2">
-                                    Área administrativa
+                                    Acesso à loja
                                 </div>
 
                                 <i className="bi bi-person-circle display-5"></i>
 
                                 <h1 className="display-font mt-3 mb-2">
-                                    Acesso à loja
+                                    Entrar
                                 </h1>
 
                                 <p className="text-muted mb-0">
-                                    Entre para acessar o painel administrativo da Adornatta.
+                                    Entre na sua conta para
+                                    continuar.
                                 </p>
                             </div>
 
@@ -122,7 +137,8 @@ function Login() {
                                     {errors.email && (
                                         <div className="invalid-feedback">
                                             {
-                                                errors.email
+                                                errors
+                                                    .email
                                                     .message
                                             }
                                         </div>
@@ -151,7 +167,8 @@ function Login() {
                                     {errors.senha && (
                                         <div className="invalid-feedback">
                                             {
-                                                errors.senha
+                                                errors
+                                                    .senha
                                                     .message
                                             }
                                         </div>
@@ -168,6 +185,25 @@ function Login() {
                                         : "Entrar"}
                                 </button>
                             </form>
+
+                            <div className="text-center mt-4">
+                                <p className="text-muted mb-2">
+                                    Ainda não possui uma conta?
+                                </p>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-dark w-100"
+                                    onClick={() =>
+                                        navigate(
+                                            "/cadastro"
+                                        )
+                                    }
+                                >
+                                    <i className="bi bi-person-plus me-2"></i>
+                                    Criar conta
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

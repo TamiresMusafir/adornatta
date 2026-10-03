@@ -52,6 +52,18 @@ async function buscarUsuario(email, senha) {
     return usuarioEncontrado || null;
 }
 
+async function buscarUsuarios() {
+    const resposta = await fetch(`${API_URL}/usuarios`);
+
+    if (!resposta.ok) {
+        throw new Error(
+            "Não foi possível carregar os usuários."
+        );
+    }
+
+    return resposta.json();
+}
+
 async function criarPedido(pedido) {
     const resposta = await fetch(`${API_URL}/pedidos`, {
         method: "POST",
@@ -110,13 +122,78 @@ async function buscarItensPedido(pedidoId) {
     return resposta.json();
 }
 
+async function atualizarProduto(id, produto) {
+    const resposta = await fetch(`${API_URL}/produtos/${id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(produto)
+    });
+
+    if (!resposta.ok) {
+        throw new Error("Não foi possível atualizar o produto.");
+    }
+
+    return resposta.json();
+}
+
+async function criarProduto(produto) {
+    const resposta = await fetch(`${API_URL}/produtos`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(produto)
+    });
+
+    if (!resposta.ok) {
+        throw new Error("Não foi possível cadastrar o produto.");
+    }
+
+    return resposta.json();
+}
+
+async function excluirProduto(id) {
+    const resposta = await fetch(`${API_URL}/produtos/${id}`, {
+        method: "DELETE"
+    });
+
+    if (!resposta.ok) {
+        throw new Error("Não foi possível excluir o produto.");
+    }
+
+    return true;
+}
+
+async function criarUsuario(usuario) {
+    const resposta = await fetch(`${API_URL}/usuarios`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(usuario)
+    });
+
+    if (!resposta.ok) {
+        throw new Error("Não foi possível criar a conta.");
+    }
+
+    return resposta.json();
+}
+
 export {
     buscarProdutos,
     buscarProdutoPorId,
     buscarCategorias,
-    buscarUsuario,
     criarPedido,
     criarItemPedido,
     buscarPedidoPorId,
-    buscarItensPedido
+    buscarItensPedido,
+    buscarUsuario,
+    buscarUsuarios,
+    criarUsuario,
+    atualizarProduto,
+    criarProduto,
+    excluirProduto
 };
