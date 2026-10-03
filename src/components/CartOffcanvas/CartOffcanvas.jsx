@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useCart } from "../../context/CartContext";
 
 function CartOffcanvas() {
+    const navigate = useNavigate();
+
     const {
         carrinho,
         removerDoCarrinho,
@@ -11,14 +13,48 @@ function CartOffcanvas() {
 
     const total = carrinho.reduce(
         (soma, produto) =>
-            soma + Number(
+            soma +
+            Number(
                 produto.preco
                     .replace("R$", "")
                     .replace(".", "")
                     .replace(",", ".")
-            ) * produto.quantidade,
+            ) *
+                produto.quantidade,
         0
     );
+
+    function fecharOffcanvas() {
+        const offcanvas = document.getElementById("cartOffcanvas");
+
+        if (offcanvas && window.bootstrap) {
+            const instancia =
+                window.bootstrap.Offcanvas.getInstance(offcanvas);
+
+            if (instancia) {
+                instancia.hide();
+            }
+        }
+
+        document
+            .querySelectorAll(".offcanvas-backdrop")
+            .forEach((elemento) => elemento.remove());
+
+        document.body.classList.remove("offcanvas-backdrop");
+        document.body.classList.remove("modal-open");
+        document.body.style.removeProperty("overflow");
+        document.body.style.removeProperty("padding-right");
+    }
+
+    function irParaProdutos() {
+        fecharOffcanvas();
+        navigate("/produtos");
+    }
+
+    function irParaCheckout() {
+        fecharOffcanvas();
+        navigate("/checkout");
+    }
 
     return (
         <aside
@@ -28,6 +64,7 @@ function CartOffcanvas() {
             aria-labelledby="cartOffcanvasLabel"
         >
             <header className="offcanvas-header">
+
                 <h2
                     className="offcanvas-title"
                     id="cartOffcanvasLabel"
@@ -41,23 +78,26 @@ function CartOffcanvas() {
                     data-bs-dismiss="offcanvas"
                     aria-label="Fechar"
                 ></button>
+
             </header>
 
             <section className="offcanvas-body">
 
                 {carrinho.length === 0 ? (
                     <div>
+
                         <p className="text-muted">
                             Seu carrinho está vazio.
                         </p>
 
-                        <Link
-                            to="/produtos"
+                        <button
+                            type="button"
                             className="btn btn-gold"
-                            data-bs-dismiss="offcanvas"
+                            onClick={irParaProdutos}
                         >
                             Ver produtos
-                        </Link>
+                        </button>
+
                     </div>
                 ) : (
                     <div>
@@ -67,6 +107,7 @@ function CartOffcanvas() {
                                 key={produto.id}
                                 className="cart-item"
                             >
+
                                 <img
                                     src={produto.imagem}
                                     alt={produto.nome}
@@ -126,10 +167,12 @@ function CartOffcanvas() {
                                     </button>
 
                                 </div>
+
                             </article>
                         ))}
 
                         <div className="cart-total">
+
                             <span>
                                 Total
                             </span>
@@ -137,14 +180,24 @@ function CartOffcanvas() {
                             <strong>
                                 R$ {total.toFixed(2).replace(".", ",")}
                             </strong>
+
                         </div>
 
-                        <Link
-                            to="/checkout"
+                        <button
+                            type="button"
                             className="btn btn-gold w-100 mt-4"
+                            onClick={irParaCheckout}
                         >
                             Finalizar pedido
-                        </Link>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="btn btn-outline-dark rounded-0 w-100 mt-3"
+                            onClick={irParaProdutos}
+                        >
+                            Continuar comprando
+                        </button>
 
                     </div>
                 )}

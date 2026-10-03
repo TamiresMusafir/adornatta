@@ -921,3 +921,250 @@ footer a {
 .wishlist-remove:hover {
     color: #a34848;
 }
+
+.checkout-section {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    background: #fff;
+}
+
+.checkout-title {
+    font-family: "Playfair Display", serif;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.checkout-section .form-label {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--brown);
+}
+
+.checkout-section .form-control {
+    border-radius: 0;
+    border-color: var(--border);
+    padding: .8rem 1rem;
+}
+
+.checkout-section .form-control:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 .15rem rgba(176, 138, 87, .12);
+}
+
+.checkout-payment-option {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    height: 100%;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color .25s ease,
+                background .25s ease;
+}
+
+.checkout-payment-option:hover {
+    border-color: var(--gold);
+    background: var(--cream);
+}
+
+.checkout-payment-option input {
+    margin-top: .25rem;
+    accent-color: var(--gold-dark);
+}
+
+.checkout-payment-option span {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.checkout-payment-option strong {
+    font-size: .9rem;
+}
+
+.checkout-payment-option small {
+    color: var(--text-muted);
+    font-size: .75rem;
+}
+
+.checkout-summary {
+    padding: 2rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    position: sticky;
+    top: 100px;
+}
+
+.checkout-products {
+    margin-top: 1.5rem;
+}
+
+.checkout-product {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.checkout-product img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: #fff;
+    padding: .5rem;
+}
+
+.checkout-product h3 {
+    font-size: 1rem;
+    margin-bottom: .35rem;
+}
+
+.checkout-product p {
+    color: var(--text-muted);
+    font-size: .75rem;
+    margin-bottom: .35rem;
+}
+
+.checkout-product strong {
+    color: var(--gold-dark);
+    font-family: "Playfair Display", serif;
+}
+
+.checkout-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    margin-top: .5rem;
+    font-size: 1.1rem;
+}
+
+.checkout-total strong {
+    color: var(--gold-dark);
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+}
+
+.checkout-success-icon {
+    font-size: 4rem;
+    color: var(--gold-dark);
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 991.98px) {
+    .checkout-summary {
+        position: static;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .checkout-section,
+    .checkout-summary {
+        padding: 1.5rem;
+    }
+
+    .checkout-payment-option {
+        padding: .85rem;
+    }
+
+    .checkout-product img {
+        width: 65px;
+        height: 65px;
+    }
+}
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-info-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.contact-info-icon {
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+    color: var(--gold-dark);
+    font-size: 1.2rem;
+}
+
+.contact-info-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: .35rem;
+}
+
+.contact-info-item p {
+    color: var(--text-muted);
+    font-size: .85rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.contact-form {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    background: #fff;
+}
+
+.contact-form .form-label {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--brown);
+}
+
+.contact-form .form-control {
+    border-radius: 0;
+    border-color: var(--border);
+    padding: .8rem 1rem;
+}
+
+.contact-form textarea.form-control {
+    resize: vertical;
+}
+
+.contact-form .form-control:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 .15rem rgba(176, 138, 87, .12);
+}
+
+.contact-success {
+    padding: 3rem 1rem;
+}
+
+.contact-success-icon {
+    font-size: 4rem;
+    color: var(--gold-dark);
+    margin-bottom: 1.5rem;
+}
+
+.contact-success h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.contact-success p {
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+@media (max-width: 575.98px) {
+    .contact-form {
+        padding: 1.5rem;
+    }
+
+    .contact-success {
+        padding: 2rem .5rem;
+    }
+}

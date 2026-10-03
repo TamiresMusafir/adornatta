@@ -10,6 +10,8 @@ import Sobre from "./pages/Sobre/Sobre";
 import Produtos from "./pages/Produtos/Produtos";
 import ProdutoDetalhes from "./pages/ProdutoDetalhes/ProdutoDetalhes";
 import ListaDesejo from "./pages/ListaDesejo/ListaDesejo";
+import Checkout from "./pages/Checkout/Checkout";
+import Contato from "./pages/Contato/Contato";
 
 function App() {
     return (
@@ -44,6 +46,16 @@ function App() {
                         <Route
                             path="/listaDesejo"
                             element={<ListaDesejo />}
+                        />
+
+                        <Route
+                            path="/checkout"
+                            element={<Checkout />}
+                        />
+    
+                        <Route
+                            path="/contato"
+                            element={<Contato />}
                         />
 
                     </Routes>

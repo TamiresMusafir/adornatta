@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import Toast from "../../components/Toast/Toast";
 
 function Produtos() {
     const categorias = [
@@ -119,6 +120,9 @@ function Produtos() {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const [toastVisivel, setToastVisivel] = useState(false);
+    const [mensagemToast, setMensagemToast] = useState("");
+
     const categoriaDaUrl = searchParams.get("categoria");
     const buscaDaUrl = searchParams.get("busca") || "";
 
@@ -152,6 +156,11 @@ function Produtos() {
         }
 
         setSearchParams(novosParametros);
+    }
+
+    function mostrarToast(mensagem) {
+        setMensagemToast(mensagem);
+        setToastVisivel(true);
     }
 
     const buscaNormalizada = buscaDaUrl
@@ -245,6 +254,9 @@ function Produtos() {
                                         preco={produto.preco}
                                         imagem={produto.imagem}
                                         tag={produto.tag}
+                                        onFavoritoAlterado={
+                                            mostrarToast
+                                        }
                                     />
                                 ))}
                             </section>
@@ -280,6 +292,12 @@ function Produtos() {
                     </div>
                 </section>
             </main>
+
+            <Toast
+                mensagem={mensagemToast}
+                visivel={toastVisivel}
+                onFechar={() => setToastVisivel(false)}
+            />
 
             <Footer />
         </>
