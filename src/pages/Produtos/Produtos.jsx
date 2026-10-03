@@ -1,146 +1,56 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import Toast from "../../components/Toast/Toast";
+
+import {
+    buscarProdutos,
+    buscarCategorias
+} from "../../services/api";
 
 function Produtos() {
-    const categorias = [
-        "Todos",
-        "Brincos",
-        "Conjuntos",
-        "Pulseiras",
-        "Cordões"
-    ];
-
-    const produtos = [
-        {
-            id: 1,
-            nome: "Brinco 2 em 1",
-            categoria: "Brincos",
-            descricao:
-                "Delicadeza e versatilidade em uma única peça.",
-            preco: "R$ 39,99",
-            imagem: "/assets/images/brinco_2_em_1.jpeg",
-            tag: "Destaque"
-        },
-        {
-            id: 2,
-            nome: "Brinco Flores",
-            categoria: "Brincos",
-            descricao:
-                "Uma peça delicada para completar seu estilo.",
-            preco: "R$ 24,99",
-            imagem: "/assets/images/brinco_flores.jpeg"
-        },
-        {
-            id: 3,
-            nome: "Conjunto Cruz",
-            categoria: "Conjuntos",
-            descricao:
-                "Elegância e significado em uma combinação especial.",
-            preco: "R$ 49,99",
-            imagem: "/assets/images/conjunto_cruz.jpeg"
-        },
-        {
-            id: 4,
-            nome: "Conjunto Ponto de Luz",
-            categoria: "Conjuntos",
-            descricao:
-                "Delicadeza e brilho para diferentes ocasiões.",
-            preco: "R$ 59,99",
-            imagem: "/assets/images/conjunto_ponto_de_luz.jpeg"
-        },
-        {
-            id: 5,
-            nome: "Pulseira Ponto de Luz",
-            categoria: "Pulseiras",
-            descricao:
-                "Um toque delicado de brilho para o seu visual.",
-            preco: "R$ 34,99",
-            imagem: "/assets/images/pulseira_ponto_de_luz.jpeg"
-        },
-        {
-            id: 6,
-            nome: "Bracelete Fino",
-            categoria: "Pulseiras",
-            descricao:
-                "Uma peça delicada e versátil para o dia a dia.",
-            preco: "R$ 34,99",
-            imagem: "/assets/images/bracelete_fino.jpeg"
-        },
-        {
-            id: 7,
-            nome: "Brinco Flor",
-            categoria: "Brincos",
-            descricao:
-                "Delicadeza e feminilidade em uma peça especial.",
-            preco: "R$ 24,99",
-            imagem: "/assets/images/brinco_flor.jpeg"
-        },
-        {
-            id: 8,
-            nome: "Brinco de Argola Tripla",
-            categoria: "Brincos",
-            descricao:
-                "Um modelo moderno para destacar seu estilo.",
-            preco: "R$ 34,99",
-            imagem: "/assets/images/brinco_argola_tripla.jpeg"
-        },
-        {
-            id: 9,
-            nome: "Bracelete Liso",
-            categoria: "Pulseiras",
-            descricao:
-                "Design minimalista e elegante.",
-            preco: "R$ 59,99",
-            imagem: "/assets/images/bracelete_liso.jpeg"
-        },
-        {
-            id: 10,
-            nome: "Choker Medalhas",
-            categoria: "Cordões",
-            descricao:
-                "Uma peça moderna para complementar diferentes looks.",
-            preco: "R$ 39,99",
-            imagem: "/assets/images/choker_medalhas.jpeg"
-        },
-        {
-            id: 11,
-            nome: "Gravatinha de Medalhas",
-            categoria: "Cordões",
-            descricao:
-                "Delicadeza e personalidade em um design especial.",
-            preco: "R$ 44,99",
-            imagem: "/assets/images/gravatinha_medalhas.jpeg"
-        }
-    ];
-
     const [searchParams, setSearchParams] = useSearchParams();
-
-    const [toastVisivel, setToastVisivel] = useState(false);
-    const [mensagemToast, setMensagemToast] = useState("");
 
     const categoriaDaUrl = searchParams.get("categoria");
     const buscaDaUrl = searchParams.get("busca") || "";
 
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState(
-        categorias.includes(categoriaDaUrl)
-            ? categoriaDaUrl
-            : "Todos"
-    );
+    const [categoriaSelecionada, setCategoriaSelecionada] =
+        useState("Todos");
+
+    const {
+        data: produtos = [],
+        isLoading: produtosCarregando,
+        isError: produtosComErro
+    } = useQuery({
+        queryKey: ["produtos"],
+        queryFn: buscarProdutos
+    });
+
+    const {
+        data: categorias = [],
+        isLoading: categoriasCarregando,
+        isError: categoriasComErro
+    } = useQuery({
+        queryKey: ["categorias"],
+        queryFn: buscarCategorias
+    });
 
     useEffect(() => {
-        const categoriaValida = categorias.includes(categoriaDaUrl);
-
-        setCategoriaSelecionada(
-            categoriaValida
-                ? categoriaDaUrl
-                : "Todos"
+        const categoriaExiste = categorias.some(
+            (categoria) =>
+                categoria.nome === categoriaDaUrl
         );
-    }, [categoriaDaUrl]);
+
+        if (categoriaExiste) {
+            setCategoriaSelecionada(categoriaDaUrl);
+            return;
+        }
+
+        setCategoriaSelecionada("Todos");
+    }, [categoriaDaUrl, categorias]);
 
     function selecionarCategoria(categoria) {
         setCategoriaSelecionada(categoria);
@@ -158,41 +68,59 @@ function Produtos() {
         setSearchParams(novosParametros);
     }
 
-    function mostrarToast(mensagem) {
-        setMensagemToast(mensagem);
-        setToastVisivel(true);
-    }
+    const categoriaSelecionadaObj =
+        categorias.find(
+            (categoria) =>
+                categoria.nome === categoriaSelecionada
+        );
 
     const buscaNormalizada = buscaDaUrl
         .toLowerCase()
         .trim();
 
-    const produtosFiltrados = produtos.filter((produto) => {
-        const correspondeCategoria =
-            categoriaSelecionada === "Todos" ||
-            produto.categoria === categoriaSelecionada;
+    const produtosFiltrados = produtos.filter(
+        (produto) => {
 
-        const correspondeBusca =
-            !buscaNormalizada ||
-            produto.nome.toLowerCase().includes(buscaNormalizada) ||
-            produto.descricao.toLowerCase().includes(buscaNormalizada) ||
-            produto.categoria.toLowerCase().includes(buscaNormalizada);
+            const correspondeCategoria =
+                categoriaSelecionada === "Todos" ||
+                Number(produto.categoriaId) ===
+                    Number(categoriaSelecionadaObj?.id);
 
-        return (
-            correspondeCategoria &&
-            correspondeBusca
-        );
-    });
+            const correspondeBusca =
+                !buscaNormalizada ||
+                produto.nome
+                    .toLowerCase()
+                    .includes(buscaNormalizada) ||
+                produto.descricao
+                    .toLowerCase()
+                    .includes(buscaNormalizada);
+
+            return (
+                correspondeCategoria &&
+                correspondeBusca
+            );
+        }
+    );
+
+    const carregando =
+        produtosCarregando ||
+        categoriasCarregando;
+
+    const erro =
+        produtosComErro ||
+        categoriasComErro;
 
     return (
         <>
             <Header />
 
             <main>
+
                 <section className="section">
                     <div className="container">
 
                         <header className="text-center mb-5">
+
                             <span className="section-label">
                                 Nossa coleção
                             </span>
@@ -205,60 +133,134 @@ function Produtos() {
                                 Explore nossas semijoias e encontre a peça
                                 ideal para o seu estilo.
                             </p>
+
                         </header>
 
                         {buscaDaUrl && (
                             <div className="text-center mb-4">
+
                                 <p className="section-text mb-0">
                                     Resultados para:
+
                                     <strong className="ms-2">
                                         "{buscaDaUrl}"
                                     </strong>
                                 </p>
+
                             </div>
                         )}
 
-                        <nav
-                            className="product-filters"
-                            aria-label="Filtrar produtos por categoria"
-                        >
-                            {categorias.map((categoria) => (
+                        {!carregando && !erro && (
+                            <nav
+                                className="product-filters"
+                                aria-label="Filtrar produtos por categoria"
+                            >
                                 <button
-                                    key={categoria}
                                     type="button"
                                     className={`product-filter ${
-                                        categoriaSelecionada === categoria
+                                        categoriaSelecionada ===
+                                        "Todos"
                                             ? "active"
                                             : ""
                                     }`}
                                     onClick={() =>
-                                        selecionarCategoria(categoria)
+                                        selecionarCategoria(
+                                            "Todos"
+                                        )
                                     }
                                 >
-                                    {categoria}
+                                    Todos
                                 </button>
-                            ))}
-                        </nav>
 
-                        {produtosFiltrados.length > 0 ? (
+                                {categorias.map(
+                                    (categoria) => (
+                                        <button
+                                            key={categoria.id}
+                                            type="button"
+                                            className={`product-filter ${
+                                                categoriaSelecionada ===
+                                                categoria.nome
+                                                    ? "active"
+                                                    : ""
+                                            }`}
+                                            onClick={() =>
+                                                selecionarCategoria(
+                                                    categoria.nome
+                                                )
+                                            }
+                                        >
+                                            {categoria.nome}
+                                        </button>
+                                    )
+                                )}
+                            </nav>
+                        )}
+
+                        {carregando ? (
+                            <section
+                                className="text-center py-5"
+                                aria-live="polite"
+                            >
+
+                                <span className="section-label">
+                                    Aguarde
+                                </span>
+
+                                <h2 className="section-title mb-3">
+                                    Carregando produtos...
+                                </h2>
+
+                                <p className="section-text mb-0">
+                                    Estamos buscando nossa coleção.
+                                </p>
+
+                            </section>
+                        ) : erro ? (
+                            <section
+                                className="text-center py-5"
+                                aria-live="assertive"
+                            >
+
+                                <span className="section-label">
+                                    Erro
+                                </span>
+
+                                <h2 className="section-title mb-3">
+                                    Não foi possível carregar o catálogo.
+                                </h2>
+
+                                <p className="section-text mb-0">
+                                    Verifique se o servidor da aplicação
+                                    está funcionando e tente novamente.
+                                </p>
+
+                            </section>
+                        ) : produtosFiltrados.length > 0 ? (
                             <section
                                 className="row g-4"
                                 aria-label="Lista de produtos"
                             >
-                                {produtosFiltrados.map((produto) => (
-                                    <ProductCard
-                                        key={produto.id}
-                                        id={produto.id}
-                                        nome={produto.nome}
-                                        descricao={produto.descricao}
-                                        preco={produto.preco}
-                                        imagem={produto.imagem}
-                                        tag={produto.tag}
-                                        onFavoritoAlterado={
-                                            mostrarToast
-                                        }
-                                    />
-                                ))}
+
+                                {produtosFiltrados.map(
+                                    (produto) => (
+                                        <ProductCard
+                                            key={produto.id}
+                                            id={produto.id}
+                                            nome={produto.nome}
+                                            descricao={produto.descricao}
+                                            preco={produto.preco.toLocaleString(
+                                                "pt-BR",
+                                                {
+                                                    style: "currency",
+                                                    currency: "BRL"
+                                                }
+                                            )}
+                                            imagem={produto.imagem}
+                                            tag={produto.tag}
+                                        />
+                                    )
+                                )}
+
                             </section>
                         ) : (
                             <section className="text-center py-5">
@@ -291,13 +293,8 @@ function Produtos() {
 
                     </div>
                 </section>
-            </main>
 
-            <Toast
-                mensagem={mensagemToast}
-                visivel={toastVisivel}
-                onFechar={() => setToastVisivel(false)}
-            />
+            </main>
 
             <Footer />
         </>

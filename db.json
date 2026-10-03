@@ -1,0 +1,173 @@
+{
+  "categorias": [
+    {
+      "id": "1",
+      "nome": "Brincos"
+    },
+    {
+      "id": "2",
+      "nome": "Conjuntos"
+    },
+    {
+      "id": "3",
+      "nome": "Pulseiras"
+    },
+    {
+      "id": "4",
+      "nome": "Cordões"
+    }
+  ],
+  "produtos": [
+    {
+      "id": "1",
+      "nome": "Brinco 2 em 1",
+      "descricao": "Delicadeza e versatilidade em uma única peça.",
+      "preco": 39.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/brinco_2_em_1.jpeg",
+      "categoriaId": 1,
+      "tag": "Destaque"
+    },
+    {
+      "id": "2",
+      "nome": "Brinco Flores",
+      "descricao": "Uma peça delicada para completar seu estilo.",
+      "preco": 24.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/brinco_flores.jpeg",
+      "categoriaId": 1
+    },
+    {
+      "id": "3",
+      "nome": "Conjunto Cruz",
+      "descricao": "Elegância e significado em uma combinação especial.",
+      "preco": 49.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/conjunto_cruz.jpeg",
+      "categoriaId": 2
+    },
+    {
+      "id": "4",
+      "nome": "Conjunto Ponto de Luz",
+      "descricao": "Delicadeza e brilho para diferentes ocasiões.",
+      "preco": 59.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/conjunto_ponto_de_luz.jpeg",
+      "categoriaId": 2
+    },
+    {
+      "id": "5",
+      "nome": "Pulseira Ponto de Luz",
+      "descricao": "Um toque delicado de brilho para o seu visual.",
+      "preco": 34.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/pulseira_ponto_de_luz.jpeg",
+      "categoriaId": 3
+    },
+    {
+      "id": "6",
+      "nome": "Bracelete Fino",
+      "descricao": "Uma peça delicada e versátil para o dia a dia.",
+      "preco": 34.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/bracelete_fino.jpeg",
+      "categoriaId": 3
+    },
+    {
+      "id": "7",
+      "nome": "Brinco Flor",
+      "descricao": "Delicadeza e feminilidade em uma peça especial.",
+      "preco": 24.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/brinco_flor.jpeg",
+      "categoriaId": 1
+    },
+    {
+      "id": "8",
+      "nome": "Brinco de Argola Tripla",
+      "descricao": "Um modelo moderno para destacar seu estilo.",
+      "preco": 34.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/brinco_argola_tripla.jpeg",
+      "categoriaId": 1
+    },
+    {
+      "id": "9",
+      "nome": "Bracelete Liso",
+      "descricao": "Design minimalista e elegante.",
+      "preco": 59.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/bracelete_liso.jpeg",
+      "categoriaId": 3
+    },
+    {
+      "id": "10",
+      "nome": "Choker Medalhas",
+      "descricao": "Uma peça moderna para complementar diferentes looks.",
+      "preco": 39.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/choker_medalhas.jpeg",
+      "categoriaId": 4
+    },
+    {
+      "id": "11",
+      "nome": "Gravatinha de Medalhas",
+      "descricao": "Delicadeza e personalidade em um design especial.",
+      "preco": 44.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 10,
+      "imagem": "/assets/images/gravatinha_medalhas.jpeg",
+      "categoriaId": 4
+    }
+  ],
+  "pedidos": [
+    {
+      "data": "2026-10-03T15:47:48.728Z",
+      "valorTotal": 39.99,
+      "status": "Em análise",
+      "id": "SeKVZ5VRGMs"
+    },
+    {
+      "data": "2026-10-03T16:41:00.429Z",
+      "valorTotal": 24.99,
+      "status": "Em análise",
+      "id": "bsPHAunjABo"
+    }
+  ],
+  "itensPedido": [
+    {
+      "pedidoId": "SeKVZ5VRGMs",
+      "produtoId": "1",
+      "quantidade": 1,
+      "id": "wEjurCo5i7I"
+    },
+    {
+      "pedidoId": "bsPHAunjABo",
+      "produtoId": "2",
+      "quantidade": 1,
+      "id": "oX2Y4rsVNWM"
+    }
+  ]
+  
+}

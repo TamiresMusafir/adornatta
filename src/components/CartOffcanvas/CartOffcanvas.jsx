@@ -14,22 +14,30 @@ function CartOffcanvas() {
     const total = carrinho.reduce(
         (soma, produto) =>
             soma +
-            Number(
-                produto.preco
-                    .replace("R$", "")
-                    .replace(".", "")
-                    .replace(",", ".")
-            ) *
+            Number(produto.preco) *
                 produto.quantidade,
         0
     );
 
+    function formatarPreco(preco) {
+        return Number(preco).toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
+    }
+
     function fecharOffcanvas() {
-        const offcanvas = document.getElementById("cartOffcanvas");
+        const offcanvas =
+            document.getElementById("cartOffcanvas");
 
         if (offcanvas && window.bootstrap) {
             const instancia =
-                window.bootstrap.Offcanvas.getInstance(offcanvas);
+                window.bootstrap.Offcanvas.getInstance(
+                    offcanvas
+                );
 
             if (instancia) {
                 instancia.hide();
@@ -38,12 +46,25 @@ function CartOffcanvas() {
 
         document
             .querySelectorAll(".offcanvas-backdrop")
-            .forEach((elemento) => elemento.remove());
+            .forEach((elemento) =>
+                elemento.remove()
+            );
 
-        document.body.classList.remove("offcanvas-backdrop");
-        document.body.classList.remove("modal-open");
-        document.body.style.removeProperty("overflow");
-        document.body.style.removeProperty("padding-right");
+        document.body.classList.remove(
+            "offcanvas-backdrop"
+        );
+
+        document.body.classList.remove(
+            "modal-open"
+        );
+
+        document.body.style.removeProperty(
+            "overflow"
+        );
+
+        document.body.style.removeProperty(
+            "padding-right"
+        );
     }
 
     function irParaProdutos() {
@@ -84,10 +105,19 @@ function CartOffcanvas() {
             <section className="offcanvas-body">
 
                 {carrinho.length === 0 ? (
-                    <div>
+                    <div className="cart-empty text-center">
 
-                        <p className="text-muted">
+                        <div className="cart-empty-icon">
+                            <i className="bi bi-bag"></i>
+                        </div>
+
+                        <h3>
                             Seu carrinho está vazio.
+                        </h3>
+
+                        <p>
+                            Explore nossas peças e
+                            encontre algo especial para você.
                         </p>
 
                         <button
@@ -96,110 +126,110 @@ function CartOffcanvas() {
                             onClick={irParaProdutos}
                         >
                             Ver produtos
+                            <i className="bi bi-arrow-right ms-2"></i>
                         </button>
 
                     </div>
                 ) : (
-                    <div>
+                    <>
+                        <div className="cart-items">
 
-                        {carrinho.map((produto) => (
-                            <article
-                                key={produto.id}
-                                className="cart-item"
-                            >
+                            {carrinho.map((produto) => (
+                                <article
+                                    className="cart-item"
+                                    key={produto.id}
+                                >
 
-                                <img
-                                    src={produto.imagem}
-                                    alt={produto.nome}
-                                    className="cart-item-image"
-                                />
+                                    <img
+                                        src={produto.imagem}
+                                        alt={produto.nome}
+                                    />
 
-                                <div className="cart-item-content">
+                                    <div className="cart-item-info">
 
-                                    <h3>
-                                        {produto.nome}
-                                    </h3>
-
-                                    <p>
-                                        {produto.preco}
-                                    </p>
-
-                                    <div className="cart-item-actions">
-
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                alterarQuantidade(
-                                                    produto.id,
-                                                    produto.quantidade - 1
-                                                )
-                                            }
-                                        >
-                                            −
-                                        </button>
+                                        <h3>
+                                            {produto.nome}
+                                        </h3>
 
                                         <span>
-                                            {produto.quantidade}
+                                            {formatarPreco(
+                                                produto.preco
+                                            )}
                                         </span>
 
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                alterarQuantidade(
-                                                    produto.id,
-                                                    produto.quantidade + 1
-                                                )
-                                            }
-                                        >
-                                            +
-                                        </button>
+                                        <div className="cart-item-actions">
+
+                                            <label
+                                                htmlFor={`quantidade-${produto.id}`}
+                                                className="visually-hidden"
+                                            >
+                                                Quantidade de{" "}
+                                                {produto.nome}
+                                            </label>
+
+                                            <input
+                                                id={`quantidade-${produto.id}`}
+                                                type="number"
+                                                min="1"
+                                                value={
+                                                    produto.quantidade
+                                                }
+                                                onChange={(event) =>
+                                                    alterarQuantidade(
+                                                        produto.id,
+                                                        Number(
+                                                            event.target.value
+                                                        )
+                                                    )
+                                                }
+                                            />
+
+                                            <button
+                                                type="button"
+                                                className="btn btn-link"
+                                                onClick={() =>
+                                                    removerDoCarrinho(
+                                                        produto.id
+                                                    )
+                                                }
+                                            >
+                                                Remover
+                                            </button>
+
+                                        </div>
 
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        className="cart-item-remove"
-                                        onClick={() =>
-                                            removerDoCarrinho(produto.id)
-                                        }
-                                    >
-                                        Remover
-                                    </button>
-
-                                </div>
-
-                            </article>
-                        ))}
-
-                        <div className="cart-total">
-
-                            <span>
-                                Total
-                            </span>
-
-                            <strong>
-                                R$ {total.toFixed(2).replace(".", ",")}
-                            </strong>
+                                </article>
+                            ))}
 
                         </div>
 
-                        <button
-                            type="button"
-                            className="btn btn-gold w-100 mt-4"
-                            onClick={irParaCheckout}
-                        >
-                            Finalizar pedido
-                        </button>
+                        <footer className="cart-footer">
 
-                        <button
-                            type="button"
-                            className="btn btn-outline-dark rounded-0 w-100 mt-3"
-                            onClick={irParaProdutos}
-                        >
-                            Continuar comprando
-                        </button>
+                            <div className="cart-total">
 
-                    </div>
+                                <span>
+                                    Total
+                                </span>
+
+                                <strong>
+                                    {formatarPreco(total)}
+                                </strong>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                className="btn btn-gold w-100"
+                                onClick={irParaCheckout}
+                            >
+                                Finalizar pedido
+                                <i className="bi bi-arrow-right ms-2"></i>
+                            </button>
+
+                        </footer>
+                    </>
                 )}
 
             </section>

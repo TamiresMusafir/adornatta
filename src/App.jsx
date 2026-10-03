@@ -12,17 +12,16 @@ import ProdutoDetalhes from "./pages/ProdutoDetalhes/ProdutoDetalhes";
 import ListaDesejo from "./pages/ListaDesejo/ListaDesejo";
 import Checkout from "./pages/Checkout/Checkout";
 import Contato from "./pages/Contato/Contato";
+import AcompanharPedido from "./pages/AcompanharPedido/AcompanharPedido";
 
 function App() {
     return (
         <WishlistProvider>
             <CartProvider>
                 <BrowserRouter>
-
                     <ScrollToTop />
 
                     <Routes>
-
                         <Route
                             path="/"
                             element={<Home />}
@@ -52,14 +51,17 @@ function App() {
                             path="/checkout"
                             element={<Checkout />}
                         />
-    
+
                         <Route
                             path="/contato"
                             element={<Contato />}
                         />
 
+                        <Route
+                            path="/pedidos/:id"
+                            element={<AcompanharPedido />}
+                        />
                     </Routes>
-
                 </BrowserRouter>
             </CartProvider>
         </WishlistProvider>
