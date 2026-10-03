@@ -1,4 +1,31 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 function SearchOffcanvas() {
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    const [busca, setBusca] = useState("");
+
+    useEffect(() => {
+        setBusca(searchParams.get("busca") || "");
+    }, [searchParams]);
+
+    function pesquisar(event) {
+        event.preventDefault();
+
+        const termo = busca.trim();
+
+        if (!termo) {
+            navigate("/produtos");
+            return;
+        }
+
+        navigate(
+            `/produtos?busca=${encodeURIComponent(termo)}`
+        );
+    }
+
     return (
         <aside
             className="offcanvas offcanvas-end"
@@ -23,7 +50,9 @@ function SearchOffcanvas() {
             </header>
 
             <section className="offcanvas-body">
-                <form>
+
+                <form onSubmit={pesquisar}>
+
                     <label
                         htmlFor="searchInput"
                         className="form-label"
@@ -35,16 +64,25 @@ function SearchOffcanvas() {
                         type="search"
                         className="form-control"
                         id="searchInput"
+                        value={busca}
+                        onChange={(event) =>
+                            setBusca(event.target.value)
+                        }
                         placeholder="Buscar semijoias..."
+                        autoComplete="off"
                     />
 
                     <button
                         type="submit"
                         className="btn btn-gold mt-3"
+                        data-bs-dismiss="offcanvas"
                     >
                         Buscar
+                        <i className="bi bi-search ms-2"></i>
                     </button>
+
                 </form>
+
             </section>
         </aside>
     );

@@ -1,17 +1,30 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import SearchOffcanvas from "../SearchOffcanvas/SearchOffcanvas";
 import CartOffcanvas from "../CartOffcanvas/CartOffcanvas";
 
+import { useAuth } from "../../context/AuthContext";
+
 function Header() {
+    const navigate = useNavigate();
+
+    const {
+        usuario,
+        autenticado,
+        logout
+    } = useAuth();
+
+    function sair() {
+        logout();
+        navigate("/");
+    }
+
     return (
         <>
             <header>
 
                 <section className="topbar">
-                    <p>
-                      
-                    </p>
+                    <p></p>
                 </section>
 
                 <nav
@@ -146,13 +159,46 @@ function Header() {
                                     <i className="bi bi-search"></i>
                                 </button>
 
-                                <Link
-                                    to="/login"
-                                    className="btn btn-link"
-                                    aria-label="Minha conta"
-                                >
-                                    <i className="bi bi-person"></i>
-                                </Link>
+                                {autenticado ? (
+                                    <>
+                                        {usuario?.perfil === "admin" && (
+                                            <Link
+                                                to="/admin"
+                                                className="btn btn-link"
+                                                aria-label="Painel administrativo"
+                                                title="Painel administrativo"
+                                            >
+                                                <i className="bi bi-speedometer2"></i>
+                                            </Link>
+                                        )}
+
+                                        <span
+                                            className="text-muted small d-none d-lg-inline"
+                                            title={usuario?.email}
+                                        >
+                                            Olá, {usuario?.nome}
+                                        </span>
+
+                                        <button
+                                            type="button"
+                                            className="btn btn-link"
+                                            onClick={sair}
+                                            aria-label="Sair da conta"
+                                            title="Sair"
+                                        >
+                                            <i className="bi bi-box-arrow-right"></i>
+                                        </button>
+                                    </>
+                                ) : (
+                                    <Link
+                                        to="/login"
+                                        className="btn btn-link"
+                                        aria-label="Minha conta"
+                                        title="Entrar"
+                                    >
+                                        <i className="bi bi-person"></i>
+                                    </Link>
+                                )}
 
                                 <Link
                                     to="/listaDesejo"

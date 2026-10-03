@@ -6,19 +6,25 @@ function Categories() {
             id: 1,
             numero: "01",
             nome: "Brincos",
-            imagem: "/assets/images/image-01.jpg"
+            imagem: "/assets/images/brinco_flor.jpeg"
         },
         {
             id: 2,
             numero: "02",
             nome: "Conjuntos",
-            imagem: "/assets/images/image-02.jpg"
+            imagem: "/assets/images/conjunto_ponto_de_luz.jpeg"
         },
         {
             id: 3,
             numero: "03",
             nome: "Pulseiras",
-            imagem: "/assets/images/image-03.jpg"
+            imagem: "/assets/images/bracelete_liso.jpeg"
+        },
+        {
+            id: 4,
+            numero: "04",
+            nome: "Cordões",
+            imagem: "/assets/images/choker_medalhas.jpeg"
         }
     ];
 
@@ -34,14 +40,6 @@ function Categories() {
                         <h2 className="section-title">
                             Encontre seu brilho
                         </h2>
-                    </div>
-
-                    <div className="col-lg-5">
-                        <p className="section-text mb-0">
-                            Descubra peças pensadas para combinar
-                            com seu estilo, sua personalidade e seus
-                            momentos especiais.
-                        </p>
                     </div>
                 </div>
 
