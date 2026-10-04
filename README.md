@@ -11,7 +11,7 @@ A Adornatta é uma loja virtual de semijoias desenvolvida para oferecer uma expe
 
 - João Henrique Lima Gualberto
 - Pedro Pimentel
-- Tamires
+- Tamires Barbosa
 - Vinicius da Silva Mendes
 
 
