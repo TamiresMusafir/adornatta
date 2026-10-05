@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useCart } from "../../context/CartContext";
 
@@ -141,6 +141,7 @@ function CartOffcanvas() {
                                 >
 
                                     <img
+                                        className="cart-item-image"
                                         src={produto.imagem}
                                         alt={produto.nome}
                                     />
@@ -151,7 +152,7 @@ function CartOffcanvas() {
                                             {produto.nome}
                                         </h3>
 
-                                        <span>
+                                        <span className="cart-item-price">
                                             {formatarPreco(
                                                 produto.preco
                                             )}
@@ -186,14 +187,15 @@ function CartOffcanvas() {
 
                                             <button
                                                 type="button"
-                                                className="btn btn-link"
+                                                className="cart-item-remove"
                                                 onClick={() =>
                                                     removerDoCarrinho(
                                                         produto.id
                                                     )
                                                 }
                                             >
-                                                Remover
+                                                <i className="bi bi-trash3"></i>
+                                                <span>Remover</span>
                                             </button>
 
                                         </div>
@@ -210,7 +212,7 @@ function CartOffcanvas() {
                             <div className="cart-total">
 
                                 <span>
-                                    Total
+                                    Total do pedido
                                 </span>
 
                                 <strong>
