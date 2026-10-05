@@ -165,6 +165,12 @@
       "valorTotal": 24.99,
       "status": "Em análise",
       "id": "9CXcFZMfD9E"
+    },
+    {
+      "data": "2026-10-04T05:37:32.113Z",
+      "valorTotal": 94.98,
+      "status": "Em análise",
+      "id": "NOEgljuUK4c"
     }
   ],
   "itensPedido": [
@@ -191,6 +197,12 @@
       "produtoId": "2",
       "quantidade": 1,
       "id": "sAQ8wFODlmE"
+    },
+    {
+      "pedidoId": "NOEgljuUK4c",
+      "produtoId": "5",
+      "quantidade": 1,
+      "id": "nSsreFMPwlc"
     }
   ],
   "usuarios": [

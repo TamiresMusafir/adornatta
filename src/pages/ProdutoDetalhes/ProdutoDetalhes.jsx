@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import Header from "../../components/Header/Header";
@@ -172,7 +172,7 @@ function ProdutoDetalhes() {
 
                                         <div>
                                             <span>
-                                                Material
+                                                Material:
                                             </span>
 
                                             <strong>
@@ -182,7 +182,7 @@ function ProdutoDetalhes() {
 
                                         <div>
                                             <span>
-                                                Tipo de banho
+                                                Tipo de banho:
                                             </span>
 
                                             <strong>
@@ -192,7 +192,7 @@ function ProdutoDetalhes() {
 
                                         <div>
                                             <span>
-                                                Disponibilidade
+                                                Disponibilidade:
                                             </span>
 
                                             <strong>
@@ -204,17 +204,27 @@ function ProdutoDetalhes() {
 
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        className="btn btn-gold"
-                                        disabled={
-                                            produto.quantidadeDisponivel <= 0
-                                        }
-                                        onClick={adicionarProduto}
-                                    >
-                                        Adicionar ao carrinho
-                                        <i className="bi bi-bag ms-2"></i>
-                                    </button>
+                                    <div className="d-flex flex-wrap gap-2 mt-3">
+                                        <button
+                                            type="button"
+                                            className="btn btn-gold"
+                                            disabled={
+                                                produto.quantidadeDisponivel <= 0
+                                            }
+                                            onClick={adicionarProduto}
+                                        >
+                                            Adicionar ao carrinho
+                                            <i className="bi bi-bag ms-2"></i>
+                                        </button>
+
+                                        <Link
+                                            to="/produtos"
+                                            className="btn btn-outline-dark rounded-0"
+                                        >
+                                            Voltar aos produtos
+                                            <i className="bi bi-arrow-left ms-2"></i>
+                                        </Link>
+                                    </div>
 
                                 </div>
 

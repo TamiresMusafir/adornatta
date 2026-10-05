@@ -37,7 +37,6 @@ function Hero() {
                 </div>
             </div>
 
-            <div className="hero-gradient"></div>
         </section>
     );
 }
