@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Footer() {
     return (
         <footer className="pt-5 pb-4">
@@ -28,21 +30,21 @@ function Footer() {
                         </div>
 
                         <p className="mb-2">
-                            <a href="/">
+                            <Link to="/">
                                 Início
-                            </a>
+                            </Link>
                         </p>
 
                         <p className="mb-2">
-                            <a href="/produtos">
+                            <Link to="/produtos">
                                 Produtos
-                            </a>
+                            </Link>
                         </p>
 
                         <p className="mb-2">
-                            <a href="/sobre">
+                            <Link to="/sobre">
                                 Sobre nós
-                            </a>
+                            </Link>
                         </p>
 
                     </section>
@@ -55,21 +57,21 @@ function Footer() {
                         </div>
 
                         <p className="mb-2">
-                            <a href="/contato">
+                            <Link to="/contato">
                                 Contato
-                            </a>
+                            </Link>
                         </p>
 
                         <p className="mb-2">
-                            <a href="/listaDesejo">
+                            <Link to="/listaDesejo">
                                 Lista de desejos
-                            </a>
+                            </Link>
                         </p>
 
                         <p className="mb-2">
-                            <a href="/minha-conta">
+                            <Link to="/minha-conta">
                                 Minha conta
-                            </a>
+                            </Link>
                         </p>
 
                     </section>
