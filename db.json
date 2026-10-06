@@ -1,0 +1,347 @@
+{
+  "categorias": [
+    {
+      "id": "1",
+      "nome": "Brincos"
+    },
+    {
+      "id": "2",
+      "nome": "Conjuntos"
+    },
+    {
+      "id": "3",
+      "nome": "Pulseiras"
+    },
+    {
+      "id": "4",
+      "nome": "Cordões"
+    }
+  ],
+  "produtos": [
+    {
+      "id": "1",
+      "nome": "Brinco 2 em 1",
+      "descricao": "Delicadeza e versatilidade em uma única peça.",
+      "preco": 39.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 0,
+      "imagem": "/assets/images/brinco_2_em_1.jpeg",
+      "categoriaId": 1,
+      "tag": "Destaque"
+    },
+    {
+      "id": "2",
+      "nome": "Brinco Flores",
+      "descricao": "Uma peça delicada para completar seu estilo.",
+      "preco": 24.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 0,
+      "imagem": "/assets/images/brinco_flores.jpeg",
+      "categoriaId": 1
+    },
+    {
+      "id": "3",
+      "nome": "Conjunto Cruz",
+      "descricao": "Elegância e significado em uma combinação especial.",
+      "preco": 49.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 2,
+      "imagem": "/assets/images/conjunto_cruz.jpeg",
+      "categoriaId": 2
+    },
+    {
+      "id": "4",
+      "nome": "Conjunto Ponto de Luz",
+      "descricao": "Delicadeza e brilho para diferentes ocasiões.",
+      "preco": 59.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 3,
+      "imagem": "/assets/images/conjunto_ponto_de_luz.jpeg",
+      "categoriaId": 2
+    },
+    {
+      "id": "5",
+      "nome": "Pulseira Ponto de Luz",
+      "descricao": "Um toque delicado de brilho para o seu visual.",
+      "preco": 34.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 3,
+      "imagem": "/assets/images/pulseira_ponto_de_luz.jpeg",
+      "categoriaId": 3
+    },
+    {
+      "id": "6",
+      "nome": "Bracelete Fino",
+      "descricao": "Uma peça delicada e versátil para o dia a dia.",
+      "preco": 34.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 5,
+      "imagem": "/assets/images/bracelete_fino.jpeg",
+      "categoriaId": 3
+    },
+    {
+      "id": "7",
+      "nome": "Brinco Flor",
+      "descricao": "Delicadeza e feminilidade em uma peça especial.",
+      "preco": 24.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 3,
+      "imagem": "/assets/images/brinco_flor.jpeg",
+      "categoriaId": 1
+    },
+    {
+      "id": "8",
+      "nome": "Brinco de Argola Tripla",
+      "descricao": "Um modelo moderno para destacar seu estilo.",
+      "preco": 34.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 3,
+      "imagem": "/assets/images/brinco_argola_tripla.jpeg",
+      "categoriaId": 1
+    },
+    {
+      "id": "9",
+      "nome": "Bracelete Liso",
+      "descricao": "Design minimalista e elegante.",
+      "preco": 59.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 3,
+      "imagem": "/assets/images/bracelete_liso.jpeg",
+      "categoriaId": 3
+    },
+    {
+      "id": "10",
+      "nome": "Choker Medalhas",
+      "descricao": "Uma peça moderna para complementar diferentes looks.",
+      "preco": 39.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 3,
+      "imagem": "/assets/images/choker_medalhas.jpeg",
+      "categoriaId": 4
+    },
+    {
+      "id": "11",
+      "nome": "Gravatinha de Medalhas",
+      "descricao": "Delicadeza e personalidade em um design especial.",
+      "preco": 44.99,
+      "material": "Semijoia",
+      "tipoBanho": "Ouro 18K",
+      "quantidadeDisponivel": 3,
+      "imagem": "/assets/images/gravatinha_medalhas.jpeg",
+      "categoriaId": 4
+    }
+  ],
+  "pedidos": [
+    {
+      "data": "2026-10-03T15:47:48.728Z",
+      "valorTotal": 39.99,
+      "status": "Em análise",
+      "usuarioId": "O47a1BFJTRg",
+      "id": "SeKVZ5VRGMs"
+    },
+    {
+      "data": "2026-10-03T16:41:00.429Z",
+      "valorTotal": 24.99,
+      "status": "Em análise",
+      "usuarioId": "O47a1BFJTRg",
+      "id": "bsPHAunjABo"
+    },
+    {
+      "data": "2026-10-03T16:52:01.166Z",
+      "valorTotal": 39.99,
+      "status": "Em análise",
+      "usuarioId": "O47a1BFJTRg",
+      "id": "XnroB1OoV_M"
+    },
+    {
+      "data": "2026-10-03T17:12:43.077Z",
+      "valorTotal": 24.99,
+      "status": "Em análise",
+      "usuarioId": "O47a1BFJTRg",
+      "id": "9CXcFZMfD9E"
+    },
+    {
+      "data": "2026-10-04T05:37:32.113Z",
+      "valorTotal": 94.98,
+      "status": "Em análise",
+      "usuarioId": "O47a1BFJTRg",
+      "id": "NOEgljuUK4c"
+    },
+    {
+      "usuarioId": "QUUWdCEhpL4",
+      "data": "2026-10-06T04:44:33.755Z",
+      "valorTotal": 49.99,
+      "status": "Em análise",
+      "id": "IqymC0JCdiM"
+    },
+    {
+      "usuarioId": "QUUWdCEhpL4",
+      "data": "2026-10-06T05:07:24.854Z",
+      "valorTotal": 49.99,
+      "status": "Em análise",
+      "formaPagamentoId": "6DrjFzI53Ow",
+      "formaPagamento": "Cartão de crédito - American Express",
+      "id": "IGyo8JQ_Fjk"
+    },
+    {
+      "usuarioId": "QUUWdCEhpL4",
+      "data": "2026-10-06T05:07:32.619Z",
+      "valorTotal": 49.99,
+      "status": "Em análise",
+      "formaPagamentoId": "invKZD2Pfok",
+      "formaPagamento": "Cartão de crédito - American Express",
+      "id": "udqrJbH4VhY"
+    },
+    {
+      "usuarioId": "QUUWdCEhpL4",
+      "data": "2026-10-06T05:10:03.945Z",
+      "valorTotal": 34.99,
+      "status": "Em análise",
+      "formaPagamentoId": "_kApkb5gczg",
+      "formaPagamento": "Cartão de crédito - Visa",
+      "id": "acLcrQ0NeIc"
+    }
+  ],
+  "itensPedido": [
+    {
+      "pedidoId": "SeKVZ5VRGMs",
+      "produtoId": "1",
+      "quantidade": 1,
+      "id": "wEjurCo5i7I"
+    },
+    {
+      "pedidoId": "bsPHAunjABo",
+      "produtoId": "2",
+      "quantidade": 1,
+      "id": "oX2Y4rsVNWM"
+    },
+    {
+      "pedidoId": "XnroB1OoV_M",
+      "produtoId": "1",
+      "quantidade": 1,
+      "id": "-B0kiJbITKk"
+    },
+    {
+      "pedidoId": "9CXcFZMfD9E",
+      "produtoId": "2",
+      "quantidade": 1,
+      "id": "sAQ8wFODlmE"
+    },
+    {
+      "pedidoId": "NOEgljuUK4c",
+      "produtoId": "5",
+      "quantidade": 1,
+      "id": "nSsreFMPwlc"
+    },
+    {
+      "pedidoId": "IqymC0JCdiM",
+      "produtoId": "3",
+      "quantidade": 1,
+      "id": "nXLPFejasIo"
+    },
+    {
+      "pedidoId": "IGyo8JQ_Fjk",
+      "produtoId": "3",
+      "quantidade": 1,
+      "precoUnitario": 49.99,
+      "id": "Pw-btB9mguI"
+    },
+    {
+      "pedidoId": "udqrJbH4VhY",
+      "produtoId": "3",
+      "quantidade": 1,
+      "precoUnitario": 49.99,
+      "id": "JEspWyDdAL8"
+    },
+    {
+      "pedidoId": "acLcrQ0NeIc",
+      "produtoId": "6",
+      "quantidade": 1,
+      "precoUnitario": 34.99,
+      "id": "wssXfzS_TqY"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "1",
+      "nome": "Administrador",
+      "email": "admin@adornatta.com",
+      "senha": "123456",
+      "perfil": "admin"
+    },
+    {
+      "id": "O47a1BFJTRg",
+      "nome": "Vinicius",
+      "email": "vinicius.testes@gmail.com",
+      "senha": "123456",
+      "perfil": "cliente",
+      "telefone": "",
+      "cpf": "",
+      "endereco": {
+        "cep": "",
+        "logradouro": "",
+        "numero": "",
+        "complemento": "",
+        "bairro": "",
+        "cidade": "",
+        "estado": ""
+      }
+    },
+    {
+      "nome": "TesteAuthCompra",
+      "email": "Teste@gmail.com",
+      "senha": "123456",
+      "perfil": "cliente",
+      "id": "QUUWdCEhpL4"
+    }
+  ],
+  "formasPagamento": [
+    {
+      "usuarioId": "QUUWdCEhpL4",
+      "tipo": "Cartão de crédito",
+      "bandeira": "American Express",
+      "ultimosDigitos": "3123",
+      "nomeCartao": "Jurandi",
+      "id": "6DrjFzI53Ow"
+    },
+    {
+      "usuarioId": "QUUWdCEhpL4",
+      "tipo": "Cartão de crédito",
+      "bandeira": "American Express",
+      "ultimosDigitos": "3123",
+      "nomeCartao": "Jurandi",
+      "id": "invKZD2Pfok"
+    },
+    {
+      "usuarioId": "QUUWdCEhpL4",
+      "tipo": "Cartão de crédito",
+      "bandeira": "Visa",
+      "ultimosDigitos": "7868",
+      "nomeCartao": "Jurandi",
+      "id": "_kApkb5gczg"
+    }
+  ],
+  "vendas": [
+    {
+      "cliente": "Jubileu",
+      "data": "2026-10-03",
+      "produtoId": "1",
+      "quantidade": 1,
+      "formaPagamento": "Pix",
+      "valorUnitario": 39.99,
+      "valorTotal": 39.99,
+      "observacoes": "",
+      "id": "Yxlpl_h59ZM"
+    }
+  ]
+}
