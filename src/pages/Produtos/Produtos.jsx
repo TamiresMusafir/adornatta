@@ -248,15 +248,10 @@ function Produtos() {
                                             id={produto.id}
                                             nome={produto.nome}
                                             descricao={produto.descricao}
-                                            preco={produto.preco.toLocaleString(
-                                                "pt-BR",
-                                                {
-                                                    style: "currency",
-                                                    currency: "BRL"
-                                                }
-                                            )}
+                                            preco={produto.preco}
                                             imagem={produto.imagem}
                                             tag={produto.tag}
+                                            quantidadeDisponivel={produto.quantidadeDisponivel} 
                                         />
                                     )
                                 )}
