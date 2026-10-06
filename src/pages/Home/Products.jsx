@@ -1,30 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../../components/ProductCard/ProductCard";
 
+// Importamos a mesma função que busca os produtos reais do banco de dados
+import { buscarProdutos } from "../../services/api";
+
 function Products() {
-    const produtos = [
-        {
-            id: 1,
-            nome: "Brinco 2 em 1",
-            descricao: "Delicadeza e versatilidade em uma única peça.",
-            preco: "R$ 39,99",
-            imagem: "/assets/images/brinco_2_em_1.jpeg",
-            tag: "Destaque"
-        },
-        {
-            id: 2,
-            nome: "Brinco Flores",
-            descricao: "Uma peça delicada para completar seu estilo.",
-            preco: "R$ 24,99",
-            imagem: "/assets/images/brinco_flores.jpeg"
-        },
-        {
-            id: 3,
-            nome: "Conjunto Cruz",
-            descricao: "Elegância e significado em uma combinação especial.",
-            preco: "R$ 49,99",
-            imagem: "/assets/images/conjunto_cruz.jpeg"
-        }
-    ];
+    // Busca os produtos da API (exatamente igual a página de Produtos faz)
+    const {
+        data: produtos = [],
+        isLoading,
+        isError
+    } = useQuery({
+        queryKey: ["produtos"],
+        queryFn: buscarProdutos
+    });
+
+    // Pega apenas os 3 primeiros produtos da lista para mostrar no Início
+    // (Se quiser, pode trocar para exibir produtos específicos)
+    const produtosDestaque = produtos.slice(0, 3);
 
     return (
         <section className="section">
@@ -41,19 +34,26 @@ function Products() {
                     </div>
                 </div>
 
-                <div className="row g-4">
-                    {produtos.map((produto) => (
-                        <ProductCard
-                            key={produto.id}
-                            id={produto.id}
-                            nome={produto.nome}
-                            descricao={produto.descricao}
-                            preco={produto.preco}
-                            imagem={produto.imagem}
-                            tag={produto.tag}
-                        />
-                    ))}
-                </div>
+                {isLoading && <p className="text-muted">Carregando destaques...</p>}
+                
+                {isError && <p className="text-danger">Erro ao carregar os produtos em destaque.</p>}
+
+                {!isLoading && !isError && (
+                    <div className="row g-4">
+                        {produtosDestaque.map((produto) => (
+                            <ProductCard
+                                key={produto.id}
+                                id={produto.id}
+                                nome={produto.nome}
+                                descricao={produto.descricao}
+                                preco={produto.preco}
+                                imagem={produto.imagem}
+                                tag={produto.tag}
+                                quantidadeDisponivel={produto.quantidadeDisponivel}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     );
