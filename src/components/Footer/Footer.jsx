@@ -40,12 +40,6 @@ function Footer() {
                         </p>
 
                         <p className="mb-2">
-                            <a href="/categorias">
-                                Categorias
-                            </a>
-                        </p>
-
-                        <p className="mb-2">
                             <a href="/sobre">
                                 Sobre nós
                             </a>
@@ -67,13 +61,13 @@ function Footer() {
                         </p>
 
                         <p className="mb-2">
-                            <a href="/lista-desejos">
+                            <a href="/listaDesejo">
                                 Lista de desejos
                             </a>
                         </p>
 
                         <p className="mb-2">
-                            <a href="/login">
+                            <a href="/minha-conta">
                                 Minha conta
                             </a>
                         </p>

@@ -33,12 +33,9 @@ function Header() {
                 >
                     <section className="container">
 
-                        <Link
-                            className="navbar-brand"
-                            to="/"
-                        >
+                        <span className="navbar-brand">
                             Adornatta
-                        </Link>
+                        </span>
 
                         <button
                             className="navbar-toggler"

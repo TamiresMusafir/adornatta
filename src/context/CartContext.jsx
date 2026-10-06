@@ -1,4 +1,8 @@
-import { createContext, useContext, useState } from "react";
+import {
+    createContext,
+    useContext,
+    useState
+} from "react";
 
 const CartContext = createContext();
 
@@ -16,7 +20,8 @@ function CartProvider({ children }) {
                     item.id === produto.id
                         ? {
                               ...item,
-                              quantidade: item.quantidade + 1
+                              quantidade:
+                                  item.quantidade + 1
                           }
                         : item
                 );
@@ -34,7 +39,9 @@ function CartProvider({ children }) {
 
     function removerDoCarrinho(id) {
         setCarrinho((carrinhoAtual) =>
-            carrinhoAtual.filter((item) => item.id !== id)
+            carrinhoAtual.filter(
+                (item) => item.id !== id
+            )
         );
     }
 
@@ -56,13 +63,18 @@ function CartProvider({ children }) {
         );
     }
 
+    function limparCarrinho() {
+        setCarrinho([]);
+    }
+
     return (
         <CartContext.Provider
             value={{
                 carrinho,
                 adicionarAoCarrinho,
                 removerDoCarrinho,
-                alterarQuantidade
+                alterarQuantidade,
+                limparCarrinho
             }}
         >
             {children}
@@ -74,4 +86,7 @@ function useCart() {
     return useContext(CartContext);
 }
 
-export { CartProvider, useCart };
+export {
+    CartProvider,
+    useCart
+};

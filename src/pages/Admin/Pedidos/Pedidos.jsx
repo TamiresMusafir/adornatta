@@ -1,9 +1,17 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient
+} from "@tanstack/react-query";
+
+import AdminHeader from "../../../components/AdminHeader/AdminHeader";
+import AdminFooter from "../../../components/AdminFooter/AdminFooter";
 
 import {
     buscarPedidos,
     buscarProdutos,
+    buscarUsuarios,
     buscarItensPedido,
     atualizarPedido
 } from "../../../services/api";
@@ -58,6 +66,49 @@ function obterClasseStatus(status) {
     }
 }
 
+function formatarEndereco(usuario) {
+    if (!usuario?.endereco) {
+        return "Endereço não cadastrado";
+    }
+
+    const endereco = usuario.endereco;
+
+    const partes = [
+        endereco.logradouro,
+        endereco.numero,
+        endereco.complemento
+    ].filter(Boolean);
+
+    const cidadeEstado = [
+        endereco.cidade,
+        endereco.estado
+    ]
+        .filter(Boolean)
+        .join(" - ");
+
+    if (cidadeEstado) {
+        partes.push(cidadeEstado);
+    }
+
+    if (endereco.cep) {
+        partes.push(`CEP: ${endereco.cep}`);
+    }
+
+    return partes.length > 0
+        ? partes.join(", ")
+        : "Endereço não cadastrado";
+}
+
+function obterCliente(pedido, usuariosMap) {
+    if (!pedido?.usuarioId) {
+        return null;
+    }
+
+    return usuariosMap.get(
+        String(pedido.usuarioId)
+    ) || null;
+}
+
 function Pedidos() {
     const queryClient = useQueryClient();
 
@@ -83,6 +134,15 @@ function Pedidos() {
         queryFn: buscarProdutos
     });
 
+    const {
+        data: usuarios = [],
+        isLoading: carregandoUsuarios,
+        isError: erroUsuarios
+    } = useQuery({
+        queryKey: ["usuarios"],
+        queryFn: buscarUsuarios
+    });
+
     const produtosMap = useMemo(() => {
         return new Map(
             produtos.map((produto) => [
@@ -91,6 +151,15 @@ function Pedidos() {
             ])
         );
     }, [produtos]);
+
+    const usuariosMap = useMemo(() => {
+        return new Map(
+            usuarios.map((usuario) => [
+                String(usuario.id),
+                usuario
+            ])
+        );
+    }, [usuarios]);
 
     const atualizarStatusMutation = useMutation({
         mutationFn: ({ id, status }) =>
@@ -115,12 +184,31 @@ function Pedidos() {
             return pedidos;
         }
 
-        return pedidos.filter((pedido) =>
-            String(pedido.id)
-                .toLowerCase()
-                .includes(termo)
-        );
-    }, [pedidos, pesquisa]);
+        return pedidos.filter((pedido) => {
+            const cliente = obterCliente(
+                pedido,
+                usuariosMap
+            );
+
+            const numeroPedido = String(
+                pedido.id
+            ).toLowerCase();
+
+            const nomeCliente = String(
+                cliente?.nome || ""
+            ).toLowerCase();
+
+            const emailCliente = String(
+                cliente?.email || ""
+            ).toLowerCase();
+
+            return (
+                numeroPedido.includes(termo) ||
+                nomeCliente.includes(termo) ||
+                emailCliente.includes(termo)
+            );
+        });
+    }, [pedidos, pesquisa, usuariosMap]);
 
     const totalPedidos = pedidos.length;
 
@@ -160,78 +248,16 @@ function Pedidos() {
         });
     }
 
+    const clienteSelecionado = pedidoSelecionado
+        ? obterCliente(
+              pedidoSelecionado,
+              usuariosMap
+          )
+        : null;
+
     return (
         <>
-            <nav className="navbar navbar-expand-lg border-bottom bg-white">
-                <div className="container">
-                    <a
-                        href="/admin"
-                        className="navbar-brand display-font"
-                        onClick={(evento) => {
-                            evento.preventDefault();
-                            window.location.href =
-                                "/admin";
-                        }}
-                    >
-                        ADORNATTA
-                    </a>
-
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#adminNavbar"
-                        aria-controls="adminNavbar"
-                        aria-expanded="false"
-                        aria-label="Alternar navegação"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div
-                        className="collapse navbar-collapse"
-                        id="adminNavbar"
-                    >
-                        <ul className="navbar-nav ms-auto align-items-lg-center">
-                            <li className="nav-item">
-                                <a
-                                    href="/admin"
-                                    className="nav-link"
-                                >
-                                    Painel
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a
-                                    href="/admin/estoque"
-                                    className="nav-link"
-                                >
-                                    Estoque
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a
-                                    href="/admin/pedidos"
-                                    className="nav-link active"
-                                >
-                                    Pedidos
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a
-                                    href="/admin/vendas"
-                                    className="nav-link"
-                                >
-                                    Vendas
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <AdminHeader />
 
             <main>
                 <section className="container py-5">
@@ -351,6 +377,16 @@ function Pedidos() {
                         </div>
                     )}
 
+                    {erroUsuarios && (
+                        <div
+                            className="alert alert-warning"
+                            role="alert"
+                        >
+                            Não foi possível carregar os
+                            dados dos clientes.
+                        </div>
+                    )}
+
                     <section className="section-soft py-5">
                         <div className="container">
                             <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
@@ -373,7 +409,7 @@ function Pedidos() {
                                         <input
                                             type="search"
                                             className="form-control"
-                                            placeholder="Pesquisar pedido..."
+                                            placeholder="Pesquisar pedido ou cliente..."
                                             value={pesquisa}
                                             onChange={(evento) =>
                                                 setPesquisa(
@@ -387,7 +423,8 @@ function Pedidos() {
                             </div>
 
                             {carregandoPedidos ||
-                            carregandoProdutos ? (
+                            carregandoProdutos ||
+                            carregandoUsuarios ? (
                                 <div className="text-center py-5">
                                     <div
                                         className="spinner-border"
@@ -408,7 +445,8 @@ function Pedidos() {
 
                                     <p className="text-muted mb-0">
                                         Tente pesquisar por
-                                        outro número de pedido.
+                                        outro número de pedido
+                                        ou cliente.
                                     </p>
                                 </div>
                             ) : (
@@ -444,73 +482,101 @@ function Pedidos() {
 
                                         <tbody>
                                             {pedidosFiltrados.map(
-                                                (pedido) => (
-                                                    <tr
-                                                        key={
-                                                            pedido.id
-                                                        }
-                                                    >
-                                                        <td>
-                                                            <strong>
-                                                                #
-                                                                {
-                                                                    pedido.id
-                                                                }
-                                                            </strong>
-                                                        </td>
+                                                (pedido) => {
+                                                    const cliente =
+                                                        obterCliente(
+                                                            pedido,
+                                                            usuariosMap
+                                                        );
 
-                                                        <td>
-                                                            <strong>
-                                                                Cliente
-                                                            </strong>
+                                                    return (
+                                                        <tr
+                                                            key={
+                                                                pedido.id
+                                                            }
+                                                        >
+                                                            <td>
+                                                                <strong>
+                                                                    #
+                                                                    {
+                                                                        pedido.id
+                                                                    }
+                                                                </strong>
+                                                            </td>
 
-                                                            <small className="d-block text-muted">
-                                                                Dados do
-                                                                cliente não
-                                                                vinculados
-                                                                ao pedido
-                                                            </small>
-                                                        </td>
+                                                            <td>
+                                                                {cliente ? (
+                                                                    <>
+                                                                        <strong className="d-block">
+                                                                            {
+                                                                                cliente.nome
+                                                                            }
+                                                                        </strong>
 
-                                                        <td>
-                                                            {formatarData(
-                                                                pedido.data
-                                                            )}
-                                                        </td>
+                                                                        <small className="text-muted">
+                                                                            {
+                                                                                cliente.email
+                                                                            }
+                                                                        </small>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <strong className="d-block">
+                                                                            Cliente
+                                                                            não
+                                                                            identificado
+                                                                        </strong>
 
-                                                        <td>
-                                                            {formatarMoeda(
-                                                                pedido.valorTotal
-                                                            )}
-                                                        </td>
+                                                                        <small className="text-muted">
+                                                                            Dados
+                                                                            não
+                                                                            vinculados
+                                                                        </small>
+                                                                    </>
+                                                                )}
+                                                            </td>
 
-                                                        <td>
-                                                            <span
-                                                                className={`badge ${obterClasseStatus(
-                                                                    pedido.status
-                                                                )}`}
-                                                            >
-                                                                {
-                                                                    pedido.status
-                                                                }
-                                                            </span>
-                                                        </td>
+                                                            <td>
+                                                                {formatarData(
+                                                                    pedido.data
+                                                                )}
+                                                            </td>
 
-                                                        <td className="text-end">
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-sm btn-outline-dark"
-                                                                onClick={() =>
-                                                                    abrirDetalhes(
-                                                                        pedido
-                                                                    )
-                                                                }
-                                                            >
-                                                                <i className="bi bi-eye"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                )
+                                                            <td>
+                                                                {formatarMoeda(
+                                                                    pedido.valorTotal
+                                                                )}
+                                                            </td>
+
+                                                            <td>
+                                                                <span
+                                                                    className={`badge ${obterClasseStatus(
+                                                                        pedido.status
+                                                                    )}`}
+                                                                >
+                                                                    {
+                                                                        pedido.status
+                                                                    }
+                                                                </span>
+                                                            </td>
+
+                                                            <td className="text-end">
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-sm btn-outline-dark"
+                                                                    onClick={() =>
+                                                                        abrirDetalhes(
+                                                                            pedido
+                                                                        )
+                                                                    }
+                                                                    title="Ver detalhes"
+                                                                >
+                                                                    <i className="bi bi-eye"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                }
                                             )}
                                         </tbody>
                                     </table>
@@ -588,9 +654,17 @@ function Pedidos() {
                                         </span>
 
                                         <strong className="d-block mt-1">
-                                            Cliente não
-                                            identificado
+                                            {clienteSelecionado?.nome ||
+                                                "Cliente não identificado"}
                                         </strong>
+
+                                        {clienteSelecionado?.email && (
+                                            <small className="text-muted d-block mt-1">
+                                                {
+                                                    clienteSelecionado.email
+                                                }
+                                            </small>
+                                        )}
                                     </div>
 
                                     <div className="col-md-6">
@@ -606,7 +680,87 @@ function Pedidos() {
                                     </div>
                                 </div>
 
-                                <div className="border-top pt-4">
+                                {clienteSelecionado && (
+                                    <div className="border-top pt-4">
+                                        <h6 className="mb-3">
+                                            Dados do cliente
+                                        </h6>
+
+                                        <div className="row g-3">
+                                            <div className="col-md-6">
+                                                <span className="text-muted small">
+                                                    Nome
+                                                </span>
+
+                                                <strong className="d-block mt-1">
+                                                    {
+                                                        clienteSelecionado.nome
+                                                    }
+                                                </strong>
+                                            </div>
+
+                                            <div className="col-md-6">
+                                                <span className="text-muted small">
+                                                    E-mail
+                                                </span>
+
+                                                <strong className="d-block mt-1">
+                                                    {
+                                                        clienteSelecionado.email
+                                                    }
+                                                </strong>
+                                            </div>
+
+                                            <div className="col-md-6">
+                                                <span className="text-muted small">
+                                                    Telefone
+                                                </span>
+
+                                                <strong className="d-block mt-1">
+                                                    {clienteSelecionado.telefone ||
+                                                        "Não informado"}
+                                                </strong>
+                                            </div>
+
+                                            <div className="col-md-6">
+                                                <span className="text-muted small">
+                                                    Perfil
+                                                </span>
+
+                                                <strong className="d-block mt-1 text-capitalize">
+                                                    {
+                                                        clienteSelecionado.perfil
+                                                    }
+                                                </strong>
+                                            </div>
+
+                                            <div className="col-12">
+                                                <span className="text-muted small">
+                                                    Endereço
+                                                </span>
+
+                                                <strong className="d-block mt-1">
+                                                    {formatarEndereco(
+                                                        clienteSelecionado
+                                                    )}
+                                                </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {!clienteSelecionado && (
+                                    <div className="border-top pt-4">
+                                        <div className="alert alert-warning mb-0">
+                                            <i className="bi bi-exclamation-triangle me-2"></i>
+                                            Este pedido não possui um
+                                            cliente vinculado pelo
+                                            campo <strong>usuarioId</strong>.
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="border-top pt-4 mt-4">
                                     <h6 className="mb-3">
                                         Produtos
                                     </h6>
@@ -619,6 +773,32 @@ function Pedidos() {
                                             produtosMap
                                         }
                                     />
+                                </div>
+
+                                <div className="border-top pt-4 mt-4">
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <span className="text-muted small">
+                                                Forma de pagamento
+                                            </span>
+
+                                            <strong className="d-block mt-1">
+                                                {pedidoSelecionado.formaPagamento ||
+                                                    "Não informado"}
+                                            </strong>
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <span className="text-muted small">
+                                                ID da forma de pagamento
+                                            </span>
+
+                                            <strong className="d-block mt-1">
+                                                {pedidoSelecionado.formaPagamentoId ||
+                                                    "Não informado"}
+                                            </strong>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="border-top pt-4 mt-4">
@@ -699,6 +879,8 @@ function Pedidos() {
                     </div>
                 </div>
             )}
+
+            <AdminFooter />
         </>
     );
 }
@@ -750,18 +932,31 @@ function ItensDoPedido({
                         String(item.produtoId)
                     );
 
+                const subtotal =
+                    Number(item.precoUnitario || 0) *
+                    Number(item.quantidade || 0);
+
                 return (
                     <div
                         key={item.id}
                         className="d-flex justify-content-between align-items-center border-bottom py-2"
                     >
-                        <span>
-                            {produto?.nome ||
-                                `Produto ${item.produtoId}`}
-                        </span>
+                        <div>
+                            <span className="d-block">
+                                {produto?.nome ||
+                                    `Produto ${item.produtoId}`}
+                            </span>
+
+                            <small className="text-muted">
+                                {formatarMoeda(
+                                    item.precoUnitario
+                                )}{" "}
+                                × {item.quantidade}
+                            </small>
+                        </div>
 
                         <strong>
-                            x{item.quantidade}
+                            {formatarMoeda(subtotal)}
                         </strong>
                     </div>
                 );

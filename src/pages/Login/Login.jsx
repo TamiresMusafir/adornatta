@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import {
+    useLocation,
+    useNavigate
+} from "react-router-dom";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -20,6 +23,7 @@ const loginSchema = z.object({
 
 function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { login } = useAuth();
 
@@ -60,12 +64,48 @@ function Login() {
                 return;
             }
 
+            /*
+             * Administrador sempre é direcionado
+             * para a área administrativa.
+             */
             if (usuario.perfil === "admin") {
-                navigate("/admin");
+                navigate("/admin", {
+                    replace: true
+                });
+
                 return;
             }
 
-            navigate("/");
+            /*
+             * Se o usuário chegou ao Login através
+             * de uma rota protegida, retornamos para
+             * essa rota após a autenticação.
+             *
+             * Exemplo:
+             *
+             * /checkout
+             *    ↓
+             * /login
+             *    ↓
+             * login realizado
+             *    ↓
+             * /checkout
+             */
+            const rotaAnterior =
+                location.state?.from?.pathname || "/";
+
+            const buscaAnterior =
+                location.state?.from?.search || "";
+
+            const hashAnterior =
+                location.state?.from?.hash || "";
+
+            navigate(
+                `${rotaAnterior}${buscaAnterior}${hashAnterior}`,
+                {
+                    replace: true
+                }
+            );
         } catch (erro) {
             setErroLogin(
                 erro.message ||
@@ -196,7 +236,13 @@ function Login() {
                                     className="btn btn-outline-dark w-100"
                                     onClick={() =>
                                         navigate(
-                                            "/cadastro"
+                                            "/cadastro",
+                                            {
+                                                state: {
+                                                    from:
+                                                        location.state?.from
+                                                }
+                                            }
                                         )
                                     }
                                 >
