@@ -18,11 +18,8 @@ import {
     zodResolver
 } from "@hookform/resolvers/zod";
 
-import {
-    Link
-} from "react-router-dom";
-
-import Header from "../../../components/Header/Header";
+import AdminHeader from "../../../components/AdminHeader/AdminHeader";
+import AdminFooter from "../../../components/AdminFooter/AdminFooter";
 
 import {
     buscarProdutos,
@@ -31,7 +28,6 @@ import {
     atualizarProduto
 } from "../../../services/api";
 
-import { useAuth } from "../../../context/AuthContext";
 
 
 const vendaSchema = z.object({
@@ -108,11 +104,6 @@ function obterDataAtual() {
 
 
 function Vendas() {
-
-    const {
-        usuario,
-        logout
-    } = useAuth();
 
     const queryClient = useQueryClient();
 
@@ -444,14 +435,11 @@ function Vendas() {
     }
 
 
-    function sair() {
-        logout();
-    }
 
 
     return (
         <>
-            <Header />
+            <AdminHeader />
 
             <main>
 
@@ -851,6 +839,8 @@ function Vendas() {
                 </section>
 
             </main>
+
+            <AdminFooter />
 
 
             <div
@@ -1480,116 +1470,6 @@ function Vendas() {
                 </div>
 
             </div>
-
-
-            <footer className="footer">
-
-                <div className="container">
-
-                    <div className="row g-5">
-
-                        <div className="col-lg-5">
-
-                            <div className="brand mb-3">
-                                ADORNATTA
-                            </div>
-
-                            <p className="text-muted mb-0">
-                                Área administrativa da loja
-                                Adornatta. Registre e acompanhe
-                                as vendas realizadas.
-                            </p>
-
-                        </div>
-
-
-                        <div className="col-6 col-lg-3">
-
-                            <h6>
-                                Área da loja
-                            </h6>
-
-                            <ul className="list-unstyled">
-
-                                <li>
-                                    <Link to="/admin">
-                                        Painel
-                                    </Link>
-                                </li>
-
-                                <li>
-                                    <Link to="/admin/estoque">
-                                        Estoque
-                                    </Link>
-                                </li>
-
-                                <li>
-                                    <Link to="/admin/pedidos">
-                                        Pedidos
-                                    </Link>
-                                </li>
-
-                                <li>
-                                    <Link to="/admin/vendas">
-                                        Vendas
-                                    </Link>
-                                </li>
-
-                            </ul>
-
-                        </div>
-
-
-                        <div className="col-6 col-lg-4">
-
-                            <h6>
-                                Conta
-                            </h6>
-
-                            <ul className="list-unstyled">
-
-                                <li>
-                                    <span className="text-muted">
-                                        {usuario?.nome}
-                                    </span>
-                                </li>
-
-                                <li>
-
-                                    <button
-                                        type="button"
-                                        className="
-                                            btn
-                                            btn-link
-                                            p-0
-                                            text-decoration-none
-                                        "
-                                        onClick={sair}
-                                    >
-                                        Sair
-                                    </button>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
-
-                    </div>
-
-
-                    <div className="footer-bottom mt-5 pt-4 border-top">
-
-                        <small className="text-muted">
-                            © 2026 Adornatta.
-                            Todos os direitos reservados.
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </footer>
         </>
     );
 }

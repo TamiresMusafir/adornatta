@@ -4,16 +4,18 @@ import {
     useState
 } from "react";
 
-import { buscarUsuario } from "../services/api";
+import {
+    buscarUsuario,
+    criarUsuario,
+    atualizarUsuario
+} from "../services/api";
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
     const [usuario, setUsuario] = useState(() => {
         const usuarioSalvo =
-            localStorage.getItem(
-                "adornattaUsuario"
-            );
+            localStorage.getItem("adornattaUsuario");
 
         return usuarioSalvo
             ? JSON.parse(usuarioSalvo)
@@ -22,10 +24,7 @@ function AuthProvider({ children }) {
 
     async function login(email, senha) {
         const usuarioEncontrado =
-            await buscarUsuario(
-                email,
-                senha
-            );
+            await buscarUsuario(email, senha);
 
         if (!usuarioEncontrado) {
             return null;
@@ -39,6 +38,45 @@ function AuthProvider({ children }) {
         );
 
         return usuarioEncontrado;
+    }
+
+    async function registrar(dados) {
+        const novoUsuario = await criarUsuario({
+            nome: dados.nome,
+            email: dados.email,
+            senha: dados.senha,
+            perfil: "cliente"
+        });
+
+        setUsuario(novoUsuario);
+
+        localStorage.setItem(
+            "adornattaUsuario",
+            JSON.stringify(novoUsuario)
+        );
+
+        return novoUsuario;
+    }
+
+    async function atualizarDados(dados) {
+        if (!usuario?.id) {
+            return false;
+        }
+
+        const usuarioAtualizado =
+            await atualizarUsuario(
+                usuario.id,
+                dados
+            );
+
+        setUsuario(usuarioAtualizado);
+
+        localStorage.setItem(
+            "adornattaUsuario",
+            JSON.stringify(usuarioAtualizado)
+        );
+
+        return usuarioAtualizado;
     }
 
     function logout() {
@@ -55,7 +93,9 @@ function AuthProvider({ children }) {
                 usuario,
                 autenticado: !!usuario,
                 login,
-                logout
+                registrar,
+                logout,
+                atualizarDados
             }}
         >
             {children}

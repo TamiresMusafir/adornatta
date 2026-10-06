@@ -5,10 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { buscarProdutos } from "../../../services/api";
 import { useAuth } from "../../../context/AuthContext";
 
+import AdminHeader from "../../../components/AdminHeader/AdminHeader";
+import AdminFooter from "../../../components/AdminFooter/AdminFooter";
+
 function Dashboard() {
     const navigate = useNavigate();
 
-    const { usuario, logout } = useAuth();
+    const { usuario } = useAuth();
 
     const {
         data: produtos = [],
@@ -45,108 +48,10 @@ function Dashboard() {
         );
     }, [produtos]);
 
-    function sair() {
-        logout();
-        navigate("/login");
-    }
-
     return (
         <>
-            <nav className="navbar navbar-expand-lg border-bottom bg-white">
-                <div className="container">
-                    <a
-                        href="/admin"
-                        className="navbar-brand display-font"
-                        onClick={(evento) => {
-                            evento.preventDefault();
-                            navigate("/admin");
-                        }}
-                    >
-                        ADORNATTA
-                    </a>
 
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#adminNavbar"
-                        aria-controls="adminNavbar"
-                        aria-expanded="false"
-                        aria-label="Alternar navegação"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div
-                        className="collapse navbar-collapse"
-                        id="adminNavbar"
-                    >
-                        <ul className="navbar-nav ms-auto align-items-lg-center">
-                            <li className="nav-item">
-                                <a
-                                    href="/admin"
-                                    className="nav-link active"
-                                    onClick={(evento) => {
-                                        evento.preventDefault();
-                                        navigate("/admin");
-                                    }}
-                                >
-                                    Painel
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a
-                                    href="/admin/estoque"
-                                    className="nav-link"
-                                    onClick={(evento) => {
-                                        evento.preventDefault();
-                                        navigate("/admin/estoque");
-                                    }}
-                                >
-                                    Estoque
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a
-                                    href="/admin/pedidos"
-                                    className="nav-link"
-                                    onClick={(evento) => {
-                                        evento.preventDefault();
-                                        navigate("/admin/pedidos");
-                                    }}
-                                >
-                                    Pedidos
-                                </a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a
-                                    href="/admin/vendas"
-                                    className="nav-link"
-                                    onClick={(evento) => {
-                                        evento.preventDefault();
-                                        navigate("/admin/vendas");
-                                    }}
-                                >
-                                    Vendas
-                                </a>
-                            </li>
-
-                            <li className="nav-item ms-lg-3">
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-dark btn-sm"
-                                    onClick={sair}
-                                >
-                                    Sair
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <AdminHeader />
 
             <main className="container py-5">
                 <div className="mb-5">
@@ -553,6 +458,8 @@ function Dashboard() {
                     </div>
                 </section>
             </main>
+
+            <AdminFooter />
         </>
     );
 }
