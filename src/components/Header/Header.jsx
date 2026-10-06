@@ -31,11 +31,16 @@ function Header() {
                     className="navbar navbar-expand-lg main-navbar sticky-top"
                     aria-label="Navegação principal"
                 >
-                    <section className="container">
+                    {/* CONTAINER ANTIGO: container-fluid e justify-content-between para garantir o espaçamento perfeito até às margens */}
+                    <section className="container-fluid d-flex align-items-center justify-content-between px-3 px-lg-4">
 
-                        <span className="navbar-brand">
+                        {/* BRAND ANTIGO: Link com a classe 'brand' para ativar a fonte Playfair Display */}
+                        <Link
+                            className="navbar-brand brand mb-0"
+                            to="/"
+                        >
                             Adornatta
-                        </span>
+                        </Link>
 
                         <button
                             className="navbar-toggler"
@@ -50,11 +55,12 @@ function Header() {
                         </button>
 
                         <section
-                            className="collapse navbar-collapse"
+                            className="collapse navbar-collapse justify-content-between align-items-center"
                             id="navbarContent"
                         >
 
-                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            {/* MENU CENTRALIZADO: mx-auto empurra as margens e centra o menu */}
+                            <ul className="navbar-nav mx-auto mb-0 align-items-center">
 
                                 <li className="nav-item">
                                     <Link
@@ -74,17 +80,19 @@ function Header() {
                                     </Link>
                                 </li>
 
+                                {/* DROPDOWN ANTIGO: com a classe categories-dropdown-btn e a seta que roda ao clicar */}
                                 <li className="nav-item dropdown">
                                     <button
-                                        className="nav-link dropdown-toggle"
+                                        className="nav-link dropdown-toggle categories-dropdown-btn"
                                         type="button"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                     >
-                                        Categorias
+                                        <span>Categorias</span>
+                                        <i className="bi bi-chevron-down dropdown-arrow"></i>
                                     </button>
 
-                                    <ul className="dropdown-menu">
+                                    <ul className="dropdown-menu categories-menu border-0 shadow-sm">
                                         <li>
                                             <Link
                                                 className="dropdown-item"
@@ -143,11 +151,12 @@ function Header() {
 
                             </ul>
 
-                            <section className="d-flex align-items-center gap-3">
+                            {/* ÍCONES DA DIREITA: Lógica nova intacta, mas a utilizar a classe 'nav-icon' para voltarem a ser círculos interativos */}
+                            <section className="d-flex align-items-center gap-1">
 
                                 <button
                                     type="button"
-                                    className="btn btn-link"
+                                    className="nav-icon"
                                     data-bs-toggle="offcanvas"
                                     data-bs-target="#searchOffcanvas"
                                     aria-controls="searchOffcanvas"
@@ -161,7 +170,7 @@ function Header() {
                                         {usuario?.perfil === "admin" && (
                                             <Link
                                                 to="/admin"
-                                                className="btn btn-link"
+                                                className="nav-icon"
                                                 aria-label="Painel administrativo"
                                                 title="Painel administrativo"
                                             >
@@ -170,7 +179,7 @@ function Header() {
                                         )}
 
                                         <span
-                                            className="text-muted small d-none d-lg-inline"
+                                            className="text-muted small d-none d-lg-inline px-2"
                                             title={usuario?.email}
                                         >
                                             Olá, {usuario?.nome}
@@ -178,7 +187,7 @@ function Header() {
 
                                         <button
                                             type="button"
-                                            className="btn btn-link"
+                                            className="nav-icon border-0 bg-transparent"
                                             onClick={sair}
                                             aria-label="Sair da conta"
                                             title="Sair"
@@ -189,7 +198,7 @@ function Header() {
                                 ) : (
                                     <Link
                                         to="/login"
-                                        className="btn btn-link"
+                                        className="nav-icon"
                                         aria-label="Minha conta"
                                         title="Entrar"
                                     >
@@ -199,7 +208,7 @@ function Header() {
 
                                 <Link
                                     to="/listaDesejo"
-                                    className="btn btn-link"
+                                    className="nav-icon"
                                     aria-label="Lista de desejos"
                                 >
                                     <i className="bi bi-heart"></i>
@@ -207,7 +216,7 @@ function Header() {
 
                                 <button
                                     type="button"
-                                    className="btn btn-link position-relative"
+                                    className="nav-icon position-relative border-0 bg-transparent"
                                     data-bs-toggle="offcanvas"
                                     data-bs-target="#cartOffcanvas"
                                     aria-controls="cartOffcanvas"
