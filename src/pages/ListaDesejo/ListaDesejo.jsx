@@ -67,7 +67,8 @@ function ListaDesejo() {
                             >
                                 {listaDesejos.map((produto) => (
                                     <article
-                                        className="col-md-4"
+                                        // Voltamos para a classe col-md-4 que faz ficar 3 um do lado do outro!
+                                        className="col-12 col-sm-6 col-md-4 d-flex flex-column align-items-center mb-4"
                                         key={produto.id}
                                     >
 
@@ -78,11 +79,14 @@ function ListaDesejo() {
                                             preco={produto.preco}
                                             imagem={produto.imagem}
                                             tag={produto.tag}
+                                            quantidadeDisponivel={produto.quantidadeDisponivel} 
+                                            // Usamos o layout "lista" que acabamos de criar para não espremer
+                                            layout="lista"
                                         />
 
                                         <button
                                             type="button"
-                                            className="wishlist-remove"
+                                            className="wishlist-remove mt-2"
                                             onClick={() =>
                                                 removerFavorito(produto.id)
                                             }
