@@ -32,7 +32,7 @@ git clone -b main https://github.com/TamiresMusafir/adornatta
 Depois, entre na pasta do projeto:
 
 ``` bash
-cd front-end-2
+cd adornatta
 ```
 
 ## 4. Instalar as dependências
@@ -41,6 +41,7 @@ Com o terminal aberto na pasta do projeto, execute:
 
 ``` bash
 npm install
+npm install gsap
 ```
 
 O comando instala as dependências definidas no `package.json`.
