@@ -60,6 +60,7 @@ Entre as principais tecnologias e bibliotecas utilizadas estão:
 -   **Zod** --- validação dos dados dos formulários;
 -   **@hookform/resolvers** --- integração entre React Hook Form e Zod;
 -   **json-server** --- backend simulado para desenvolvimento.
+-   **gsap** --- cria animações avançadas e controla transições de elementos da interface.
 
 O projeto utiliza `json-server` na versão `1.0.0-beta.15`.
 
@@ -105,7 +106,11 @@ http://localhost:3000
 
 ## 7. Inicialização do frontend
 
-Abra um segundo terminal na pasta do projeto e execute:
+Abra um segundo terminal e execute:
+
+``` bash
+cd adornatta
+```
 
 ``` bash
 npm run dev
