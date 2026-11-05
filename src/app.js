@@ -4,6 +4,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const catalogoRoutes = require('./routes/catalogoRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes');
+const formaPagamentoRoutes = require('./routes/formaPagamentoRoutes');
 
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -35,6 +38,9 @@ app.get('/api/health', (req, res) => {
 
 // Rotas de usuários
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api', catalogoRoutes);
+app.use('/api', pedidoRoutes);
+app.use('/api', formaPagamentoRoutes);
 
 // =====================================================
 // TRATAMENTO DE ERROS
