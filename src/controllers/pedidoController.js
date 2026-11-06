@@ -74,6 +74,19 @@ async function criarItemPedido(req, res, next) {
     }
 }
 
+async function removerItemPedido(req, res, next) {
+    try {
+        const resultado = await pedidoService.removerItemPedido(
+            req.params.pedidoId,
+            req.params.produtoId,
+            req.usuarioAutenticado
+        );
+        return res.status(200).json(resultado);
+    } catch (error) {
+        return next(error);
+    }
+}
+
 async function listarItensPedido(req, res, next) {
     try {
         const itens = await pedidoService.listarItensPedido(
@@ -100,6 +113,7 @@ module.exports = {
     listarPedidos,
     atualizarPedido,
     criarItemPedido,
+    removerItemPedido,
     listarItensPedido,
     listarVendas,
 };

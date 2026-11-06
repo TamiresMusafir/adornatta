@@ -24,6 +24,11 @@ router.patch(
 
 router.get('/itensPedido', autenticar, pedidoController.listarItensPedido);
 router.post('/itensPedido', autenticar, pedidoController.criarItemPedido);
+router.delete(
+    '/itensPedido/:pedidoId/:produtoId',
+    autenticar,
+    pedidoController.removerItemPedido
+);
 
 router.get(
     '/vendas',

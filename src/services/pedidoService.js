@@ -27,7 +27,7 @@ const statusSaida = {
 const transicoesPedido = {
     pendente: ['em_preparacao', 'cancelado'],
     confirmado: ['em_preparacao', 'cancelado'],
-    em_preparacao: ['enviado'],
+    em_preparacao: ['enviado', 'cancelado'],
     enviado: ['entregue'],
     entregue: [],
     cancelado: [],
@@ -61,6 +61,39 @@ function validarId(id, nome = 'Identificador') {
     }
 
     return valor;
+}
+
+function validarItensPedido(itens) {
+    if (!Array.isArray(itens) || itens.length === 0) {
+        throw criarErro('O pedido precisa conter pelo menos um produto.');
+    }
+
+    const quantidades = new Map();
+    for (const item of itens) {
+        if (!item || typeof item !== 'object' || Array.isArray(item)) {
+            throw criarErro('Item do pedido inválido.');
+        }
+
+        const produtoId = validarId(item.produtoId, 'Produto');
+        const quantidade = item.quantidade;
+        if (
+            !Number.isSafeInteger(quantidade) ||
+            quantidade < 1 ||
+            quantidade > 2147483647
+        ) {
+            throw criarErro('Quantidade do item inválida.');
+        }
+
+        const total = (quantidades.get(produtoId) || 0) + quantidade;
+        if (!Number.isSafeInteger(total) || total > 2147483647) {
+            throw criarErro('Quantidade total do produto inválida.');
+        }
+        quantidades.set(produtoId, total);
+    }
+
+    return [...quantidades.entries()]
+        .sort(([produtoA], [produtoB]) => produtoA - produtoB)
+        .map(([produtoId, quantidade]) => ({ produtoId, quantidade }));
 }
 
 function validarPagamento(valor) {
@@ -249,15 +282,7 @@ async function criarPedido(dados, usuarioAutenticado) {
     const formaPagamentoId = dados.formaPagamentoId
         ? validarId(dados.formaPagamentoId, 'Forma de pagamento')
         : null;
-    const total = dados.valorTotal;
-    if (
-        typeof total !== 'number' ||
-        !Number.isFinite(total) ||
-        total < 0 ||
-        total > 99999999.99
-    ) {
-        throw criarErro('Valor total do pedido inválido.');
-    }
+    const itens = validarItensPedido(dados.itens);
 
     const statusInicial = dados.status === undefined
         ? 'pendente'
@@ -277,6 +302,52 @@ async function criarPedido(dados, usuarioAutenticado) {
     try {
         await client.query('BEGIN');
         await validarUsuario(client, idusuario);
+
+        const produtos = await client.query(
+            `SELECT idproduto, preco_unitario, quantidade
+             FROM produto
+             WHERE idproduto = ANY($1::integer[])
+             ORDER BY idproduto
+             FOR UPDATE`,
+            [itens.map((item) => item.produtoId)]
+        );
+        const produtosPorId = new Map(
+            produtos.rows.map((produto) => [
+                Number(produto.idproduto),
+                produto,
+            ])
+        );
+        if (produtosPorId.size !== itens.length) {
+            throw criarErro('Um ou mais produtos não foram encontrados.', 404);
+        }
+
+        let totalCentavos = 0;
+        const itensComPreco = itens.map((item) => {
+            const produto = produtosPorId.get(item.produtoId);
+            if (produto.quantidade < item.quantidade) {
+                throw criarErro(
+                    `Estoque insuficiente para o produto ${item.produtoId}.`,
+                    409
+                );
+            }
+
+            const precoCentavos = Math.round(
+                Number(produto.preco_unitario) * 100
+            );
+            totalCentavos += precoCentavos * item.quantidade;
+            if (
+                !Number.isSafeInteger(totalCentavos) ||
+                totalCentavos > 9999999999
+            ) {
+                throw criarErro('Valor total do pedido inválido.');
+            }
+
+            return {
+                ...item,
+                precoUnitario: precoCentavos / 100,
+            };
+        });
+        const total = totalCentavos / 100;
 
         if (formaPagamentoId) {
             const forma = await client.query(
@@ -324,6 +395,28 @@ async function criarPedido(dados, usuarioAutenticado) {
         );
 
         pedidoId = pedido.rows[0].idpedido;
+
+        for (const item of itensComPreco) {
+            await client.query(
+                `INSERT INTO produto_pedido
+                    (idproduto, idpedido, quantidade,
+                     quantidade_reservada, preco_unitario)
+                 VALUES ($1, $2, $3, $3, $4)`,
+                [
+                    item.produtoId,
+                    pedidoId,
+                    item.quantidade,
+                    item.precoUnitario,
+                ]
+            );
+            await client.query(
+                `UPDATE produto
+                 SET quantidade = quantidade - $1
+                 WHERE idproduto = $2`,
+                [item.quantidade, item.produtoId]
+            );
+        }
+
         await client.query('COMMIT');
     } catch (error) {
         await rollback(client);
@@ -431,6 +524,43 @@ async function atualizarPedido(id, dados) {
                 );
             }
 
+            if (status === 'cancelado') {
+                if (atual.status_pagamento === 'aprovado') {
+                    throw criarErro(
+                        'O pagamento foi aprovado. Faça o estorno antes de cancelar o pedido e devolver os itens ao estoque.',
+                        409
+                    );
+                }
+
+                const itens = await client.query(
+                    `SELECT idproduto, quantidade_reservada
+                     FROM produto_pedido
+                     WHERE idpedido = $1
+                     ORDER BY idproduto`,
+                    [pedidoId]
+                );
+                for (const item of itens.rows) {
+                    await client.query(
+                        `UPDATE produto
+                         SET quantidade = quantidade + $1
+                         WHERE idproduto = $2`,
+                        [item.quantidade_reservada, item.idproduto]
+                    );
+                }
+                await client.query(
+                    `UPDATE produto_pedido
+                     SET quantidade_reservada = 0
+                     WHERE idpedido = $1`,
+                    [pedidoId]
+                );
+                await client.query(
+                    `UPDATE pagamento
+                     SET status = 'cancelado'
+                     WHERE idpedido = $1 AND status = 'pendente'`,
+                    [pedidoId]
+                );
+            }
+
             await client.query(
                 'UPDATE pedido SET status = $1 WHERE idpedido = $2',
                 [status, pedidoId]
@@ -513,22 +643,36 @@ async function criarItemPedido(dados, usuarioAutenticado) {
         }
 
         const produto = await client.query(
-            `SELECT preco_unitario
+            `SELECT preco_unitario, quantidade
              FROM produto
-             WHERE idproduto = $1`,
+             WHERE idproduto = $1
+             FOR UPDATE`,
             [produtoId]
         );
         if (!produto.rows[0]) {
             throw criarErro('Produto não encontrado.', 404);
         }
+        if (produto.rows[0].quantidade < quantidade) {
+            throw criarErro('Estoque insuficiente.', 409);
+        }
+
+        await client.query(
+            `UPDATE produto
+             SET quantidade = quantidade - $1
+             WHERE idproduto = $2`,
+            [quantidade, produtoId]
+        );
 
         await client.query(
             `INSERT INTO produto_pedido
-                (idproduto, idpedido, quantidade, preco_unitario)
-             VALUES ($1, $2, $3, $4)
+                (idproduto, idpedido, quantidade,
+                 quantidade_reservada, preco_unitario)
+             VALUES ($1, $2, $3, $3, $4)
              ON CONFLICT (idproduto, idpedido)
              DO UPDATE SET
                 quantidade = produto_pedido.quantidade + EXCLUDED.quantidade,
+                quantidade_reservada = produto_pedido.quantidade_reservada
+                    + EXCLUDED.quantidade_reservada,
                 preco_unitario = EXCLUDED.preco_unitario`,
             [
                 produtoId,
@@ -567,6 +711,111 @@ async function criarItemPedido(dados, usuarioAutenticado) {
         await client.query('COMMIT');
 
         return montarItem(resultado.rows[0]);
+    } catch (error) {
+        await rollback(client);
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+async function removerItemPedido(pedidoIdInformado, produtoIdInformado, usuarioAutenticado) {
+    const pedidoId = validarId(pedidoIdInformado, 'Pedido');
+    const produtoId = validarId(produtoIdInformado, 'Produto');
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+        await verificarAcessoPedido(pedidoId, usuarioAutenticado, client);
+
+        const pedido = await client.query(
+            `SELECT p.status, pg.status AS status_pagamento
+             FROM pedido p
+             LEFT JOIN LATERAL (
+                 SELECT status
+                 FROM pagamento
+                 WHERE idpedido = p.idpedido
+                 ORDER BY idpagamento DESC
+                 LIMIT 1
+             ) pg ON TRUE
+             WHERE p.idpedido = $1
+             FOR UPDATE OF p`,
+            [pedidoId]
+        );
+        if (
+            pedido.rows[0].status !== 'pendente' ||
+            pedido.rows[0].status_pagamento !== 'pendente'
+        ) {
+            throw criarErro(
+                'Só é possível remover produtos de pedidos em análise com pagamento pendente.',
+                409
+            );
+        }
+
+        const item = await client.query(
+            `SELECT quantidade_reservada
+             FROM produto_pedido
+             WHERE idpedido = $1 AND idproduto = $2
+             FOR UPDATE`,
+            [pedidoId, produtoId]
+        );
+        if (!item.rows[0]) {
+            throw criarErro('Produto não encontrado neste pedido.', 404);
+        }
+
+        await client.query(
+            `UPDATE produto
+             SET quantidade = quantidade + $1
+             WHERE idproduto = $2`,
+            [item.rows[0].quantidade_reservada, produtoId]
+        );
+        await client.query(
+            `DELETE FROM produto_pedido
+             WHERE idpedido = $1 AND idproduto = $2`,
+            [pedidoId, produtoId]
+        );
+
+        const total = await client.query(
+            `SELECT COALESCE(SUM(quantidade * preco_unitario), 0) AS valor_total,
+                    COUNT(*) AS quantidade_itens
+             FROM produto_pedido
+             WHERE idpedido = $1`,
+            [pedidoId]
+        );
+        const pedidoCancelado = Number(total.rows[0].quantidade_itens) === 0;
+        if (pedidoCancelado) {
+            await client.query(
+                `UPDATE pedido SET status = 'cancelado' WHERE idpedido = $1`,
+                [pedidoId]
+            );
+            await client.query(
+                `UPDATE pagamento
+                 SET status = 'cancelado'
+                 WHERE idpedido = $1 AND status = 'pendente'`,
+                [pedidoId]
+            );
+        } else {
+            await client.query(
+                `UPDATE pedido
+                 SET valor_total = $1
+                 WHERE idpedido = $2`,
+                [total.rows[0].valor_total, pedidoId]
+            );
+            await client.query(
+                `UPDATE pagamento
+                 SET valor = $1
+                 WHERE idpedido = $2 AND status = 'pendente'`,
+                [total.rows[0].valor_total, pedidoId]
+            );
+        }
+
+        await client.query('COMMIT');
+        return {
+            pedidoId: String(pedidoId),
+            produtoId: String(produtoId),
+            quantidadeRemovida: item.rows[0].quantidade,
+            pedidoCancelado,
+        };
     } catch (error) {
         await rollback(client);
         throw error;
@@ -657,6 +906,7 @@ module.exports = {
     listarPedidos,
     atualizarPedido,
     criarItemPedido,
+    removerItemPedido,
     listarItensPedido,
     listarVendas,
 };
