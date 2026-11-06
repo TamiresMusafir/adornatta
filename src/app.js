@@ -4,6 +4,10 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const catalogoRoutes = require('./routes/catalogoRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes');
+const formaPagamentoRoutes = require('./routes/formaPagamentoRoutes');
+const mercadoPagoRoutes = require('./routes/mercadoPagoRoutes');
 
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -26,6 +30,13 @@ app.use(cookieParser());
 // =====================================================
 
 // Verificar se o backend está funcionando
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        message: 'API Adornatta funcionando. Use /api/health para verificar a saúde do serviço.',
+    });
+});
+
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'ok',
@@ -35,6 +46,10 @@ app.get('/api/health', (req, res) => {
 
 // Rotas de usuários
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api', catalogoRoutes);
+app.use('/api', pedidoRoutes);
+app.use('/api', formaPagamentoRoutes);
+app.use('/api', mercadoPagoRoutes);
 
 // =====================================================
 // TRATAMENTO DE ERROS
