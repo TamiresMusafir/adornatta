@@ -1,6 +1,7 @@
 
 const bcrypt = require('bcrypt');
 const { pool } = require('../database/connection');
+const { validarCepExistente } = require('./cepService');
 
 function formatarUsuario(usuario) {
     const telefones = usuario.telefones || [];
@@ -95,7 +96,7 @@ function validarEndereco(endereco) {
     }
 
     const uf = ufInformada.trim().toUpperCase();
-    const cep = endereco.cep.replace(/\D/g, '');
+    const cep = endereco.cep.trim().replace('-', '');
     const resultado = {
         logradouro: String(endereco.logradouro || '').trim(),
         numero: String(endereco.numero || '').trim(),
@@ -119,7 +120,7 @@ function validarEndereco(endereco) {
         !resultado.cidade ||
         resultado.cidade.length > 60 ||
         !/^[A-Z]{2}$/.test(uf) ||
-        !/^[0-9]{8}$/.test(cep)
+        !/^\d{5}-?\d{3}$/.test(endereco.cep.trim())
     ) {
         throw criarErro('Endereço inválido ou fora dos limites permitidos.');
     }
@@ -438,6 +439,13 @@ async function atualizarUsuario(id, dados) {
         throw criarErro('Nenhum campo permitido foi informado.');
     }
 
+    const enderecoValidado = dados.endereco === undefined
+        ? null
+        : validarEndereco(dados.endereco);
+    if (enderecoValidado) {
+        await validarCepExistente(enderecoValidado.cep);
+    }
+
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
@@ -521,7 +529,7 @@ async function atualizarUsuario(id, dados) {
         }
 
         if (dados.endereco !== undefined) {
-            const endereco = validarEndereco(dados.endereco);
+            const endereco = enderecoValidado;
             const enderecoExistente = await client.query(
                 `SELECT idendereco
                  FROM endereco_usuario

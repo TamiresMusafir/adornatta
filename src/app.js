@@ -29,6 +29,13 @@ app.use(cookieParser());
 // =====================================================
 
 // Verificar se o backend está funcionando
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        message: 'API Adornatta funcionando. Use /api/health para verificar a saúde do serviço.',
+    });
+});
+
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'ok',

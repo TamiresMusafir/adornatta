@@ -1,4 +1,5 @@
 const { pool } = require('../database/connection');
+const { validarCepExistente } = require('./cepService');
 
 const statusEntrada = {
     'Em análise': 'pendente',
@@ -130,7 +131,7 @@ function validarEndereco(dados) {
         bairro: String(dados.bairro || '').trim(),
         cidade: String(dados.cidade || '').trim(),
         uf: ufInformada.trim().toUpperCase(),
-        cep: dados.cep.replace(/\D/g, ''),
+        cep: dados.cep.trim().replace('-', ''),
     };
 
     if (
@@ -144,7 +145,7 @@ function validarEndereco(dados) {
         !endereco.cidade ||
         endereco.cidade.length > 60 ||
         !/^[A-Z]{2}$/.test(endereco.uf) ||
-        !/^[0-9]{8}$/.test(endereco.cep)
+        !/^\d{5}-?\d{3}$/.test(dados.cep.trim())
     ) {
         throw criarErro('Endereço de entrega inválido.');
     }
@@ -152,12 +153,12 @@ function validarEndereco(dados) {
     return endereco;
 }
 
-async function obterEndereco(client, idusuario, dadosEndereco) {
+async function obterEndereco(idusuario, dadosEndereco) {
     if (dadosEndereco) {
         return validarEndereco(dadosEndereco);
     }
 
-    const resultado = await client.query(
+    const resultado = await pool.query(
         `SELECT logradouro, numero, complemento, bairro, cidade, uf, cep
          FROM endereco_usuario
          WHERE idusuario = $1
@@ -266,14 +267,16 @@ async function criarPedido(dados, usuarioAutenticado) {
             'O pedido deve iniciar em análise e aguardar a confirmação do pagamento.'
         );
     }
+
     const data = validarData(dados.data);
+    const endereco = await obterEndereco(idusuario, enderecoInformado);
+    await validarCepExistente(endereco.cep);
 
     const client = await pool.connect();
     let pedidoId;
     try {
         await client.query('BEGIN');
         await validarUsuario(client, idusuario);
-        const endereco = await obterEndereco(client, idusuario, enderecoInformado);
 
         if (formaPagamentoId) {
             const forma = await client.query(
