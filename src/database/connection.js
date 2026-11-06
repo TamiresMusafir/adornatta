@@ -1,12 +1,18 @@
 
 const { Pool } = require('pg');
 
+const roleAplicacao = process.env.DB_ROLE || 'adornatta_app';
+if (roleAplicacao !== 'adornatta_app') {
+    throw new Error('DB_ROLE deve ser adornatta_app para o backend.');
+}
+
 const pool = new Pool({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    options: '-c role=adornatta_app',
 });
 
 // Identifica erros em conexões que estão ociosas no pool

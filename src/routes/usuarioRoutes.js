@@ -20,6 +20,7 @@ router.post('/', usuarioController.cadastrarUsuario);
 // POST /api/usuarios/login
 router.post('/login', usuarioController.loginUsuario);
 router.post('/logout', usuarioController.logoutUsuario);
+router.get('/sessao', autenticar, usuarioController.verificarSessao);
 
 // Dados pessoais não são disponibilizados publicamente.
 router.get(

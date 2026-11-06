@@ -1,7 +1,9 @@
 const pedidoService = require('../services/pedidoService');
+const mercadoPagoService = require('../services/mercadoPagoService');
 
 async function criarPedido(req, res, next) {
     try {
+        mercadoPagoService.validarConfiguracao();
         const pedido = await pedidoService.criarPedido(
             req.body,
             req.usuarioAutenticado

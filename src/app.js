@@ -7,6 +7,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const catalogoRoutes = require('./routes/catalogoRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
 const formaPagamentoRoutes = require('./routes/formaPagamentoRoutes');
+const mercadoPagoRoutes = require('./routes/mercadoPagoRoutes');
 
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -48,6 +49,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api', catalogoRoutes);
 app.use('/api', pedidoRoutes);
 app.use('/api', formaPagamentoRoutes);
+app.use('/api', mercadoPagoRoutes);
 
 // =====================================================
 // TRATAMENTO DE ERROS
