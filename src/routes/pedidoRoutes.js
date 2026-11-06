@@ -31,11 +31,5 @@ router.get(
     exigirAdministrador,
     pedidoController.listarVendas
 );
-router.post(
-    '/vendas',
-    autenticar,
-    exigirAdministrador,
-    pedidoController.criarVenda
-);
 
 module.exports = router;

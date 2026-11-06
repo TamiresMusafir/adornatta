@@ -23,6 +23,15 @@ const statusSaida = {
     cancelado: 'Cancelado',
 };
 
+const transicoesPedido = {
+    pendente: ['em_preparacao', 'cancelado'],
+    confirmado: ['em_preparacao', 'cancelado'],
+    em_preparacao: ['enviado'],
+    enviado: ['entregue'],
+    entregue: [],
+    cancelado: [],
+};
+
 function criarErro(mensagem, statusCode = 400) {
     const erro = new Error(mensagem);
     erro.statusCode = statusCode;
@@ -203,6 +212,7 @@ function montarPedido(row) {
             ? String(row.idformapagamento)
             : undefined,
         formaPagamento,
+        statusPagamento: row.status_pagamento || null,
         enderecoEntrega: endereco,
     };
 }
@@ -211,10 +221,11 @@ const consultaPedidos = `
     SELECT p.idpedido, p.data, p.valor_total, p.status, p.idusuario,
            p.logradouro_entrega, p.numero_entrega, p.complemento_entrega,
            p.bairro_entrega, p.cidade_entrega, p.uf_entrega, p.cep_entrega,
-           pg.forma_pagamento, fp.bandeira, fp.idformapagamento
+           pg.forma_pagamento, pg.status AS status_pagamento,
+           fp.bandeira, fp.idformapagamento
     FROM pedido p
     LEFT JOIN LATERAL (
-        SELECT idformapagamento, forma_pagamento
+        SELECT idformapagamento, forma_pagamento, status
         FROM pagamento
         WHERE idpedido = p.idpedido
         ORDER BY idpagamento DESC
@@ -247,11 +258,13 @@ async function criarPedido(dados, usuarioAutenticado) {
         throw criarErro('Valor total do pedido inválido.');
     }
 
-    const status = dados.status === undefined
+    const statusInicial = dados.status === undefined
         ? 'pendente'
         : statusEntrada[dados.status];
-    if (!status || !['pendente', 'confirmado'].includes(status)) {
-        throw criarErro('O pedido deve iniciar em análise ou confirmado.');
+    if (statusInicial !== 'pendente') {
+        throw criarErro(
+            'O pedido deve iniciar em análise e aguardar a confirmação do pagamento.'
+        );
     }
     const data = validarData(dados.data);
 
@@ -287,7 +300,7 @@ async function criarPedido(dados, usuarioAutenticado) {
             [
                 data,
                 total,
-                status,
+                'pendente',
                 idusuario,
                 endereco.logradouro,
                 endereco.numero,
@@ -362,21 +375,74 @@ async function atualizarPedido(id, dados) {
     }
 
     const status = statusEntrada[dados.status];
-    if (!status) {
+    if (
+        !status ||
+        !Object.prototype.hasOwnProperty.call(transicoesPedido, status)
+    ) {
         throw criarErro('Status do pedido inválido.');
     }
 
-    const resultado = await pool.query(
-        `UPDATE pedido
-         SET status = $1
-         WHERE idpedido = $2
-         RETURNING idpedido`,
-        [status, pedidoId]
-    );
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const pedido = await client.query(
+            `SELECT p.status, pg.status AS status_pagamento,
+                    pg.provedor
+             FROM pedido p
+             LEFT JOIN LATERAL (
+                 SELECT status, provedor
+                 FROM pagamento
+                 WHERE idpedido = p.idpedido
+                 ORDER BY idpagamento DESC
+                 LIMIT 1
+             ) pg ON TRUE
+             WHERE p.idpedido = $1
+             FOR UPDATE OF p`,
+            [pedidoId]
+        );
 
-    return resultado.rowCount > 0
-        ? await buscarPedidoPorId(pedidoId)
-        : null;
+        if (!pedido.rows[0]) {
+            await client.query('ROLLBACK');
+            return null;
+        }
+
+        const atual = pedido.rows[0];
+        if (atual.status !== status) {
+            if (!transicoesPedido[atual.status]?.includes(status)) {
+                throw criarErro(
+                    `Não é possível alterar o pedido de "${statusSaida[atual.status] || atual.status}" para "${statusSaida[status]}".`,
+                    409
+                );
+            }
+
+            if (
+                ['em_preparacao', 'enviado', 'entregue'].includes(status) &&
+                (
+                    atual.status_pagamento !== 'aprovado' ||
+                    atual.provedor !== 'mercado_pago'
+                )
+            ) {
+                throw criarErro(
+                    'O pedido só pode avançar após a confirmação do pagamento pelo Mercado Pago.',
+                    409
+                );
+            }
+
+            await client.query(
+                'UPDATE pedido SET status = $1 WHERE idpedido = $2',
+                [status, pedidoId]
+            );
+        }
+
+        await client.query('COMMIT');
+    } catch (error) {
+        await rollback(client);
+        throw error;
+    } finally {
+        client.release();
+    }
+
+    return buscarPedidoPorId(pedidoId);
 }
 
 async function verificarAcessoPedido(id, usuarioAutenticado, client = pool) {
@@ -416,6 +482,33 @@ async function criarItemPedido(dados, usuarioAutenticado) {
     try {
         await client.query('BEGIN');
         await verificarAcessoPedido(pedidoId, usuarioAutenticado, client);
+        const estadoPedido = await client.query(
+            `SELECT p.status, pg.status AS status_pagamento
+             FROM pedido p
+             LEFT JOIN LATERAL (
+                 SELECT status
+                 FROM pagamento
+                 WHERE idpedido = p.idpedido
+                 ORDER BY idpagamento DESC
+                 LIMIT 1
+             ) pg ON TRUE
+             WHERE p.idpedido = $1
+             FOR UPDATE OF p`,
+            [pedidoId]
+        );
+        if (!estadoPedido.rows[0]) {
+            throw criarErro('Pedido não encontrado.', 404);
+        }
+        if (
+            estadoPedido.rows[0].status !== 'pendente' ||
+            estadoPedido.rows[0].status_pagamento !== 'pendente'
+        ) {
+            throw criarErro(
+                'Não é possível alterar itens após o pedido avançar ou o pagamento ser confirmado.',
+                409
+            );
+        }
+
         const produto = await client.query(
             `SELECT preco_unitario
              FROM produto
@@ -505,153 +598,52 @@ async function listarItensPedido(pedidoId, usuarioAutenticado) {
     return resultado.rows.map(montarItem);
 }
 
-async function criarVendaComoPedido(dados) {
-    if (!dados || typeof dados !== 'object' || Array.isArray(dados)) {
-        throw criarErro('Dados da venda inválidos.');
-    }
-
-    const idusuario = validarId(dados.usuarioId, 'Usuário');
-    const produtoId = validarId(dados.produtoId, 'Produto');
-    const quantidade = dados.quantidade;
-    if (!Number.isSafeInteger(quantidade) || quantidade < 1) {
-        throw criarErro('Quantidade da venda inválida.');
-    }
-
-    const formaPagamento = validarPagamento(dados.formaPagamento);
-    const data = validarData(dados.data);
-    const client = await pool.connect();
-    let pedidoId;
-    try {
-        await client.query('BEGIN');
-        await validarUsuario(client, idusuario);
-        const endereco = await obterEndereco(
-            client,
-            idusuario,
-            dados.enderecoEntrega || dados.endereco
-        );
-        const produto = await client.query(
-            `SELECT nome, preco_unitario
-             FROM produto
-             WHERE idproduto = $1 AND quantidade >= $2
-             FOR UPDATE`,
-            [produtoId, quantidade]
-        );
-        if (!produto.rows[0]) {
-            const existe = await client.query(
-                'SELECT idproduto FROM produto WHERE idproduto = $1',
-                [produtoId]
-            );
-            if (!existe.rows[0]) {
-                throw criarErro('Produto não encontrado.', 404);
-            }
-            throw criarErro('Estoque insuficiente.', 409);
-        }
-
-        const unitario = Number(produto.rows[0].preco_unitario);
-        const total = unitario * quantidade;
-        if (!Number.isFinite(total) || total > 99999999.99) {
-            throw criarErro('Valor total da venda inválido.');
-        }
-
-        const pedido = await client.query(
-            `INSERT INTO pedido
-                (data, valor_total, status, idusuario, logradouro_entrega,
-                 numero_entrega, complemento_entrega, bairro_entrega,
-                 cidade_entrega, uf_entrega, cep_entrega)
-             VALUES (COALESCE($1::timestamptz, CURRENT_TIMESTAMP), $2,
-                     'entregue', $3, $4, $5, $6, $7, $8, $9, $10)
-             RETURNING idpedido`,
-            [
-                data,
-                total,
-                idusuario,
-                endereco.logradouro,
-                endereco.numero,
-                endereco.complemento,
-                endereco.bairro,
-                endereco.cidade,
-                endereco.uf,
-                endereco.cep,
-            ]
-        );
-        pedidoId = pedido.rows[0].idpedido;
-
-        await client.query(
-            `INSERT INTO produto_pedido
-                (idproduto, idpedido, quantidade, preco_unitario)
-             VALUES ($1, $2, $3, $4)`,
-            [produtoId, pedidoId, quantidade, unitario]
-        );
-        const estoque = await client.query(
-            `UPDATE produto
-             SET quantidade = quantidade - $1
-             WHERE idproduto = $2 AND quantidade >= $1
-             RETURNING idproduto`,
-            [quantidade, produtoId]
-        );
-        if (!estoque.rows[0]) {
-            throw criarErro('Estoque insuficiente.', 409);
-        }
-
-        await client.query(
-            `INSERT INTO pagamento
-                (idpedido, valor, status, forma_pagamento, provedor,
-                 data_pagamento)
-             VALUES ($1, $2, 'aprovado', $3, 'manual', CURRENT_TIMESTAMP)`,
-            [pedidoId, total, formaPagamento]
-        );
-        await client.query('COMMIT');
-    } catch (error) {
-        await rollback(client);
-        throw error;
-    } finally {
-        client.release();
-    }
-
-    return buscarVendaPorPedido(pedidoId);
-}
-
 function montarVenda(row) {
     return {
-        id: `${row.idpedido}-${row.idproduto}`,
+        id: String(row.idpedido),
+        pedidoId: String(row.idpedido),
         cliente: row.nome_usuario,
         data: row.data,
-        produtoId: String(row.idproduto),
-        quantidade: row.quantidade,
         formaPagamento: row.forma_pagamento,
-        valorUnitario: Number(row.preco_unitario),
         valorTotal: Number(row.valor_total),
+        statusPedido: statusSaida[row.status] || row.status,
+        itens: row.itens,
     };
 }
 
 const consultaVendas = `
-    SELECT p.idpedido, p.data, p.valor_total, u.nome AS nome_usuario,
-           pp.idproduto, pp.quantidade, pp.preco_unitario,
-           pg.forma_pagamento
+    SELECT p.idpedido, p.data, p.valor_total, p.status,
+           u.nome AS nome_usuario,
+           pg.forma_pagamento,
+           json_agg(
+               json_build_object(
+                   'produtoId', pp.idproduto,
+                   'nome', produto.nome,
+                   'quantidade', pp.quantidade,
+                   'precoUnitario', pp.preco_unitario
+               )
+               ORDER BY pp.idproduto
+           ) AS itens
     FROM pedido p
     JOIN usuario u ON u.idusuario = p.idusuario
     JOIN produto_pedido pp ON pp.idpedido = p.idpedido
-    LEFT JOIN LATERAL (
-        SELECT forma_pagamento
+    JOIN produto ON produto.idproduto = pp.idproduto
+    JOIN LATERAL (
+        SELECT forma_pagamento, status, provedor
         FROM pagamento
         WHERE idpedido = p.idpedido
         ORDER BY idpagamento DESC
         LIMIT 1
     ) pg ON TRUE
-    WHERE p.status = 'entregue'
+    WHERE pg.status = 'aprovado'
+      AND pg.provedor = 'mercado_pago'
+    GROUP BY p.idpedido, p.data, p.valor_total, p.status,
+             u.nome, pg.forma_pagamento
 `;
-
-async function buscarVendaPorPedido(pedidoId) {
-    const resultado = await pool.query(
-        `${consultaVendas} AND p.idpedido = $1 ORDER BY pp.idproduto`,
-        [pedidoId]
-    );
-    return resultado.rows.map(montarVenda);
-}
 
 async function listarVendas() {
     const resultado = await pool.query(
-        `${consultaVendas} ORDER BY p.data DESC, p.idpedido DESC, pp.idproduto`
+        `${consultaVendas} ORDER BY p.data DESC, p.idpedido DESC`
     );
     return resultado.rows.map(montarVenda);
 }
@@ -663,6 +655,5 @@ module.exports = {
     atualizarPedido,
     criarItemPedido,
     listarItensPedido,
-    criarVendaComoPedido,
     listarVendas,
 };

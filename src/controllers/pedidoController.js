@@ -86,15 +86,6 @@ async function listarItensPedido(req, res, next) {
     }
 }
 
-async function criarVenda(req, res, next) {
-    try {
-        const vendas = await pedidoService.criarVendaComoPedido(req.body);
-        return res.status(201).json(vendas[0]);
-    } catch (error) {
-        return next(error);
-    }
-}
-
 async function listarVendas(req, res, next) {
     try {
         return res.status(200).json(await pedidoService.listarVendas());
@@ -110,6 +101,5 @@ module.exports = {
     atualizarPedido,
     criarItemPedido,
     listarItensPedido,
-    criarVenda,
     listarVendas,
 };
