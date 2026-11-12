@@ -16,18 +16,18 @@ async function receberWebhook(req, res, next) {
     try {
         const tipo = req.body?.type || req.body?.topic ||
             req.query.type || req.query.topic;
-        if (tipo !== 'payment') {
+        if (!['payment', 'orders', 'order'].includes(tipo)) {
             return res.status(200).json({ recebido: true, ignorado: true });
         }
 
-        const paymentId = req.body?.data?.id || req.query['data.id'] ||
+        const resourceId = req.body?.data?.id || req.query['data.id'] ||
             req.query.id;
         const requestId = req.get('x-request-id');
         const assinatura = req.get('x-signature');
         const valida = mercadoPagoService.validarAssinaturaWebhook({
             assinatura,
             requestId,
-            paymentId: paymentId ? String(paymentId) : '',
+            resourceId: resourceId ? String(resourceId) : '',
             secret: mercadoPagoService.obterSegredoWebhook(),
         });
         if (!valida) {
@@ -37,8 +37,9 @@ async function receberWebhook(req, res, next) {
             });
         }
 
-        const resultado =
-            await mercadoPagoService.processarNotificacaoPagamento(paymentId);
+        const resultado = tipo === 'payment'
+            ? await mercadoPagoService.processarNotificacaoPagamento(resourceId)
+            : await mercadoPagoService.processarNotificacaoOrder(resourceId);
         return res.status(200).json({ recebido: true, ...resultado });
     } catch (error) {
         return next(error);

@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const app = require('./app');
 const { testarConexao } = require('./database/connection');
+const mercadoPagoService = require('./services/mercadoPagoService');
 
 const PORT = process.env.PORT || 3000;
 
@@ -14,6 +15,7 @@ async function iniciarServidor() {
         // Inicia o servidor somente após conectar
         app.listen(PORT, () => {
             console.log(`Servidor rodando em http://localhost:${PORT}`);
+            mercadoPagoService.iniciarExpiracaoCheckouts();
         });
 
     } catch (error) {
