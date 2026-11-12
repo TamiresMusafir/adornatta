@@ -2,6 +2,10 @@ const crypto = require('node:crypto');
 const { pool } = require('../database/connection');
 
 const API_BASE_URL = 'https://api.mercadopago.com';
+const CHECKOUT_TIMEOUT_MINUTES = 15;
+const CHECKOUT_EXPIRATION_INTERVAL_MS = 30_000;
+const CHECKOUT_EXPIRATION_LOCK = 1_447_311_438;
+let expiracaoCheckoutsEmAndamento = false;
 
 function criarErro(mensagem, statusCode = 400) {
     const erro = new Error(mensagem);
@@ -27,42 +31,29 @@ function validarId(id, nome = 'Identificador') {
 
 function obterConfiguracao() {
     const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
-    const webhookSecret = process.env.MERCADO_PAGO_WEBHOOK_SECRET;
-    const webhookUrl = process.env.MERCADO_PAGO_WEBHOOK_URL;
     const frontendUrl = process.env.FRONTEND_URL;
 
-    if (!accessToken || !webhookSecret || !webhookUrl || !frontendUrl) {
+    if (!accessToken || !frontendUrl) {
         throw criarErro(
-            'A integração do Mercado Pago não está configurada por completo.',
+            'MERCADO_PAGO_ACCESS_TOKEN e FRONTEND_URL devem estar configurados para criar uma Order.',
             503
         );
     }
 
-    let urlWebhook;
     let urlFrontend;
     try {
-        urlWebhook = new URL(webhookUrl);
         urlFrontend = new URL(frontendUrl);
     } catch {
         throw criarErro('As URLs da integração de pagamento são inválidas.', 500);
     }
 
-    if (urlWebhook.protocol !== 'https:') {
-        throw criarErro(
-            'A URL pública do webhook do Mercado Pago precisa usar HTTPS.',
-            500
-        );
-    }
     if (!['http:', 'https:'].includes(urlFrontend.protocol)) {
         throw criarErro('A URL do frontend é inválida.', 500);
     }
 
     return {
         accessToken,
-        webhookSecret,
-        webhookUrl: urlWebhook.toString(),
         frontendUrl: urlFrontend,
-        usarSandbox: process.env.MERCADO_PAGO_USE_SANDBOX === 'true',
     };
 }
 
@@ -73,7 +64,7 @@ function validarConfiguracao() {
 function criarChaveIdempotencia(idpagamento) {
     const bytes = crypto
         .createHash('sha256')
-        .update(`adornatta:mercado-pago:preference:${idpagamento}`)
+        .update(`adornatta:mercado-pago:order:${idpagamento}`)
         .digest();
     bytes[6] = (bytes[6] & 0x0f) | 0x50;
     bytes[8] = (bytes[8] & 0x3f) | 0x80;
@@ -95,12 +86,56 @@ function criarUrlRetorno(frontendUrl, pedidoId, resultado) {
     return url.toString();
 }
 
+function criarPayloadOrder(pedido, itens, totalCentavos, frontendUrl) {
+    return {
+        type: 'online',
+        processing_mode: 'manual',
+        capture_mode: 'automatic_async',
+        total_amount: (totalCentavos / 100).toFixed(2),
+        external_reference: String(pedido.idpagamento),
+        items: itens.map((item) => ({
+            title: item.nome,
+            quantity: Number(item.quantidade),
+            unit_price: (
+                Math.round(Number(item.preco_unitario) * 100) / 100
+            ).toFixed(2),
+        })),
+        payer: {
+            email: pedido.email,
+        },
+        config: {
+            online: {
+                success_url: criarUrlRetorno(
+                    frontendUrl,
+                    pedido.idpedido,
+                    'approved'
+                ),
+                pending_url: criarUrlRetorno(
+                    frontendUrl,
+                    pedido.idpedido,
+                    'pending'
+                ),
+                failure_url: criarUrlRetorno(
+                    frontendUrl,
+                    pedido.idpedido,
+                    'failure'
+                ),
+                ...(frontendUrl.protocol === 'https:'
+                    ? { auto_return: 'approved' }
+                    : {}),
+            },
+        },
+        description: `Pedido Adornatta ${pedido.idpedido}`,
+    };
+}
+
 async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
     const pedidoId = validarId(pedidoIdInformado, 'Pedido');
     const configuracao = obterConfiguracao();
     const client = await pool.connect();
     let pedido;
     let itens;
+    let totalCentavos;
 
     try {
         await client.query('BEGIN');
@@ -108,7 +143,8 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
             `SELECT p.idpedido, p.idusuario, p.valor_total,
                     p.status AS status_pedido, pg.idpagamento,
                     pg.valor AS valor_pagamento, pg.status AS status_pagamento,
-                    pg.idpreferencia, pg.url_checkout,
+                    pg.idpreferencia, pg.idorder, pg.url_checkout,
+                    pg.checkout_expires_at,
                     u.nome, u.email
              FROM pedido p
              JOIN pagamento pg ON pg.idpedido = p.idpedido
@@ -143,12 +179,32 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
                 409
             );
         }
-        if (pedido.idpreferencia && pedido.url_checkout) {
+        if (
+            pedido.idorder &&
+            !pedido.idorder.startsWith('pending-') &&
+            pedido.url_checkout
+        ) {
+            if (
+                !pedido.checkout_expires_at ||
+                new Date(pedido.checkout_expires_at).getTime() <= Date.now()
+            ) {
+                throw criarErro(
+                    'Este checkout expirou ou não possui validade registrada. Crie um novo pedido para tentar novamente.',
+                    409
+                );
+            }
             await client.query('COMMIT');
             return {
                 pedidoId: String(pedido.idpedido),
                 checkoutUrl: pedido.url_checkout,
+                checkoutExpiresAt: pedido.checkout_expires_at,
             };
+        }
+        if (pedido.idpreferencia && pedido.url_checkout && !pedido.idorder) {
+            throw criarErro(
+                'Este pedido já possui um checkout legado ativo. Conclua ou cancele esse pagamento antes de criar uma Order.',
+                409
+            );
         }
 
         itens = await client.query(
@@ -163,7 +219,7 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
             throw criarErro('O pedido não contém produtos.', 409);
         }
 
-        const totalCentavos = itens.rows.reduce(
+        totalCentavos = itens.rows.reduce(
             (total, item) =>
                 total + Math.round(Number(item.preco_unitario) * 100) *
                     Number(item.quantidade),
@@ -181,14 +237,15 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
             );
         }
 
-        if (!pedido.idpreferencia) {
+        if (!pedido.idorder) {
             const checkoutReservado = await client.query(
                 `UPDATE pagamento
-                 SET idpreferencia = $1
+                 SET idorder = $1
                  WHERE idpagamento = $2
                    AND status = 'pendente'
                    AND provedor = 'mercado_pago'
-                 RETURNING idpagamento`,
+                   AND idorder IS NULL
+                 RETURNING idpagamento, checkout_expires_at`,
                 [
                     `pending-${pedido.idpagamento}`,
                     pedido.idpagamento,
@@ -214,52 +271,16 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
         client.release();
     }
 
-    const successUrl = criarUrlRetorno(
-        configuracao.frontendUrl,
-        pedido.idpedido,
-        'approved'
+    const order = criarPayloadOrder(
+        pedido,
+        itens.rows,
+        totalCentavos,
+        configuracao.frontendUrl
     );
-    const pendingUrl = criarUrlRetorno(
-        configuracao.frontendUrl,
-        pedido.idpedido,
-        'pending'
-    );
-    const failureUrl = criarUrlRetorno(
-        configuracao.frontendUrl,
-        pedido.idpedido,
-        'failure'
-    );
-    const preference = {
-        items: itens.rows.map((item) => ({
-            id: String(item.idproduto),
-            title: item.nome,
-            quantity: Number(item.quantidade),
-            unit_price: Number(item.preco_unitario),
-            currency_id: 'BRL',
-        })),
-        payer: {
-            name: pedido.nome,
-            email: pedido.email,
-        },
-        external_reference: String(pedido.idpagamento),
-        notification_url: configuracao.webhookUrl,
-        back_urls: {
-            success: successUrl,
-            pending: pendingUrl,
-            failure: failureUrl,
-        },
-        metadata: {
-            pedido_id: Number(pedido.idpedido),
-            pagamento_id: Number(pedido.idpagamento),
-        },
-    };
-    if (configuracao.frontendUrl.protocol === 'https:') {
-        preference.auto_return = 'approved';
-    }
 
     let resposta;
     try {
-        resposta = await fetch(`${API_BASE_URL}/checkout/preferences`, {
+        resposta = await fetch(`${API_BASE_URL}/v1/orders`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${configuracao.accessToken}`,
@@ -268,7 +289,7 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
                     pedido.idpagamento
                 ),
             },
-            body: JSON.stringify(preference),
+            body: JSON.stringify(order),
         });
     } catch (error) {
         console.error('Não foi possível conectar ao Mercado Pago:', error.message);
@@ -281,7 +302,7 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
     const respostaGateway = await resposta.json().catch(() => null);
     if (!resposta.ok) {
         console.error(
-            'Mercado Pago recusou a criação da preferência:',
+            'Mercado Pago recusou a criação da order:',
             resposta.status,
             respostaGateway?.message || 'sem mensagem'
         );
@@ -291,30 +312,37 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
         );
     }
 
-    const checkoutUrl = configuracao.usarSandbox
-        ? respostaGateway?.sandbox_init_point
-        : respostaGateway?.init_point;
+    const checkoutUrl = respostaGateway?.checkout_url;
     if (
         typeof respostaGateway?.id !== 'string' ||
+        !/^[A-Za-z0-9_-]{1,100}$/.test(respostaGateway.id) ||
         typeof checkoutUrl !== 'string' ||
         !checkoutUrl.startsWith('https://')
     ) {
         throw criarErro(
-            'O Mercado Pago retornou uma preferência de pagamento inválida.',
+            'O Mercado Pago retornou uma order ou URL de checkout inválida.',
             502
         );
     }
 
-    const atualizacaoPreferencia = await pool.query(
+    const atualizacaoOrder = await pool.query(
         `UPDATE pagamento
-         SET idpreferencia = $1, url_checkout = $2
+         SET idorder = $1, url_checkout = $2,
+             checkout_expires_at = CURRENT_TIMESTAMP + ($5 * INTERVAL '1 minute')
          WHERE idpagamento = $3
            AND status = 'pendente'
            AND provedor = 'mercado_pago'
+           AND idorder IN ($4, $1)
          RETURNING idpagamento`,
-        [respostaGateway.id, checkoutUrl, pedido.idpagamento]
+        [
+            respostaGateway.id,
+            checkoutUrl,
+            pedido.idpagamento,
+            `pending-${pedido.idpagamento}`,
+            CHECKOUT_TIMEOUT_MINUTES,
+        ]
     );
-    if (!atualizacaoPreferencia.rows[0]) {
+    if (!atualizacaoOrder.rows[0]) {
         throw criarErro(
             'O pedido deixou de aguardar pagamento. Consulte o status antes de tentar novamente.',
             409
@@ -324,14 +352,15 @@ async function criarCheckout(pedidoIdInformado, usuarioAutenticado) {
     return {
         pedidoId: String(pedido.idpedido),
         checkoutUrl,
+        checkoutExpiresAt: atualizacaoOrder.rows[0].checkout_expires_at,
     };
 }
 
-function validarAssinaturaWebhook({ assinatura, requestId, paymentId, secret }) {
+function validarAssinaturaWebhook({ assinatura, requestId, resourceId, secret }) {
     if (
         typeof assinatura !== 'string' ||
         typeof requestId !== 'string' ||
-        typeof paymentId !== 'string' ||
+        typeof resourceId !== 'string' ||
         !secret
     ) {
         return false;
@@ -353,7 +382,7 @@ function validarAssinaturaWebhook({ assinatura, requestId, paymentId, secret }) 
     }
 
     const manifest =
-        `id:${paymentId.toLowerCase()};request-id:${requestId};ts:${timestamp};`;
+        `id:${resourceId.toLowerCase()};request-id:${requestId};ts:${timestamp};`;
     const assinaturaEsperada = crypto
         .createHmac('sha256', secret)
         .update(manifest)
@@ -378,6 +407,25 @@ function converterStatusPagamento(status) {
         case 'pending':
         case 'in_process':
         case 'authorized':
+            return 'pendente';
+        default:
+            return null;
+    }
+}
+
+function converterStatusOrder(status) {
+    switch (status) {
+        case 'processed':
+            return 'aprovado';
+        case 'failed':
+            return 'recusado';
+        case 'canceled':
+            return 'cancelado';
+        case 'refunded':
+            return 'estornado';
+        case 'created':
+        case 'action_required':
+        case 'processing':
             return 'pendente';
         default:
             return null;
@@ -411,37 +459,79 @@ async function buscarPagamentoGateway(paymentId, accessToken) {
     return resposta.json();
 }
 
-async function processarNotificacaoPagamento(paymentIdInformado) {
-    const paymentId = String(paymentIdInformado || '');
-    if (!/^[0-9]+$/.test(paymentId)) {
-        throw criarErro('Identificador de pagamento inválido.');
+async function buscarOrderGateway(orderId, accessToken) {
+    let resposta;
+    try {
+        resposta = await fetch(
+            `${API_BASE_URL}/v1/orders/${encodeURIComponent(orderId)}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken,
+                },
+            }
+        );
+    } catch (error) {
+        console.error('Não foi possível consultar a order no Mercado Pago:', error.message);
+        throw criarErro('Falha ao consultar a order no Mercado Pago.', 502);
     }
 
-    const { accessToken } = obterConfiguracao();
-    const pagamentoGateway = await buscarPagamentoGateway(
-        paymentId,
-        accessToken
-    );
-    const status = converterStatusPagamento(pagamentoGateway.status);
-    const pagamentoId = Number(pagamentoGateway.external_reference);
-    if (
-        !Number.isSafeInteger(pagamentoId) ||
-        pagamentoId < 1 ||
-        !status
-    ) {
+    if (!resposta.ok) {
+        console.error(
+            'Mercado Pago não retornou a order da notificação:',
+            resposta.status
+        );
+        throw criarErro('Não foi possível validar a order recebida.', 502);
+    }
+
+    return resposta.json();
+}
+
+async function cancelarOrderGateway(orderId, accessToken) {
+    let resposta;
+    try {
+        resposta = await fetch(
+            `${API_BASE_URL}/v1/orders/${encodeURIComponent(orderId)}/cancel`,
+            {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'X-Idempotency-Key': criarChaveIdempotencia(
+                        `cancel:${orderId}`
+                    ),
+                },
+            }
+        );
+    } catch (error) {
+        console.error('Não foi possível cancelar a order no Mercado Pago:', error.message);
+        throw criarErro('Falha ao cancelar a order no Mercado Pago.', 502);
+    }
+
+    if (!resposta.ok) {
+        console.error(
+            'Mercado Pago não confirmou o cancelamento da order:',
+            resposta.status
+        );
+        throw criarErro('Não foi possível cancelar a order no Mercado Pago.', 502);
+    }
+}
+
+async function aplicarStatusPagamento({
+    pagamentoId,
+    externalId,
+    orderId,
+    status,
+    valorCentavos,
+    moeda,
+    dataPagamento,
+}) {
+    if (!Number.isSafeInteger(pagamentoId) || pagamentoId < 1 || !status) {
         console.warn(
             'Notificação do Mercado Pago ignorada por referência/status inválido.'
         );
         return { ignorada: true };
     }
-
-    const valorCentavos = Math.round(
-        Number(pagamentoGateway.transaction_amount) * 100
-    );
-    if (
-        !Number.isSafeInteger(valorCentavos) ||
-        pagamentoGateway.currency_id !== 'BRL'
-    ) {
+    if (!Number.isSafeInteger(valorCentavos) || moeda !== 'BRL') {
         throw criarErro('Dados do pagamento recebido são inválidos.', 409);
     }
 
@@ -455,8 +545,9 @@ async function processarNotificacaoPagamento(paymentIdInformado) {
              JOIN pedido p ON p.idpedido = pg.idpedido
              WHERE pg.idpagamento = $1
                AND pg.provedor = 'mercado_pago'
+               AND ($2::varchar IS NULL OR pg.idorder = $2)
              FOR UPDATE OF pg, p`,
-            [pagamentoId]
+            [pagamentoId, orderId || null]
         );
         const pagamento = resultado.rows[0];
         if (!pagamento) {
@@ -470,22 +561,25 @@ async function processarNotificacaoPagamento(paymentIdInformado) {
             );
         }
         if (
+            externalId &&
             pagamento.identificador_externo &&
-            pagamento.identificador_externo !== paymentId
+            pagamento.identificador_externo !== externalId
         ) {
             throw criarErro(
                 'O pedido já está associado a outro pagamento do Mercado Pago.',
                 409
             );
         }
-        const pagamentoDuplicado = await client.query(
-            `SELECT idpagamento
-             FROM pagamento
-             WHERE provedor = 'mercado_pago'
-               AND identificador_externo = $1
-               AND idpagamento <> $2`,
-            [paymentId, pagamentoId]
-        );
+        const pagamentoDuplicado = externalId
+            ? await client.query(
+                `SELECT idpagamento
+                 FROM pagamento
+                 WHERE provedor = 'mercado_pago'
+                   AND identificador_externo = $1
+                   AND idpagamento <> $2`,
+                [externalId, pagamentoId]
+            )
+            : { rows: [] };
         if (pagamentoDuplicado.rows[0]) {
             throw criarErro(
                 'O pagamento do Mercado Pago já foi associado a outro pedido.',
@@ -517,12 +611,12 @@ async function processarNotificacaoPagamento(paymentIdInformado) {
             await client.query(
                 `UPDATE pagamento
                  SET status = 'aprovado',
-                     identificador_externo = $1,
+                     identificador_externo = COALESCE($1, identificador_externo),
                      data_pagamento = COALESCE($2, CURRENT_TIMESTAMP)
                  WHERE idpagamento = $3`,
                 [
-                    paymentId,
-                    pagamentoGateway.date_approved || null,
+                    externalId,
+                    dataPagamento || null,
                     pagamentoId,
                 ]
             );
@@ -540,24 +634,24 @@ async function processarNotificacaoPagamento(paymentIdInformado) {
                 );
             } else if (pagamento.status_pedido === 'cancelado') {
                 console.error(
-                    `Pagamento ${paymentId} foi aprovado após o cancelamento do pedido ${pagamento.idpedido}; estorno/revisão manual necessário.`
+                    `Pagamento ${externalId || orderId} foi aprovado após o cancelamento do pedido ${pagamento.idpedido}; estorno/revisão manual necessário.`
                 );
             }
         } else if (status === 'estornado') {
             await client.query(
                 `UPDATE pagamento
                  SET status = 'estornado',
-                     identificador_externo = $1
+                     identificador_externo = COALESCE($1, identificador_externo)
                  WHERE idpagamento = $2`,
-                [paymentId, pagamentoId]
+                [externalId, pagamentoId]
             );
         } else {
             await client.query(
                 `UPDATE pagamento
                  SET status = $1,
-                     identificador_externo = $2
+                     identificador_externo = COALESCE($2, identificador_externo)
                  WHERE idpagamento = $3`,
-                [status, paymentId, pagamentoId]
+                [status, externalId, pagamentoId]
             );
             if (
                 ['recusado', 'cancelado'].includes(status) &&
@@ -610,6 +704,166 @@ async function processarNotificacaoPagamento(paymentIdInformado) {
     }
 }
 
+async function processarNotificacaoPagamento(paymentIdInformado) {
+    const paymentId = String(paymentIdInformado || '');
+    if (!/^[0-9]+$/.test(paymentId)) {
+        throw criarErro('Identificador de pagamento inválido.');
+    }
+
+    const { accessToken } = obterConfiguracao();
+    const pagamentoGateway = await buscarPagamentoGateway(
+        paymentId,
+        accessToken
+    );
+    return aplicarStatusPagamento({
+        pagamentoId: Number(pagamentoGateway.external_reference),
+        externalId: paymentId,
+        status: converterStatusPagamento(pagamentoGateway.status),
+        valorCentavos: Math.round(
+            Number(pagamentoGateway.transaction_amount) * 100
+        ),
+        moeda: pagamentoGateway.currency_id,
+        dataPagamento: pagamentoGateway.date_approved,
+    });
+}
+
+async function processarNotificacaoOrder(orderIdInformado) {
+    const orderId = String(orderIdInformado || '');
+    if (!/^[A-Za-z0-9_-]{1,100}$/.test(orderId)) {
+        throw criarErro('Identificador de order inválido.');
+    }
+
+    const { accessToken } = obterConfiguracao();
+    const order = await buscarOrderGateway(orderId, accessToken);
+    if (order.id !== orderId) {
+        throw criarErro('A order consultada não corresponde à notificação.', 409);
+    }
+    const pagamentoExterno = order.transactions?.payments?.[0];
+    return aplicarStatusPagamento({
+        pagamentoId: Number(order.external_reference),
+        externalId: pagamentoExterno?.id
+            ? String(pagamentoExterno.id)
+            : null,
+        orderId,
+        status: converterStatusOrder(order.status),
+        valorCentavos: Math.round(Number(order.total_amount) * 100),
+        moeda: order.currency,
+        dataPagamento: pagamentoExterno?.date_approved,
+    });
+}
+
+async function expirarCheckout(order, accessToken) {
+    await processarNotificacaoOrder(order.idorder);
+
+    const pagamentoAtual = await pool.query(
+        `SELECT pg.status AS status_pagamento
+         FROM pagamento pg
+         WHERE pg.idpagamento = $1
+           AND pg.idorder = $2`,
+        [order.idpagamento, order.idorder]
+    );
+    if (pagamentoAtual.rows[0]?.status_pagamento !== 'pendente') {
+        return;
+    }
+
+    await cancelarOrderGateway(order.idorder, accessToken);
+    await processarNotificacaoOrder(order.idorder);
+
+    const pedidoAtual = await pool.query(
+        `SELECT p.status AS status_pedido, pg.status AS status_pagamento
+         FROM pagamento pg
+         JOIN pedido p ON p.idpedido = pg.idpedido
+         WHERE pg.idpagamento = $1
+           AND pg.idorder = $2`,
+        [order.idpagamento, order.idorder]
+    );
+    if (
+        pedidoAtual.rows[0]?.status_pedido === 'pendente' ||
+        pedidoAtual.rows[0]?.status_pagamento === 'pendente'
+    ) {
+        console.error(
+            `O Mercado Pago não confirmou o cancelamento do checkout expirado do pagamento ${order.idpagamento}.`
+        );
+    }
+}
+
+async function expirarCheckoutsPendentes() {
+    if (expiracaoCheckoutsEmAndamento) {
+        return;
+    }
+    expiracaoCheckoutsEmAndamento = true;
+
+    let client;
+    let lockAcquired = false;
+    try {
+        const { accessToken } = obterConfiguracao();
+        client = await pool.connect();
+        const lock = await client.query(
+            'SELECT pg_try_advisory_lock($1, $2) AS adquirido',
+            [CHECKOUT_EXPIRATION_LOCK, 1]
+        );
+        lockAcquired = lock.rows[0].adquirido;
+        if (!lockAcquired) {
+            return;
+        }
+
+        const expirados = await client.query(
+            `SELECT pg.idpagamento, pg.idorder
+             FROM pagamento pg
+             JOIN pedido p ON p.idpedido = pg.idpedido
+             WHERE pg.provedor = 'mercado_pago'
+               AND pg.status = 'pendente'
+               AND p.status = 'pendente'
+               AND pg.idorder IS NOT NULL
+               AND pg.idorder NOT LIKE 'pending-%'
+               AND pg.checkout_expires_at <= CURRENT_TIMESTAMP
+             ORDER BY pg.checkout_expires_at, pg.idpagamento
+             LIMIT 50`
+        );
+
+        for (const order of expirados.rows) {
+            try {
+                await expirarCheckout(order, accessToken);
+            } catch (error) {
+                console.error(
+                    `Falha ao expirar checkout do pagamento ${order.idpagamento}:`,
+                    error.message
+                );
+            }
+        }
+    } catch (error) {
+        console.error('Falha ao processar checkouts expirados:', error.message);
+    } finally {
+        if (client) {
+            if (lockAcquired) {
+                try {
+                    await client.query('SELECT pg_advisory_unlock($1, $2)', [
+                        CHECKOUT_EXPIRATION_LOCK,
+                        1,
+                    ]);
+                } catch (error) {
+                    console.error(
+                        'Falha ao liberar o lock de expiração de checkout:',
+                        error.message
+                    );
+                }
+            }
+            client.release();
+        }
+        expiracaoCheckoutsEmAndamento = false;
+    }
+}
+
+function iniciarExpiracaoCheckouts() {
+    void expirarCheckoutsPendentes();
+    const timer = setInterval(
+        expirarCheckoutsPendentes,
+        CHECKOUT_EXPIRATION_INTERVAL_MS
+    );
+    timer.unref();
+    return timer;
+}
+
 function obterSegredoWebhook() {
     if (!process.env.MERCADO_PAGO_WEBHOOK_SECRET) {
         throw criarErro(
@@ -622,9 +876,16 @@ function obterSegredoWebhook() {
 
 module.exports = {
     criarCheckout,
+    iniciarExpiracaoCheckouts,
+    expirarCheckoutsPendentes,
+    CHECKOUT_TIMEOUT_MINUTES,
     validarConfiguracao,
     processarNotificacaoPagamento,
+    processarNotificacaoOrder,
     obterSegredoWebhook,
     validarAssinaturaWebhook,
     converterStatusPagamento,
+    converterStatusOrder,
+    criarPayloadOrder,
+    criarChaveIdempotencia,
 };

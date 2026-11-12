@@ -11,6 +11,23 @@ const rootPath = path.resolve(__dirname, '..');
 const schemaPath = path.resolve(rootPath, '..', 'BDadornatta', 'BancoDadosAdornatta.sql');
 const testDatabase = `adornatta_security_test_${crypto.randomBytes(5).toString('hex')}`;
 
+function obterCredenciaisMigration() {
+    if (
+        !process.env.DB_MIGRATION_USER ||
+        !process.env.DB_MIGRATION_PASSWORD ||
+        process.env.DB_MIGRATION_USER === process.env.DB_USER
+    ) {
+        throw new Error(
+            'Configure DB_MIGRATION_USER e DB_MIGRATION_PASSWORD distintos das credenciais da aplicação.'
+        );
+    }
+
+    return {
+        user: process.env.DB_MIGRATION_USER,
+        password: process.env.DB_MIGRATION_PASSWORD,
+    };
+}
+
 function quoteIdentifier(value) {
     return `"${value.replace(/"/g, '""')}"`;
 }
@@ -39,8 +56,7 @@ async function main() {
         host,
         port: Number(process.env.DB_PORT),
         database: db,
-        user: process.env.DB_MIGRATION_USER || process.env.DB_USER,
-        password: process.env.DB_MIGRATION_PASSWORD || process.env.DB_PASSWORD,
+        ...obterCredenciaisMigration(),
         connectionTimeoutMillis: 5000,
     });
     let databaseCreated = false;
@@ -62,8 +78,7 @@ async function main() {
             host,
             port: Number(process.env.DB_PORT),
             database: testDatabase,
-            user: process.env.DB_MIGRATION_USER || process.env.DB_USER,
-            password: process.env.DB_MIGRATION_PASSWORD || process.env.DB_PASSWORD,
+            ...obterCredenciaisMigration(),
         });
         try {
             await setupPool.query(fs.readFileSync(schemaPath, 'utf8'));
@@ -184,8 +199,7 @@ async function main() {
                 host,
                 port: Number(process.env.DB_PORT),
                 database: db,
-                user: process.env.DB_MIGRATION_USER || process.env.DB_USER,
-                password: process.env.DB_MIGRATION_PASSWORD || process.env.DB_PASSWORD,
+                ...obterCredenciaisMigration(),
             });
             try {
                 await cleanupPool.query(

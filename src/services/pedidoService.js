@@ -248,8 +248,14 @@ function montarPedido(row) {
             : undefined,
         formaPagamento,
         statusPagamento: row.status_pagamento || null,
+        checkoutExpiraEm: row.checkout_expires_at || null,
         checkoutAtivo: Boolean(
-            row.idpreferencia && row.status_pagamento === 'pendente'
+            (row.idorder || row.idpreferencia) &&
+            row.status_pagamento === 'pendente' &&
+            (
+                !row.checkout_expires_at ||
+                new Date(row.checkout_expires_at).getTime() > Date.now()
+            )
         ),
         enderecoEntrega: endereco,
     };
@@ -260,10 +266,12 @@ const consultaPedidos = `
            p.logradouro_entrega, p.numero_entrega, p.complemento_entrega,
            p.bairro_entrega, p.cidade_entrega, p.uf_entrega, p.cep_entrega,
            pg.forma_pagamento, pg.status AS status_pagamento,
-           pg.idpreferencia, fp.bandeira, fp.idformapagamento
+           pg.idpreferencia, pg.idorder, pg.checkout_expires_at,
+           fp.bandeira, fp.idformapagamento
     FROM pedido p
     LEFT JOIN LATERAL (
-        SELECT idformapagamento, forma_pagamento, status, idpreferencia
+        SELECT idformapagamento, forma_pagamento, status,
+               idpreferencia, idorder, checkout_expires_at
         FROM pagamento
         WHERE idpedido = p.idpedido
         ORDER BY idpagamento DESC
@@ -504,10 +512,10 @@ async function atualizarPedido(id, dados) {
         await client.query('BEGIN');
         const pedido = await client.query(
             `SELECT p.status, pg.status AS status_pagamento,
-                    pg.provedor, pg.idpreferencia
+                    pg.provedor, pg.idpreferencia, pg.idorder
              FROM pedido p
              LEFT JOIN LATERAL (
-                 SELECT status, provedor, idpreferencia
+                 SELECT status, provedor, idpreferencia, idorder
                  FROM pagamento
                  WHERE idpedido = p.idpedido
                  ORDER BY idpagamento DESC
@@ -559,7 +567,7 @@ async function atualizarPedido(id, dados) {
                 }
                 if (
                     atual.status_pagamento === 'pendente' &&
-                    atual.idpreferencia
+                    (atual.idorder || atual.idpreferencia)
                 ) {
                     throw criarErro(
                         'Este pedido possui um checkout ativo. Aguarde a atualização do Mercado Pago antes de cancelar.',
@@ -652,10 +660,10 @@ async function criarItemPedido(dados, usuarioAutenticado) {
         await verificarAcessoPedido(pedidoId, usuarioAutenticado, client);
         const estadoPedido = await client.query(
             `SELECT p.status, pg.status AS status_pagamento,
-                    pg.idpreferencia
+                    pg.idpreferencia, pg.idorder
              FROM pedido p
              LEFT JOIN LATERAL (
-                 SELECT status, idpreferencia
+                 SELECT status, idpreferencia, idorder
                  FROM pagamento
                  WHERE idpedido = p.idpedido
                  ORDER BY idpagamento DESC
@@ -671,7 +679,8 @@ async function criarItemPedido(dados, usuarioAutenticado) {
         if (
             estadoPedido.rows[0].status !== 'pendente' ||
             estadoPedido.rows[0].status_pagamento !== 'pendente' ||
-            estadoPedido.rows[0].idpreferencia
+            estadoPedido.rows[0].idpreferencia ||
+            estadoPedido.rows[0].idorder
         ) {
             throw criarErro(
                 'Não é possível alterar itens após iniciar o checkout ou confirmar o pagamento.',
@@ -767,10 +776,10 @@ async function removerItemPedido(pedidoIdInformado, produtoIdInformado, usuarioA
 
         const pedido = await client.query(
             `SELECT p.status, pg.status AS status_pagamento,
-                    pg.idpreferencia
+                    pg.idpreferencia, pg.idorder
              FROM pedido p
              LEFT JOIN LATERAL (
-                 SELECT status, idpreferencia
+                 SELECT status, idpreferencia, idorder
                  FROM pagamento
                  WHERE idpedido = p.idpedido
                  ORDER BY idpagamento DESC
@@ -783,7 +792,8 @@ async function removerItemPedido(pedidoIdInformado, produtoIdInformado, usuarioA
         if (
             pedido.rows[0].status !== 'pendente' ||
             pedido.rows[0].status_pagamento !== 'pendente' ||
-            pedido.rows[0].idpreferencia
+            pedido.rows[0].idpreferencia ||
+            pedido.rows[0].idorder
         ) {
             throw criarErro(
                 'Só é possível remover produtos antes de iniciar o checkout e com pagamento pendente.',
