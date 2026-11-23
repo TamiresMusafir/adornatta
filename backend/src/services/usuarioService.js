@@ -577,7 +577,6 @@ async function atualizarUsuario(id, dados) {
             }
         }
         await client.query('COMMIT');
-        await client.query('COMMIT');
     } catch (error) {
         await rollback(client);
         if (error.code === '23505') {
