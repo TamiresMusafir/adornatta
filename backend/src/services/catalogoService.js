@@ -206,6 +206,11 @@ async function criarProduto(dados) {
     } catch (error) {
         await rollback(client);
 
+        if (error.code === '23503') {
+            throw criarErro('Categoria não encontrada.', 404);
+        }
+
+        // Índice único uq_produto_categoria_nome_ci (migration 001)
         if (error.code === '23505') {
             throw criarErro(
                 'Já existe um produto com este nome nesta categoria.',
@@ -261,6 +266,14 @@ async function atualizarProduto(id, dados) {
 
         if (error.code === '23503') {
             throw criarErro('Categoria não encontrada.', 404);
+        }
+
+        // Índice único uq_produto_categoria_nome_ci (migration 001)
+        if (error.code === '23505') {
+            throw criarErro(
+                'Já existe um produto com este nome nesta categoria.',
+                409
+            );
         }
 
         throw error;
