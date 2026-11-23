@@ -305,7 +305,9 @@ async function criarPedido(dados, usuarioAutenticado) {
         );
     }
 
-    const data = validarData(dados.data);
+    const data = usuarioAutenticado.perfil === 'administrador'
+        ? validarData(dados.data)
+        : null;
     const endereco = await obterEndereco(idusuario, enderecoInformado);
     await validarCepExistente(endereco.cep);
 
