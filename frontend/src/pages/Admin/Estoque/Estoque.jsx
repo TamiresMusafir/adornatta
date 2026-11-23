@@ -122,8 +122,10 @@ function Estoque() {
             }, 3000);
         },
 
-        onError: () => {
-            setMensagem("Não foi possível atualizar o produto.");
+        onError: (error) => {
+            setMensagem(
+                error?.message || "Não foi possível atualizar o produto."
+            );
 
             setTimeout(() => {
                 setMensagem("");
@@ -272,10 +274,16 @@ function Estoque() {
         }
 
         if (produtoSelecionado) {
-            await atualizarProdutoMutation.mutateAsync({
-                id: produtoSelecionado.id,
-                produto
-            });
+            try {
+                await atualizarProdutoMutation.mutateAsync({
+                    id: produto.id,
+                    produto: {
+                        quantidadeDisponivel: novaQuantidade
+                    }
+                });
+            } catch {
+                // O erro já é exibido pelo onError.
+            }
         } else {
             await criarProdutoMutation.mutateAsync(produto);
         }
@@ -288,12 +296,20 @@ function Estoque() {
             return;
         }
 
-        await atualizarProdutoMutation.mutateAsync({
-            id: produto.id,
-            produto: {
-                quantidadeDisponivel: novaQuantidade
+        try {
+            if (produtoSelecionado) {
+                await atualizarProdutoMutation.mutateAsync({
+                    id: produtoSelecionado.id,
+                    produto
+                });
+            } else {
+                await criarProdutoMutation.mutateAsync(produto);
             }
-        });
+
+            fecharModal();
+        } catch {
+            // O erro já é exibido pelo onError; o modal fica aberto para correção.
+        }
     }
 
     async function removerProduto(produto) {
@@ -305,7 +321,11 @@ function Estoque() {
             return;
         }
 
-        await excluirProdutoMutation.mutateAsync(produto.id);
+        try {
+            await excluirProdutoMutation.mutateAsync(produto.id);
+        } catch {
+            // O erro já é exibido pelo onError.
+        }
     }
 
     function obterNomeCategoria(categoriaId) {
