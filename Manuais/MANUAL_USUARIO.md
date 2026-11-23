@@ -112,6 +112,9 @@ para consulta posterior.
 Para acessar a lista, utilize o ícone de coração disponível na
 navegação.
 
+Assim como o carrinho, a lista fica apenas na página aberta e é esvaziada
+ao recarregar a página ou fechar a aba.
+
 ## 9. Carrinho de compras
 
 O carrinho apresenta os produtos selecionados pelo usuário.
@@ -127,77 +130,91 @@ Nele é possível:
 
 ## 10. Finalização do pedido
 
-Para finalizar uma compra:
+Para finalizar uma compra é necessário estar com a conta aberta (login).
 
 1.  Adicione os produtos desejados ao carrinho.
-2.  Acesse o carrinho.
-3.  Confira os produtos e as quantidades.
-4.  Selecione a opção para finalizar a compra.
-5.  Preencha os dados solicitados no checkout.
-6.  Confirme o pedido.
+2.  Acesse o carrinho e confira os produtos e as quantidades.
+3.  Selecione a opção para finalizar a compra.
+4.  Informe o endereço de entrega no checkout.
+5.  Confirme o pedido.
+6.  O site direciona para a página de pagamento do **Mercado Pago**, onde o
+    pagamento é concluído. Os dados do cartão são informados somente no
+    Mercado Pago, nunca no site Adornatta.
+7.  Ao final, o Mercado Pago devolve o usuário para o site, com o resultado
+    do pagamento e o atalho para acompanhar o pedido.
 
-O formulário do checkout possui validação dos dados informados.
+Ao confirmar o pedido, os produtos ficam reservados no estoque. Se o
+pagamento não for concluído, o pedido continua disponível em
+**Acompanhar pedido**, com o botão **Continuar para pagamento**, até o prazo
+do checkout expirar.
 
-Após a criação do pedido, o usuário é direcionado para o acompanhamento
-do pedido.
+O carrinho fica apenas na página aberta: recarregar a página ou fechar a aba
+esvazia o carrinho.
 
 ## 11. Acompanhamento do pedido
 
-Após finalizar uma compra, o usuário pode consultar o pedido por meio da
-página de acompanhamento.
+O acompanhamento exige login, e cada cliente vê apenas os próprios pedidos.
+Ele pode ser acessado pelo retorno do pagamento ou por **Minha conta >
+Meus pedidos**.
 
-O pedido possui um identificador próprio e apresenta informações como:
+A página apresenta:
 
--   identificação do pedido;
+-   número do pedido;
 -   data;
 -   valor total;
 -   status;
--   produtos e quantidades relacionados.
+-   produtos e quantidades;
+-   botão para continuar o pagamento, enquanto ele estiver pendente.
 
-Os possíveis status utilizados pelo sistema são:
+Os possíveis status do pedido são:
 
--   **Em análise**;
--   **Em preparação**;
--   **Enviado**;
--   **Entregue**;
--   **Cancelado**.
+| Status | Significado |
+|---|---|
+| **Em análise** | Pedido criado, aguardando a confirmação do pagamento |
+| **Confirmado** | O Mercado Pago aprovou o pagamento |
+| **Em preparação** | A loja está separando os produtos |
+| **Enviado** | O pedido foi despachado |
+| **Entregue** | O pedido chegou ao cliente |
+| **Cancelado** | O pedido foi cancelado e os produtos voltaram ao estoque |
 
 ## 12. Cadastro
 
-O usuário pode criar uma conta pela opção de cadastro.
+O usuário pode criar uma conta pela opção de cadastro, informando nome,
+CPF, e-mail, telefone e senha (mínimo de 6 caracteres).
 
-O formulário solicita os dados necessários para criação do usuário e
-realiza validações antes do envio.
+O formulário valida os dados antes do envio. Ao concluir o cadastro, a
+conta já fica aberta, sem necessidade de novo login.
 
-Após o cadastro, o usuário pode utilizar suas credenciais para entrar na
-aplicação.
-
-## 13. Login
+## 13. Login e Minha conta
 
 Para entrar na aplicação:
 
 1.  Acesse a tela de login.
-2.  Informe o e-mail.
-3.  Informe a senha.
-4.  Confirme o acesso.
+2.  Informe o e-mail e a senha.
+3.  Confirme o acesso.
 
-Após o login, a aplicação identifica o usuário autenticado.
+A sessão dura **1 hora**; depois disso é necessário entrar novamente.
+Usuários com perfil de administrador são levados diretamente ao painel
+administrativo.
 
-Usuários com perfil administrativo possuem acesso à área administrativa.
+Na página **Minha conta**, o cliente pode:
+
+-   consultar e atualizar dados pessoais, telefone e endereço;
+-   cadastrar e gerenciar formas de pagamento salvas;
+-   consultar seus pedidos, com filtro por pendentes, concluídos e
+    cancelados.
 
 ## 14. Logout
 
-Quando estiver autenticado, o usuário pode sair da conta utilizando a
-opção de logout disponível na navegação.
-
-Após o logout, a sessão armazenada no navegador é removida.
+Quando estiver autenticado, o usuário pode sair da conta pela opção de
+logout disponível na navegação. A sessão é encerrada no servidor e no
+navegador.
 
 ## 15. Área administrativa
 
-A área administrativa reúne os recursos utilizados para gerenciamento da
-loja.
-
-O acesso é destinado ao usuário com perfil administrativo.
+A área administrativa reúne os recursos de gerenciamento da loja e só pode
+ser acessada por contas com perfil de **administrador**. O ícone do painel
+aparece na navegação apenas para esse perfil.
 
 ### 15.1 Dashboard
 
@@ -205,7 +222,7 @@ O dashboard apresenta um resumo da operação, incluindo:
 
 -   total de produtos;
 -   total de itens disponíveis em estoque;
--   produtos com estoque baixo;
+-   produtos com estoque baixo (de 1 a 3 unidades);
 -   produtos sem estoque;
 -   atalhos para estoque, pedidos e vendas.
 
@@ -213,52 +230,49 @@ O dashboard apresenta um resumo da operação, incluindo:
 
 Na página **Estoque**, o administrador pode:
 
--   consultar produtos;
--   pesquisar produtos;
+-   consultar e pesquisar produtos, com filtro por categoria;
 -   cadastrar novos produtos;
 -   editar informações;
 -   excluir produtos;
 -   aumentar ou reduzir a quantidade disponível.
 
-A página também apresenta indicadores sobre a situação do estoque.
+Um produto que já faz parte de algum pedido não pode ser excluído; nesse
+caso, a tela mostra o motivo. Para retirá-lo da venda, zere a quantidade
+disponível.
 
 ### 15.3 Gerenciamento de pedidos
 
 Na página **Pedidos**, o administrador pode:
 
 -   visualizar os pedidos realizados;
--   pesquisar pedidos;
--   consultar os detalhes de cada pedido;
--   visualizar os produtos relacionados;
+-   pesquisar por número do pedido, nome ou e-mail do cliente;
+-   consultar os detalhes de cada pedido, incluindo o endereço de entrega e
+    o status do pagamento;
+-   visualizar os produtos do pedido;
 -   alterar o status do pedido.
 
-### 15.4 Gerenciamento de vendas
+Regras para alterar o status:
 
-Na página **Vendas**, o administrador pode consultar e registrar vendas.
+-   o pedido só avança para **Em preparação**, **Enviado** e **Entregue**
+    depois que o pagamento for **aprovado** pelo Mercado Pago;
+-   a sequência é Confirmado → Em preparação → Enviado → Entregue;
+-   só é possível cancelar pedidos sem pagamento aprovado e sem pagamento em
+    andamento no Mercado Pago;
+-   quando uma alteração não é permitida, a tela mostra o motivo.
+
+### 15.4 Vendas
+
+A página **Vendas** é de consulta. Uma venda corresponde a um pedido cujo
+pagamento foi aprovado pelo Mercado Pago; não há registro manual de vendas.
 
 A tela apresenta:
 
--   vendas realizadas;
+-   total de vendas;
 -   vendas realizadas no mês;
 -   faturamento do mês;
--   histórico de vendas;
--   busca por vendas.
-
-### Como registrar uma venda
-
-1.  Acesse **Vendas**.
-2.  Selecione **Registrar venda**.
-3.  Informe o cliente.
-4.  Informe a data.
-5.  Selecione o produto.
-6.  Informe a quantidade.
-7.  Selecione a forma de pagamento.
-8.  Confira o valor calculado.
-9.  Adicione observações, se necessário.
-10. Confirme o registro.
-
-Ao registrar a venda, o sistema verifica o estoque disponível e atualiza
-a quantidade do produto.
+-   histórico de vendas, com busca;
+-   detalhes de cada venda (cliente, data, forma de pagamento, status do
+    pedido e produtos).
 
 ## 16. Contato
 
@@ -283,11 +297,11 @@ Página Principal
       │             ├── Lista de desejos
       │             └── Carrinho
       │                    │
-      │                    └── Checkout
+      │                    └── Checkout (login)
       │                           │
-      │                           └── Pedido
+      │                           └── Pagamento no Mercado Pago
       │                                  │
-      │                                  └── Acompanhamento
+      │                                  └── Acompanhamento do pedido
       │
       ├── Sobre nós
       │
