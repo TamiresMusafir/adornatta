@@ -206,8 +206,11 @@ async function criarProduto(dados) {
     } catch (error) {
         await rollback(client);
 
-        if (error.code === '23503') {
-            throw criarErro('Categoria não encontrada.', 404);
+        if (error.code === '23505') {
+            throw criarErro(
+                'Já existe um produto com este nome nesta categoria.',
+                409
+            );
         }
 
         throw error;
