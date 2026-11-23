@@ -130,6 +130,9 @@ function obterClasseStatus(status) {
         case "Em análise":
             return "bg-warning-subtle text-warning-emphasis";
 
+        case "Confirmado":
+            return "bg-success-subtle text-success-emphasis";
+
         default:
             return "bg-secondary-subtle text-secondary";
     }
