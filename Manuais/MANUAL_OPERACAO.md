@@ -1,216 +1,175 @@
-# Manual de Operação 
+# Manual de Operação
 
 ## 1. Objetivo
 
-Este manual apresenta os procedimentos necessários para executar e
-utilizar a aplicação Adornatta durante o desenvolvimento.
+Este manual apresenta como executar, operar e manter a aplicação Adornatta
+em ambiente de desenvolvimento. A instalação está descrita no
+[Manual de Instalação](MANUAL_INSTALACAO.md) e a preparação do banco no
+[Manual do Banco de Dados](MANUAL_BANCO_DADOS.md).
 
 A aplicação é composta por:
 
--   frontend desenvolvido em React e executado pelo Vite;
--   backend simulado utilizando json-server;
--   banco de dados local armazenado em `db.json`.
+- **frontend** em React, executado pelo Vite (`frontend/`);
+- **backend** em Node.js com Express (`backend/`), que expõe a API REST;
+- **banco de dados PostgreSQL**;
+- integração de pagamento com o **Mercado Pago**.
 
-## 2. Iniciar o backend
+## 2. Iniciar a aplicação
 
-Abra um terminal na raiz do projeto e execute:
+Terminal 1, na pasta `backend/`:
 
-``` bash
-npm run server
-```
-
-O servidor será iniciado em:
-
-``` text
-http://localhost:3000
-```
-
-O terminal deverá permanecer aberto enquanto a aplicação estiver sendo
-utilizada.
-
-## 3. Iniciar o frontend
-
-Abra um segundo terminal na raiz do projeto e execute:
-
-``` bash
+```bash
 npm run dev
 ```
 
-O Vite informará o endereço da aplicação, normalmente:
+O comando usa `node --watch`, que reinicia a API sempre que um arquivo do
+backend é salvo. A API fica em `http://localhost:3000/api`.
 
-``` text
-http://localhost:5173
+Terminal 2, na pasta `frontend/`:
+
+```bash
+npm run dev
 ```
 
-Abra esse endereço em um navegador.
+O Vite informa o endereço da aplicação, normalmente
+`http://localhost:5173`, e recarrega a página a cada arquivo salvo.
 
-## 4. Parar a aplicação
+Os dois terminais devem permanecer abertos enquanto a aplicação estiver em
+uso.
 
-Para interromper qualquer um dos servidores, selecione o respectivo
-terminal e pressione:
+## 3. Parar a aplicação
 
-``` text
-CTRL + C
+Em cada terminal, pressione `CTRL + C`.
+
+## 4. Comandos disponíveis
+
+### Backend (`backend/`)
+
+| Comando | Função |
+|---|---|
+| `npm run dev` | Inicia a API e reinicia ao salvar arquivos |
+| `npm start` | Inicia a API sem reinício automático |
+| `npm run db:migrate` | Aplica as migrations pendentes |
+| `npm run db:seed` | Carrega o catálogo inicial (categorias e produtos) |
+
+### Frontend (`frontend/`)
+
+| Comando | Função |
+|---|---|
+| `npm run dev` | Inicia o servidor de desenvolvimento |
+| `npm run build` | Gera a versão de produção em `frontend/dist` |
+| `npm run preview` | Exibe localmente a versão gerada pelo `build` |
+
+## 5. Rotas da API
+
+Todas as rotas começam com `/api`. A coluna **Acesso** indica quem pode
+usá-las: público, usuário autenticado ou administrador.
+
+| Método e rota | Acesso | Função |
+|---|---|---|
+| `GET /health` | público | Verifica se a API está no ar |
+| `POST /usuarios` | público | Cadastra cliente e já inicia a sessão |
+| `POST /usuarios/login` | público | Inicia a sessão |
+| `POST /usuarios/logout` | público | Encerra a sessão |
+| `GET /usuarios/sessao` | autenticado | Retorna o usuário da sessão |
+| `GET /usuarios` | administrador | Lista usuários |
+| `GET`/`PATCH /usuarios/:id` | o próprio usuário ou administrador | Consulta/atualiza dados pessoais |
+| `GET /categorias` | público | Lista categorias |
+| `GET /produtos`, `GET /produtos/:id` | público | Consulta o catálogo |
+| `POST`/`PATCH`/`DELETE /produtos[/:id]` | administrador | Mantém o catálogo e o estoque |
+| `GET /pedidos`, `GET /pedidos/:id` | autenticado | Cliente vê os próprios pedidos; administrador vê todos |
+| `POST /pedidos` | autenticado | Cria o pedido e reserva o estoque |
+| `PATCH /pedidos/:id` | administrador | Altera o status do pedido |
+| `GET`/`POST /itensPedido`, `DELETE /itensPedido/:pedidoId/:produtoId` | autenticado | Itens do pedido (só antes do pagamento) |
+| `POST /pedidos/:id/checkout` | autenticado | Gera o link de pagamento no Mercado Pago |
+| `POST /pagamentos/mercado-pago/webhook` | Mercado Pago | Recebe a confirmação do pagamento |
+| `GET /vendas` | administrador | Lista pedidos com pagamento aprovado |
+| `GET`/`POST`/`PATCH`/`DELETE /formasPagamento` | autenticado | Formas de pagamento salvas do usuário |
+
+## 6. Autenticação e perfis
+
+- Ao entrar, o backend grava um cookie `token` (JWT, `httpOnly`) válido por
+  **1 hora**. O navegador o envia automaticamente; o frontend não guarda
+  senha nem token.
+- Existem dois perfis: **cliente** e **administrador**. O site só cria
+  clientes; a promoção a administrador é feita no banco (Manual do
+  Banco de Dados, item 8).
+- O perfil fica gravado no token. Se o perfil de um usuário mudar, ele
+  precisa sair e entrar de novo.
+- No frontend, as páginas *Minha conta*, *Checkout* e *Acompanhar pedido*
+  exigem login; as páginas `/admin` exigem perfil administrador. O backend
+  repete essas verificações em todas as rotas protegidas.
+
+## 7. Ciclo de vida do pedido
+
+```text
+Em análise ──(pagamento aprovado no Mercado Pago)──► Confirmado
+     │                                                   │
+     │                                                   ▼
+     │                                           Em preparação ──► Enviado ──► Entregue
+     │                                                   │
+     └──────────────► Cancelado ◄────────────────────────┘
 ```
 
-Para utilizar novamente a aplicação, inicie o backend e o frontend
-conforme as instruções anteriores.
+Regras aplicadas pelo backend:
 
-## 5. Funcionamento dos dados
+1. Todo pedido nasce **Em análise**, com o estoque dos itens já
+   **reservado** (descontado do produto).
+2. Quando o Mercado Pago aprova o pagamento, o webhook muda o pedido para
+   **Confirmado**.
+3. O administrador só consegue avançar para *Em preparação*, *Enviado* e
+   *Entregue* se o pagamento estiver **aprovado**.
+4. Só é possível cancelar um pedido **sem** pagamento aprovado e **sem**
+   checkout em andamento. Ao cancelar, o estoque reservado volta ao produto.
+5. Pedidos com checkout pendente expiram automaticamente; o backend
+   verifica isso enquanto está em execução.
+6. Não é possível excluir um produto que já faz parte de algum pedido.
 
-A comunicação entre a interface e o backend ocorre por meio de
-requisições HTTP.
+## 8. Área administrativa
 
-As principais operações realizadas pela aplicação incluem:
+| Rota | Conteúdo |
+|---|---|
+| `/admin` | Dashboard: total de produtos, unidades em estoque, estoque baixo (1 a 3 unidades), produtos zerados e atalhos |
+| `/admin/estoque` | Cadastro, edição, exclusão e ajuste de quantidade dos produtos |
+| `/admin/pedidos` | Lista, busca (número, nome ou e-mail do cliente), detalhes e alteração de status |
+| `/admin/vendas` | Pedidos com pagamento aprovado: total, vendas e faturamento do mês e detalhes de cada venda |
 
--   consulta de produtos;
--   consulta de categorias;
--   criação de pedidos;
--   criação dos itens dos pedidos;
--   consulta de pedidos;
--   atualização do status dos pedidos;
--   criação e consulta de usuários;
--   criação, alteração e exclusão de produtos;
--   atualização do estoque;
--   criação e consulta de vendas.
+A tela de vendas é **somente consulta**: uma venda passa a existir quando o
+Mercado Pago aprova o pagamento de um pedido.
 
-Os dados são armazenados no arquivo `db.json`.
+## 9. Gerenciamento de estado e formulários no frontend
 
-## 6. Gerenciamento de estado e requisições
+- **TanStack Query** faz as consultas à API e atualiza as telas depois de
+  cada alteração (catálogo, pedidos, estoque e vendas).
+- **React Hook Form** com **Zod** valida os formulários de cadastro,
+  login, checkout e estoque antes do envio. O backend valida de novo todos
+  os dados recebidos.
+- Carrinho e lista de desejos ficam apenas na memória da página: são
+  perdidos ao recarregar a página ou fechar a aba.
 
-O projeto utiliza **TanStack Query** para realizar consultas e mutações
-de dados e atualizar as informações apresentadas nas telas após
-operações realizadas no backend.
+## 10. Banco de dados
 
-Entre as operações que utilizam esse fluxo estão:
-
--   catálogo de produtos;
--   detalhes do produto;
--   acompanhamento de pedidos;
--   estoque;
--   pedidos administrativos;
--   vendas administrativas.
-
-## 7. Formulários e validação
-
-Os formulários utilizam:
-
--   **React Hook Form** para gerenciamento dos campos;
--   **Zod** para definição e validação das regras;
--   **@hookform/resolvers** para integração entre as duas bibliotecas.
-
-Essa estrutura é utilizada em funcionalidades como cadastro, checkout e
-operações administrativas que possuem formulários.
-
-## 8. Autenticação
-
-A aplicação possui:
-
--   tela de login;
--   tela de cadastro;
--   armazenamento da sessão do usuário no navegador;
--   logout;
--   identificação do perfil do usuário;
--   proteção das rotas administrativas para usuários autenticados.
-
-O perfil administrativo possui acesso à área de gerenciamento da
-aplicação.
-
-## 9. Área administrativa
-
-A área administrativa é composta por:
-
-``` text
-/admin
-/admin/estoque
-/admin/pedidos
-/admin/vendas
-```
-
-### Dashboard
-
-Apresenta informações resumidas sobre:
-
--   quantidade de produtos;
--   quantidade total em estoque;
--   produtos com estoque baixo;
--   produtos sem estoque;
--   acessos rápidos às áreas administrativas.
-
-### Estoque
-
-Permite:
-
--   consultar produtos;
--   pesquisar produtos;
--   cadastrar produtos;
--   editar produtos;
--   excluir produtos;
--   alterar quantidades disponíveis;
--   visualizar a situação do estoque.
-
-### Pedidos
-
-Permite:
-
--   consultar pedidos;
--   pesquisar pedidos;
--   visualizar os itens de um pedido;
--   consultar valores;
--   alterar o status do pedido.
-
-Os status utilizados são:
-
--   Em análise;
--   Em preparação;
--   Enviado;
--   Entregue;
--   Cancelado.
-
-### Vendas
-
-A área de vendas permite:
-
--   visualizar vendas registradas;
--   pesquisar vendas;
--   consultar o total de vendas;
--   consultar as vendas do mês;
--   consultar o faturamento do mês;
--   registrar uma nova venda;
--   consultar os detalhes de uma venda.
-
-Ao registrar uma venda, o sistema verifica a quantidade disponível do
-produto e atualiza o estoque.
-
-## 10. Desenvolvimento
-
-Durante o desenvolvimento, o Vite permite atualizar a aplicação conforme
-os arquivos são modificados.
-
-Após alterações importantes no banco de dados ou na estrutura da
-aplicação, recomenda-se verificar novamente o funcionamento do frontend
-e do backend.
+- Novas alterações de estrutura devem ser feitas em **uma nova migration**
+  (`backend/src/database/migrations/004_descricao.sql`). Nunca edite uma
+  migration já aplicada: o `db:migrate` confere o conteúdo e interrompe a
+  execução se ela tiver sido alterada.
+- O backend recusa iniciar se a conta de `DB_USER` for superusuário ou se
+  não assumir a role `adornatta_app`.
 
 ## 11. Build para produção
 
-Para gerar a versão de produção do frontend, execute:
+Na pasta `frontend/`:
 
-``` bash
+```bash
 npm run build
+npm run preview   # opcional, para conferir a build localmente
 ```
 
-O Vite realizará o processo de build conforme a configuração do projeto.
-
-Para visualizar a build localmente, pode ser utilizado:
-
-``` bash
-npm run preview
-```
+Em produção, defina `NODE_ENV=production` no backend (o cookie de sessão
+passa a exigir HTTPS) e ajuste `FRONTEND_URL` e `VITE_API_URL` para os
+endereços reais.
 
 ## 12. Encerramento
 
-Ao finalizar o uso da aplicação, encerre os processos do frontend e do
-backend com `CTRL + C`.
-
-Para conhecer o funcionamento de cada recurso pelo ponto de vista do
-usuário, consulte o [Manual do Usuário](MANUAL_USUARIO.md).
+Para conhecer cada recurso pelo ponto de vista de quem usa o site,
+consulte o [Manual do Usuário](MANUAL_USUARIO.md).
