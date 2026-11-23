@@ -802,7 +802,7 @@ async function removerItemPedido(pedidoIdInformado, produtoIdInformado, usuarioA
         }
 
         const item = await client.query(
-            `SELECT quantidade_reservada
+            `SELECT quantidade, quantidade_reservada
              FROM produto_pedido
              WHERE idpedido = $1 AND idproduto = $2
              FOR UPDATE`,
