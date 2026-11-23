@@ -7,10 +7,7 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "db:migrate": "node src/database/migrate.js",
-    "db:seed": "node src/database/seeds/catalog.js",
-    "test:http": "node scripts/test-http-routes.js",
-    "test:mercado-pago": "node scripts/test-mercado-pago-orders.js",
-    "test:security": "node scripts/test-database-security.js"
+    "db:seed": "node src/database/seeds/catalog.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
