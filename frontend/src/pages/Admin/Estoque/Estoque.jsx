@@ -148,8 +148,10 @@ function Estoque() {
             }, 3000);
         },
 
-        onError: () => {
-            setMensagem("Não foi possível cadastrar o produto.");
+        onError: (error) => {
+            setMensagem(
+                error?.message || "Não foi possível cadastrar o produto."
+            );
 
             setTimeout(() => {
                 setMensagem("");
@@ -172,8 +174,10 @@ function Estoque() {
             }, 3000);
         },
 
-        onError: () => {
-            setMensagem("Não foi possível excluir o produto.");
+        onError: (error) => {
+            setMensagem(
+                error?.message || "Não foi possível excluir o produto."
+            );
 
             setTimeout(() => {
                 setMensagem("");
@@ -273,29 +277,6 @@ function Estoque() {
             produto.tag = dados.tag.trim();
         }
 
-        if (produtoSelecionado) {
-            try {
-                await atualizarProdutoMutation.mutateAsync({
-                    id: produto.id,
-                    produto: {
-                        quantidadeDisponivel: novaQuantidade
-                    }
-                });
-            } catch {
-                // O erro já é exibido pelo onError.
-            }
-        } else {
-            await criarProdutoMutation.mutateAsync(produto);
-        }
-
-        fecharModal();
-    }
-
-    async function alterarEstoque(produto, novaQuantidade) {
-        if (novaQuantidade < 0) {
-            return;
-        }
-
         try {
             if (produtoSelecionado) {
                 await atualizarProdutoMutation.mutateAsync({
@@ -309,6 +290,23 @@ function Estoque() {
             fecharModal();
         } catch {
             // O erro já é exibido pelo onError; o modal fica aberto para correção.
+        }
+    }
+
+    async function alterarEstoque(produto, novaQuantidade) {
+        if (novaQuantidade < 0) {
+            return;
+        }
+
+        try {
+            await atualizarProdutoMutation.mutateAsync({
+                id: produto.id,
+                produto: {
+                    quantidadeDisponivel: novaQuantidade
+                }
+            });
+        } catch {
+            // O erro já é exibido pelo onError.
         }
     }
 
