@@ -24,9 +24,10 @@ async function request(path, options = {}) {
     }
 
     let data = null;
+    const contentType = response.headers.get("content-type") || "";
+    const respostaJson = contentType.includes("application/json");
     if (response.status !== 204) {
-        const contentType = response.headers.get("content-type") || "";
-        data = contentType.includes("application/json")
+        data = respostaJson
             ? await response.json()
             : await response.text();
     }
@@ -37,6 +38,16 @@ async function request(path, options = {}) {
         );
         error.status = response.status;
         throw error;
+    }
+
+    // Toda resposta da API Adornatta (exceto 204) é JSON. Se chegou outra
+    // coisa (ex.: uma página HTML), o VITE_API_URL aponta para o servidor
+    // errado; o erro evita que a tela quebre ao tratar texto como lista.
+    if (response.status !== 204 && !respostaJson) {
+        throw new Error(
+            `A API em ${API_URL} não respondeu em JSON. ` +
+            "Confira se o backend está ligado e se VITE_API_URL aponta para ele."
+        );
     }
 
     return data;
