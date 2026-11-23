@@ -741,13 +741,16 @@ function Pedidos() {
                                             </div>
 
                                             <div className="col-12">
-                                                <span className="text-muted small">
-                                                    Endereço
+                                                <span className="text-muted small"></span>                                          <span className="text-muted small">
+                                                    Endereço de entrega
                                                 </span>
 
                                                 <strong className="d-block mt-1">
+                                                    {/* Usa o endereço gravado no pedido; o do cadastro pode ter mudado depois. */}
                                                     {formatarEndereco(
-                                                        clienteSelecionado
+                                                        pedidoSelecionado.enderecoEntrega
+                                                            ? { endereco: pedidoSelecionado.enderecoEntrega }
+                                                            : clienteSelecionado
                                                     )}
                                                 </strong>
                                             </div>
@@ -796,11 +799,12 @@ function Pedidos() {
 
                                         <div className="col-md-6">
                                             <span className="text-muted small">
-                                                ID da forma de pagamento
+                                                Status do pagamento          
                                             </span>
 
-                                            <strong className="d-block mt-1">
-                                                {pedidoSelecionado.formaPagamentoId ||
+                                            {/* O pedido só pode avançar além de "Em análise" com pagamento aprovado. */}
+                                            <strong className="d-block mt-1 text-capitalize">
+                                                {pedidoSelecionado.statusPagamento ||
                                                     "Não informado"}
                                             </strong>
                                         </div>
