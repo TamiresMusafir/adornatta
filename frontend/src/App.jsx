@@ -102,7 +102,9 @@ function App() {
                             <Route
                                 path="/pedidos/:id"
                                 element={
-                                    <AcompanharPedido />
+                                    <ProtectedRoute>
+                                        <AcompanharPedido />
+                                    </ProtectedRoute>
                                 }
                             />
 
