@@ -4,7 +4,7 @@ function errorHandler(err, req, res, next) {
     const statusCode = err.statusCode || err.status || 500;
 
     const message =
-        statusCode >= 500
+        statusCode >= 500 && statusCode !== 503
             ? 'Erro interno do servidor.'
             : err.message;
 
