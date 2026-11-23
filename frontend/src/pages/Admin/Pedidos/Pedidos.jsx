@@ -18,6 +18,7 @@ import {
 
 const STATUS_PEDIDO = [
     "Em análise",
+    "Confirmado",
     "Em preparação",
     "Enviado",
     "Entregue",
