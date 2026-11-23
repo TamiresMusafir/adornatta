@@ -30,6 +30,8 @@ import Contato
     from "./pages/Contato/Contato";
 import AcompanharPedido
     from "./pages/AcompanharPedido/AcompanharPedido";
+import PagamentoRetorno
+    from "./pages/PagamentoRetorno/PagamentoRetorno";
 
 import Login from "./pages/Login/Login";
 import Cadastro from "./pages/Cadastro/Cadastro";
@@ -101,6 +103,13 @@ function App() {
                                 path="/pedidos/:id"
                                 element={
                                     <AcompanharPedido />
+                                }
+                            />
+
+                            <Route
+                                path="/pagamento/retorno"
+                                element={
+                                    <PagamentoRetorno />
                                 }
                             />
 

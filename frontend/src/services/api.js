@@ -1,424 +1,193 @@
-const API_URL = "http://localhost:3000";
+const API_URL = (
+    import.meta.env.VITE_API_URL || "http://localhost:3000/api"
+).replace(/\/+$/, "");
 
-async function buscarProdutos() {
-    const resposta = await fetch(`${API_URL}/produtos`);
+async function request(path, options = {}) {
+    const {
+        allowUnauthorized = false,
+        ...fetchOptions
+    } = options;
+    const headers = new Headers(fetchOptions.headers);
 
-    if (!resposta.ok) {
-        throw new Error("Não foi possível carregar os produtos.");
+    if (fetchOptions.body && !headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/json");
     }
 
-    return resposta.json();
+    const response = await fetch(`${API_URL}${path}`, {
+        ...fetchOptions,
+        headers,
+        credentials: "include"
+    });
+
+    if (response.status === 401 && allowUnauthorized) {
+        return null;
+    }
+
+    let data = null;
+    if (response.status !== 204) {
+        const contentType = response.headers.get("content-type") || "";
+        data = contentType.includes("application/json")
+            ? await response.json()
+            : await response.text();
+    }
+
+    if (!response.ok) {
+        const error = new Error(
+            data?.message || `A API respondeu com status ${response.status}.`
+        );
+        error.status = response.status;
+        throw error;
+    }
+
+    return data;
+}
+
+function enviar(path, method, data) {
+    return request(path, {
+        method,
+        body: JSON.stringify(data)
+    });
+}
+
+function buscarProdutos() {
+    return request("/produtos");
 }
 
 async function buscarProdutoPorId(id) {
-    const resposta = await fetch(`${API_URL}/produtos/${id}`);
-
-    if (resposta.status === 404) {
-        return null;
+    try {
+        return await request(`/produtos/${encodeURIComponent(id)}`);
+    } catch (error) {
+        if (error.status === 404) {
+            return null;
+        }
+        throw error;
     }
-
-    if (!resposta.ok) {
-        throw new Error("Não foi possível carregar o produto.");
-    }
-
-    return resposta.json();
 }
 
-async function buscarCategorias() {
-    const resposta = await fetch(`${API_URL}/categorias`);
-
-    if (!resposta.ok) {
-        throw new Error("Não foi possível carregar as categorias.");
-    }
-
-    return resposta.json();
+function buscarCategorias() {
+    return request("/categorias");
 }
 
-/* =========================
-   USUÁRIOS
-========================= */
+function loginUsuario(email, senha) {
+    return enviar("/usuarios/login", "POST", { email, senha });
+}
 
-async function buscarUsuario(email, senha) {
-    const resposta = await fetch(`${API_URL}/usuarios`);
+function buscarSessao() {
+    return request("/usuarios/sessao", { allowUnauthorized: true });
+}
 
-    if (!resposta.ok) {
-        throw new Error("Não foi possível realizar o login.");
-    }
-
-    const usuarios = await resposta.json();
-
-    const usuarioEncontrado = usuarios.find(
-        (usuario) =>
-            usuario.email === email &&
-            usuario.senha === senha
-    );
-
-    return usuarioEncontrado || null;
+function encerrarSessao() {
+    return request("/usuarios/logout", { method: "POST" });
 }
 
 async function buscarUsuarioPorId(id) {
-    const resposta = await fetch(
-        `${API_URL}/usuarios/${id}`
-    );
-
-    if (resposta.status === 404) {
-        return null;
-    }
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar os dados do usuário."
-        );
-    }
-
-    return resposta.json();
-}
-
-async function buscarUsuarios() {
-    const resposta = await fetch(`${API_URL}/usuarios`);
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar os usuários."
-        );
-    }
-
-    return resposta.json();
-}
-
-async function criarUsuario(usuario) {
-    const resposta = await fetch(`${API_URL}/usuarios`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(usuario)
-    });
-
-    if (!resposta.ok) {
-        throw new Error("Não foi possível criar a conta.");
-    }
-
-    return resposta.json();
-}
-
-async function atualizarUsuario(id, dados) {
-    const resposta = await fetch(
-        `${API_URL}/usuarios/${id}`,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dados)
+    try {
+        return await request(`/usuarios/${encodeURIComponent(id)}`);
+    } catch (error) {
+        if (error.status === 404) {
+            return null;
         }
+        throw error;
+    }
+}
+
+function buscarUsuarios() {
+    return request("/usuarios");
+}
+
+function criarUsuario(usuario) {
+    return enviar("/usuarios", "POST", usuario);
+}
+
+function atualizarUsuario(id, dados) {
+    return enviar(`/usuarios/${encodeURIComponent(id)}`, "PATCH", dados);
+}
+
+function criarPedido(pedido) {
+    return enviar("/pedidos", "POST", pedido);
+}
+
+function criarCheckout(pedidoId) {
+    return enviar(
+        `/pedidos/${encodeURIComponent(pedidoId)}/checkout`,
+        "POST",
+        {}
     );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível atualizar os dados do usuário."
-        );
-    }
-
-    return resposta.json();
 }
 
-/* =========================
-   PEDIDOS
-========================= */
-
-async function criarPedido(pedido) {
-    const resposta = await fetch(`${API_URL}/pedidos`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(pedido)
-    });
-
-    if (!resposta.ok) {
-        throw new Error("Não foi possível criar o pedido.");
-    }
-
-    return resposta.json();
-}
-
-async function criarItemPedido(itemPedido) {
-    const resposta = await fetch(`${API_URL}/itensPedido`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(itemPedido)
-    });
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível adicionar o item ao pedido."
-        );
-    }
-
-    return resposta.json();
+function criarItemPedido(itemPedido) {
+    return enviar("/itensPedido", "POST", itemPedido);
 }
 
 async function buscarPedidoPorId(id) {
-    const resposta = await fetch(`${API_URL}/pedidos/${id}`);
-
-    if (resposta.status === 404) {
-        return null;
-    }
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar o pedido."
-        );
-    }
-
-    return resposta.json();
-}
-
-async function buscarPedidos() {
-    const resposta = await fetch(`${API_URL}/pedidos`);
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar os pedidos."
-        );
-    }
-
-    return resposta.json();
-}
-
-async function buscarPedidosPorUsuario(usuarioId) {
-    const resposta = await fetch(
-        `${API_URL}/pedidos?usuarioId=${encodeURIComponent(
-            usuarioId
-        )}`
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar os pedidos do usuário."
-        );
-    }
-
-    return resposta.json();
-}
-
-async function buscarItensPedido(pedidoId) {
-    const resposta = await fetch(
-        `${API_URL}/itensPedido?pedidoId=${pedidoId}`
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar os itens do pedido."
-        );
-    }
-
-    return resposta.json();
-}
-
-async function atualizarPedido(id, dados) {
-    const resposta = await fetch(
-        `${API_URL}/pedidos/${id}`,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dados)
+    try {
+        return await request(`/pedidos/${encodeURIComponent(id)}`);
+    } catch (error) {
+        if (error.status === 404) {
+            return null;
         }
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível atualizar o pedido."
-        );
+        throw error;
     }
-
-    return resposta.json();
 }
 
-/* =========================
-   FORMAS DE PAGAMENTO
-========================= */
-
-async function buscarFormasPagamentoPorUsuario(usuarioId) {
-    const resposta = await fetch(
-        `${API_URL}/formasPagamento?usuarioId=${encodeURIComponent(
-            usuarioId
-        )}`
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar as formas de pagamento."
-        );
-    }
-
-    return resposta.json();
+function buscarPedidos() {
+    return request("/pedidos");
 }
 
-async function criarFormaPagamento(formaPagamento) {
-    const resposta = await fetch(
-        `${API_URL}/formasPagamento`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formaPagamento)
-        }
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível salvar a forma de pagamento."
-        );
-    }
-
-    return resposta.json();
+function buscarPedidosPorUsuario(usuarioId) {
+    return request(`/pedidos?usuarioId=${encodeURIComponent(usuarioId)}`);
 }
 
-async function atualizarFormaPagamento(
-    id,
-    dados
-) {
-    const resposta = await fetch(
-        `${API_URL}/formasPagamento/${id}`,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dados)
-        }
+function buscarItensPedido(pedidoId) {
+    return request(`/itensPedido?pedidoId=${encodeURIComponent(pedidoId)}`);
+}
+
+function atualizarPedido(id, dados) {
+    return enviar(`/pedidos/${encodeURIComponent(id)}`, "PATCH", dados);
+}
+
+function buscarFormasPagamentoPorUsuario(usuarioId) {
+    return request(
+        `/formasPagamento?usuarioId=${encodeURIComponent(usuarioId)}`
     );
+}
 
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível atualizar a forma de pagamento."
-        );
-    }
+function criarFormaPagamento(formaPagamento) {
+    return enviar("/formasPagamento", "POST", formaPagamento);
+}
 
-    return resposta.json();
+function atualizarFormaPagamento(id, dados) {
+    return enviar(
+        `/formasPagamento/${encodeURIComponent(id)}`,
+        "PATCH",
+        dados
+    );
 }
 
 async function excluirFormaPagamento(id) {
-    const resposta = await fetch(
-        `${API_URL}/formasPagamento/${id}`,
-        {
-            method: "DELETE"
-        }
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível excluir a forma de pagamento."
-        );
-    }
-
+    await request(`/formasPagamento/${encodeURIComponent(id)}`, {
+        method: "DELETE"
+    });
     return true;
 }
 
-/* =========================
-   PRODUTOS - ADMIN
-========================= */
-
-async function atualizarProduto(id, produto) {
-    const resposta = await fetch(
-        `${API_URL}/produtos/${id}`,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(produto)
-        }
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível atualizar o produto."
-        );
-    }
-
-    return resposta.json();
+function atualizarProduto(id, produto) {
+    return enviar(`/produtos/${encodeURIComponent(id)}`, "PATCH", produto);
 }
 
-async function criarProduto(produto) {
-    const resposta = await fetch(`${API_URL}/produtos`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(produto)
-    });
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível cadastrar o produto."
-        );
-    }
-
-    return resposta.json();
+function criarProduto(produto) {
+    return enviar("/produtos", "POST", produto);
 }
 
 async function excluirProduto(id) {
-    const resposta = await fetch(
-        `${API_URL}/produtos/${id}`,
-        {
-            method: "DELETE"
-        }
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível excluir o produto."
-        );
-    }
-
+    await request(`/produtos/${encodeURIComponent(id)}`, {
+        method: "DELETE"
+    });
     return true;
 }
 
-/* =========================
-   VENDAS
-========================= */
-
-async function buscarVendas() {
-    const resposta = await fetch(
-        `${API_URL}/vendas`
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível carregar as vendas."
-        );
-    }
-
-    return resposta.json();
-}
-
-async function criarVenda(venda) {
-    const resposta = await fetch(
-        `${API_URL}/vendas`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(venda)
-        }
-    );
-
-    if (!resposta.ok) {
-        throw new Error(
-            "Não foi possível registrar a venda."
-        );
-    }
-
-    return resposta.json();
+function buscarVendas() {
+    return request("/vendas");
 }
 
 export {
@@ -426,13 +195,16 @@ export {
     buscarProdutoPorId,
     buscarCategorias,
 
-    buscarUsuario,
+    loginUsuario,
+    buscarSessao,
+    encerrarSessao,
     buscarUsuarioPorId,
     buscarUsuarios,
     criarUsuario,
     atualizarUsuario,
 
     criarPedido,
+    criarCheckout,
     criarItemPedido,
     buscarPedidoPorId,
     buscarPedidos,
@@ -450,5 +222,4 @@ export {
     excluirProduto,
 
     buscarVendas,
-    criarVenda
 };

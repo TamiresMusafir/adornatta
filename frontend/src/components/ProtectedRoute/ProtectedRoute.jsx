@@ -11,10 +11,38 @@ function ProtectedRoute({
 }) {
     const {
         usuario,
-        autenticado
+        autenticado,
+        carregandoSessao,
+        erroSessao,
+        recarregarSessao
     } = useAuth();
 
     const location = useLocation();
+
+    if (carregandoSessao) {
+        return (
+            <main className="container py-5">
+                <p role="status">Verificando sessão...</p>
+            </main>
+        );
+    }
+
+    if (erroSessao) {
+        return (
+            <main className="container py-5">
+                <div className="alert alert-danger" role="alert">
+                    Não foi possível verificar sua sessão: {erroSessao.message}
+                </div>
+                <button
+                    type="button"
+                    className="btn btn-outline-dark"
+                    onClick={recarregarSessao}
+                >
+                    Tentar novamente
+                </button>
+            </main>
+        );
+    }
 
     if (!autenticado) {
         return (

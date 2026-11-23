@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 
 function AdminHeader() {
     const navigate = useNavigate();
+    const [erroLogout, setErroLogout] = useState("");
 
     const {
         usuario,
@@ -11,13 +13,23 @@ function AdminHeader() {
         logout
     } = useAuth();
 
-    function sair() {
-        logout();
-        navigate("/");
+    async function sair() {
+        setErroLogout("");
+        try {
+            await logout();
+            navigate("/");
+        } catch (error) {
+            setErroLogout(error.message);
+        }
     }
 
     return (
         <header>
+            {erroLogout && (
+                <div className="alert alert-danger mb-0" role="alert">
+                    Não foi possível encerrar a sessão: {erroLogout}
+                </div>
+            )}
             <nav
                 className="navbar navbar-expand-lg border-bottom bg-white"
                 aria-label="Navegação administrativa"

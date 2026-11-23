@@ -1,183 +1,100 @@
-# Manual de Instalação 
+# Manual de Instalação
 
-## 1. Sobre o projeto
+## Pré-requisitos
 
-A **Loja Virtual Adornatta** é uma aplicação web desenvolvida com React
-para a comercialização de semijoias. O projeto possui uma área de loja
-para os clientes e uma área administrativa para gerenciamento dos
-produtos, estoque, pedidos e vendas.
+- Git;
+- Node.js 22.12 ou superior e npm;
+- PostgreSQL com o esquema-base do Adornatta já criado;
+- credenciais de integração do Mercado Pago para testar pagamentos.
 
-A aplicação utiliza um backend simulado com **json-server**, permitindo
-que os dados sejam armazenados no arquivo `db.json` durante o
-desenvolvimento.
+O projeto possui dois processos independentes: a aplicação React/Vite em
+`frontend/` e a API Express em `backend/`. O `db.json` e o servidor simulado
+não são usados pelo fluxo com o backend real.
 
-## 2. Pré-requisitos
+## Instalar dependências
 
-Para instalar e executar o projeto, é necessário ter instalado:
+Na raiz do repositório, abra um terminal para cada pasta:
 
--   Git;
--   Node.js;
--   npm.
-
-Recomenda-se utilizar uma versão recente e estável do Node.js.
-
-## 3. Clonar o projeto
-
-Clone o repositório utilizando a branch principal:
-
-``` bash
-git clone -b main https://github.com/TamiresMusafir/adornatta
+```powershell
+Set-Location .\frontend
+npm ci
 ```
 
-Depois, entre na pasta do projeto:
-
-``` bash
-cd adornatta
-```
-
-## 4. Instalar as dependências
-
-Com o terminal aberto na pasta do projeto, execute:
-
-``` bash
+```powershell
+Set-Location .\backend
 npm install
-npm install gsap
 ```
 
-O comando instala as dependências definidas no `package.json`.
+## Configurar o backend
 
-Entre as principais tecnologias e bibliotecas utilizadas estão:
+Crie localmente `backend/.env` e preencha as configurações necessárias. Não
+versione esse arquivo nem compartilhe seus valores.
 
--   **React** --- construção da interface da aplicação;
--   **React DOM** --- integração do React com o DOM;
--   **React Router DOM** --- gerenciamento das rotas;
--   **Vite** --- ambiente de desenvolvimento e build da aplicação;
--   **Bootstrap** --- estrutura responsiva e componentes visuais;
--   **Bootstrap Icons** --- ícones utilizados na interface;
--   **TanStack Query** --- gerenciamento das consultas e mutações de
-    dados;
--   **React Hook Form** --- gerenciamento dos formulários;
--   **Zod** --- validação dos dados dos formulários;
--   **@hookform/resolvers** --- integração entre React Hook Form e Zod;
--   **json-server** --- backend simulado para desenvolvimento.
--   **gsap** --- cria animações avançadas e controla transições de elementos da interface.
-
-O projeto utiliza `json-server` na versão `1.0.0-beta.15`.
-
-## 5. Configuração do banco de dados
-
-Os dados iniciais da aplicação ficam no arquivo:
-
-``` text
-db.json
+```text
+PORT=3000
+FRONTEND_URL=http://localhost:5173
+DB_HOST=
+DB_PORT=5432
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_ROLE=adornatta_app
+DB_MIGRATION_USER=
+DB_MIGRATION_PASSWORD=
+JWT_SECRET=
+MERCADO_PAGO_ACCESS_TOKEN=
+MERCADO_PAGO_WEBHOOK_SECRET=
 ```
 
-Esse arquivo contém as coleções utilizadas pela aplicação, incluindo:
+O usuário de execução do backend deve ser restrito, não superusuário, e
+`DB_ROLE` deve ser `adornatta_app`. A conta usada por `DB_MIGRATION_USER` deve
+ser diferente da conta de aplicação e ter as permissões necessárias para
+aplicar migrations.
 
--   `categorias`;
--   `produtos`;
--   `pedidos`;
--   `itensPedido`;
--   `usuarios`;
--   `vendas`.
+As migrations do repositório são incrementais e pressupõem que o esquema-base
+já exista. Depois de confirmar o banco e suas permissões, aplique-as na pasta
+`backend/`:
 
-O arquivo deve permanecer na raiz do projeto.
-
-## 6. Inicialização do backend
-
-O projeto possui um servidor personalizado para executar o json-server
-por meio do arquivo:
-
-``` text
-server.js
+```powershell
+npm run db:migrate
 ```
 
-Em um terminal, na pasta do projeto, execute:
+Para carregar o catálogo inicial em um banco de desenvolvimento, use:
 
-``` bash
-npm run server
+```powershell
+npm run db:seed
 ```
 
-O backend ficará disponível em:
+O frontend usa `http://localhost:3000/api` por padrão. Para apontar para outra
+API, configure `VITE_API_URL` no ambiente do Vite. `FRONTEND_URL` no backend
+deve corresponder exatamente à origem do frontend para o CORS e os cookies.
 
-``` text
-http://localhost:3000
-```
+## Executar localmente
 
-## 7. Inicialização do frontend
+Terminal 1, na pasta `backend/`:
 
-Abra um segundo terminal e execute:
-
-``` bash
-cd adornatta
-```
-
-``` bash
+```powershell
 npm run dev
 ```
 
-O Vite exibirá no terminal o endereço local da aplicação, normalmente:
+Terminal 2, na pasta `frontend/`:
 
-``` text
-http://localhost:5173
-```
-
-Acesse esse endereço pelo navegador.
-
-## 8. Execução completa
-
-Para utilizar a aplicação corretamente durante o desenvolvimento, os
-dois processos devem permanecer em execução:
-
-**Terminal 1 --- backend:**
-
-``` bash
-npm run server
-```
-
-**Terminal 2 --- frontend:**
-
-``` bash
+```powershell
 npm run dev
 ```
 
-O frontend realiza as requisições para o backend em
-`http://localhost:3000`.
+Abra o endereço mostrado pelo Vite, normalmente
+`http://localhost:5173`. A API deve responder em
+`http://localhost:3000/api/health`.
 
-## 9. Estrutura principal
+## Validar o frontend
 
-A aplicação está organizada, entre outras, nas seguintes áreas:
+Na pasta `frontend/`, gere a build de produção:
 
-``` text
-src/
-├── components/
-├── context/
-├── pages/
-│   ├── Home/
-│   ├── Sobre/
-│   ├── Produtos/
-│   ├── ProdutoDetalhes/
-│   ├── ListaDesejo/
-│   ├── Checkout/
-│   ├── Contato/
-│   ├── AcompanharPedido/
-│   ├── Login/
-│   ├── Cadastro/
-│   └── Admin/
-│       ├── Dashboard/
-│       ├── Estoque/
-│       ├── Pedidos/
-│       └── Vendas/
-├── schemas/
-├── services/
-└── styles/
+```powershell
+npm run build
 ```
 
-## 10. Encerramento
-
-Depois de instalar as dependências e iniciar o backend e o frontend, a
-aplicação estará pronta para uso em ambiente de desenvolvimento.
-
-As instruções de funcionamento da aplicação estão disponíveis no [Manual
-de Operação](MANUAL_OPERACAO.md), enquanto as funcionalidades destinadas
-aos usuários estão descritas no [Manual do Usuário](MANUAL_USUARIO.md).
+Para validar login, cadastro, pedidos e área administrativa, use contas do
+banco de desenvolvimento. O pagamento é concluído no ambiente do Mercado Pago;
+os dados de cartão não devem ser inseridos no site Adornatta.

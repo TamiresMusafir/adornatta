@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import SearchOffcanvas from "../SearchOffcanvas/SearchOffcanvas";
@@ -7,6 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 
 function Header() {
     const navigate = useNavigate();
+    const [erroLogout, setErroLogout] = useState("");
 
     const {
         usuario,
@@ -14,13 +16,23 @@ function Header() {
         logout
     } = useAuth();
 
-    function sair() {
-        logout();
-        navigate("/");
+    async function sair() {
+        setErroLogout("");
+        try {
+            await logout();
+            navigate("/");
+        } catch (error) {
+            setErroLogout(error.message);
+        }
     }
 
     return (
         <>
+            {erroLogout && (
+                <div className="alert alert-danger mb-0" role="alert">
+                    Não foi possível encerrar a sessão: {erroLogout}
+                </div>
+            )}
             <header>
 
                 <section className="topbar">

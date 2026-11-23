@@ -1,11 +1,15 @@
 import {
     createContext,
     useContext,
+    useCallback,
+    useEffect,
     useState
 } from "react";
 
 import {
-    buscarUsuario,
+    loginUsuario,
+    buscarSessao,
+    encerrarSessao,
     criarUsuario,
     atualizarUsuario
 } from "../services/api";
@@ -13,48 +17,39 @@ import {
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-    const [usuario, setUsuario] = useState(() => {
-        const usuarioSalvo =
-            localStorage.getItem("adornattaUsuario");
+    const [usuario, setUsuario] = useState(null);
+    const [carregandoSessao, setCarregandoSessao] = useState(true);
+    const [erroSessao, setErroSessao] = useState(null);
 
-        return usuarioSalvo
-            ? JSON.parse(usuarioSalvo)
-            : null;
-    });
+    const recarregarSessao = useCallback(async () => {
+        setCarregandoSessao(true);
+        setErroSessao(null);
+
+        try {
+            setUsuario(await buscarSessao());
+        } catch (error) {
+            setUsuario(null);
+            setErroSessao(error);
+        } finally {
+            setCarregandoSessao(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        recarregarSessao();
+    }, [recarregarSessao]);
 
     async function login(email, senha) {
-        const usuarioEncontrado =
-            await buscarUsuario(email, senha);
-
-        if (!usuarioEncontrado) {
-            return null;
-        }
-
-        setUsuario(usuarioEncontrado);
-
-        localStorage.setItem(
-            "adornattaUsuario",
-            JSON.stringify(usuarioEncontrado)
-        );
-
-        return usuarioEncontrado;
+        const usuarioAutenticado = await loginUsuario(email, senha);
+        setUsuario(usuarioAutenticado);
+        setErroSessao(null);
+        return usuarioAutenticado;
     }
 
     async function registrar(dados) {
-        const novoUsuario = await criarUsuario({
-            nome: dados.nome,
-            email: dados.email,
-            senha: dados.senha,
-            perfil: "cliente"
-        });
-
+        const novoUsuario = await criarUsuario(dados);
         setUsuario(novoUsuario);
-
-        localStorage.setItem(
-            "adornattaUsuario",
-            JSON.stringify(novoUsuario)
-        );
-
+        setErroSessao(null);
         return novoUsuario;
     }
 
@@ -63,28 +58,15 @@ function AuthProvider({ children }) {
             return false;
         }
 
-        const usuarioAtualizado =
-            await atualizarUsuario(
-                usuario.id,
-                dados
-            );
-
+        const usuarioAtualizado = await atualizarUsuario(usuario.id, dados);
         setUsuario(usuarioAtualizado);
-
-        localStorage.setItem(
-            "adornattaUsuario",
-            JSON.stringify(usuarioAtualizado)
-        );
-
         return usuarioAtualizado;
     }
 
-    function logout() {
+    async function logout() {
+        await encerrarSessao();
         setUsuario(null);
-
-        localStorage.removeItem(
-            "adornattaUsuario"
-        );
+        setErroSessao(null);
     }
 
     return (
@@ -92,6 +74,9 @@ function AuthProvider({ children }) {
             value={{
                 usuario,
                 autenticado: !!usuario,
+                carregandoSessao,
+                erroSessao,
+                recarregarSessao,
                 login,
                 registrar,
                 logout,

@@ -9,7 +9,6 @@ import {
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { buscarUsuarios } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 
 const cadastroSchema = z
@@ -18,9 +17,26 @@ const cadastroSchema = z
             .string()
             .min(3, "Informe seu nome completo."),
 
+        cpf: z
+            .string()
+            .refine(
+                (cpf) => cpf.replace(/\D/g, "").length === 11,
+                "Informe um CPF válido."
+            ),
+
         email: z
             .string()
             .email("Informe um e-mail válido."),
+
+        telefone: z
+            .string()
+            .refine(
+                (telefone) => {
+                    const digitos = telefone.replace(/\D/g, "");
+                    return digitos.length >= 10 && digitos.length <= 15;
+                },
+                "Informe um telefone válido."
+            ),
 
         senha: z
             .string()
@@ -69,7 +85,9 @@ function Cadastro() {
 
         defaultValues: {
             nome: "",
+            cpf: "",
             email: "",
+            telefone: "",
             senha: "",
             confirmarSenha: ""
         }
@@ -80,27 +98,14 @@ function Cadastro() {
         setErroCadastro("");
 
         try {
-            const usuarios = await buscarUsuarios();
-
-            const emailJaCadastrado =
-                usuarios.some(
-                    (usuario) =>
-                        usuario.email.toLowerCase() ===
-                        dados.email.toLowerCase()
-                );
-
-            if (emailJaCadastrado) {
-                setErroCadastro(
-                    "Este e-mail já está cadastrado."
-                );
-
-                return;
-            }
-
             await registrar({
                 nome: dados.nome,
+                cpf: dados.cpf.replace(/\D/g, ""),
                 email: dados.email,
-                senha: dados.senha
+                senha: dados.senha,
+                telefones: [
+                    dados.telefone.replace(/\D/g, "")
+                ]
             });
 
             /*
@@ -222,6 +227,33 @@ function Cadastro() {
 
                                 <div className="mb-3">
                                     <label
+                                        htmlFor="cpf"
+                                        className="form-label"
+                                    >
+                                        CPF
+                                    </label>
+
+                                    <input
+                                        id="cpf"
+                                        type="text"
+                                        inputMode="numeric"
+                                        className={`form-control ${
+                                            errors.cpf
+                                                ? "is-invalid"
+                                                : ""
+                                        }`}
+                                        {...register("cpf")}
+                                    />
+
+                                    {errors.cpf && (
+                                        <div className="invalid-feedback">
+                                            {errors.cpf.message}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label
                                         htmlFor="email"
                                         className="form-label"
                                     >
@@ -248,6 +280,32 @@ function Cadastro() {
                                                     .email
                                                     .message
                                             }
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label
+                                        htmlFor="telefone"
+                                        className="form-label"
+                                    >
+                                        Telefone
+                                    </label>
+
+                                    <input
+                                        id="telefone"
+                                        type="tel"
+                                        className={`form-control ${
+                                            errors.telefone
+                                                ? "is-invalid"
+                                                : ""
+                                        }`}
+                                        {...register("telefone")}
+                                    />
+
+                                    {errors.telefone && (
+                                        <div className="invalid-feedback">
+                                            {errors.telefone.message}
                                         </div>
                                     )}
                                 </div>

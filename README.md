@@ -26,9 +26,14 @@ https://github.com/TamiresMusafir/adornatta
 - Vite
 - Bootstrap
 - Bootstrap Icons
+- Node.js e Express
+- PostgreSQL
+
+O frontend está em `frontend/` e a API real em `backend/`. A instalação e
+execução local estão descritas no [Manual de Instalação](Manuais/MANUAL_INSTALACAO.md).
 
 ## Documentação
 
-- [Manual de Instalação](MANUAL_INSTALACAO.md)
-- [Manual de Operação](MANUAL_OPERACAO.md)
-- [Manual do Usuário](MANUAL_USUARIO.md)
+- [Manual de Instalação](Manuais/MANUAL_INSTALACAO.md)
+- [Manual de Operação](Manuais/MANUAL_OPERACAO.md)
+- [Manual do Usuário](Manuais/MANUAL_USUARIO.md)

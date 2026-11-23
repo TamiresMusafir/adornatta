@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { useQueries, useQuery } from "@tanstack/react-query";
 
 import Header from "../../components/Header/Header";
@@ -7,11 +8,30 @@ import Footer from "../../components/Footer/Footer";
 import {
     buscarPedidoPorId,
     buscarItensPedido,
-    buscarProdutoPorId
+    buscarProdutoPorId,
+    criarCheckout
 } from "../../services/api";
 
 function AcompanharPedido() {
     const { id } = useParams();
+    const location = useLocation();
+    const [erroCheckout, setErroCheckout] = useState(
+        location.state?.erroCheckout || ""
+    );
+    const [criandoCheckout, setCriandoCheckout] = useState(false);
+
+    async function continuarPagamento() {
+        setErroCheckout("");
+        setCriandoCheckout(true);
+        try {
+            const checkout = await criarCheckout(id);
+            window.location.assign(checkout.checkoutUrl);
+        } catch (error) {
+            setErroCheckout(error.message);
+        } finally {
+            setCriandoCheckout(false);
+        }
+    }
 
     const {
         data: pedido,
@@ -210,6 +230,29 @@ function AcompanharPedido() {
                                             )}
                                         </strong>
                                     </div>
+
+                                    {pedido.statusPagamento === "pendente" && (
+                                        <>
+                                            {erroCheckout && (
+                                                <div
+                                                    className="alert alert-danger mt-3"
+                                                    role="alert"
+                                                >
+                                                    {erroCheckout}
+                                                </div>
+                                            )}
+                                            <button
+                                                type="button"
+                                                className="btn btn-dark w-100 mt-3"
+                                                onClick={continuarPagamento}
+                                                disabled={criandoCheckout}
+                                            >
+                                                {criandoCheckout
+                                                    ? "Abrindo pagamento..."
+                                                    : "Continuar para pagamento"}
+                                            </button>
+                                        </>
+                                    )}
 
                                 </section>
 
