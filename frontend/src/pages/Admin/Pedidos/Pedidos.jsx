@@ -49,6 +49,9 @@ function obterClasseStatus(status) {
     switch (status) {
         case "Em análise":
             return "bg-warning-subtle text-warning-emphasis";
+        
+        case "Confirmado":
+            return "bg-success-subtle text-success-emphasis";
 
         case "Em preparação":
             return "bg-primary-subtle text-primary";
