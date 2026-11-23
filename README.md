@@ -30,10 +30,13 @@ https://github.com/TamiresMusafir/adornatta
 - PostgreSQL
 
 O frontend está em `frontend/` e a API real em `backend/`. A instalação e
-execução local estão descritas no [Manual de Instalação](Manuais/MANUAL_INSTALACAO.md).
+execução local (Linux e Windows) estão descritas no
+[Manual de Instalação](Manuais/MANUAL_INSTALACAO.md).
 
 ## Documentação
 
 - [Manual de Instalação](Manuais/MANUAL_INSTALACAO.md)
+- [Manual do Banco de Dados](Manuais/MANUAL_BANCO_DADOS.md)
 - [Manual de Operação](Manuais/MANUAL_OPERACAO.md)
 - [Manual do Usuário](Manuais/MANUAL_USUARIO.md)
+- [Roteiro de Teste do Administrador](Manuais/ROTEIRO_TESTE_ADMIN.md)
