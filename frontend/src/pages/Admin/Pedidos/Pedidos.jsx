@@ -232,6 +232,8 @@ function Pedidos() {
     ).length;
 
     function abrirDetalhes(pedido) {
+        atualizarStatusMutation.reset();
+        setPedidoSelecionado(pedido);
         setPedidoSelecionado(pedido);
         setNovoStatus(pedido.status);
     }
@@ -846,9 +848,8 @@ function Pedidos() {
                                         className="alert alert-danger mt-4 mb-0"
                                         role="alert"
                                     >
-                                        Não foi possível
-                                        atualizar o status
-                                        do pedido.
+                                        {atualizarStatusMutation.error?.message ||
+                                            "Não foi possível atualizar o status do pedido."}
                                     </div>
                                 )}
                             </div>
