@@ -58,7 +58,8 @@ function ProtectedRoute({
 
     if (
         admin &&
-        usuario?.perfil !== "admin"
+        usuario?.perfil !== "admin" &&
+        usuario?.perfil !== "administrador"
     ) {
         return (
             <Navigate

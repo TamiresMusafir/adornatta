@@ -3,13 +3,11 @@ const { validarCepExistente } = require('./cepService');
 
 const statusEntrada = {
     'Em análise': 'pendente',
-    Confirmado: 'confirmado',
     'Em preparação': 'em_preparacao',
     Enviado: 'enviado',
     Entregue: 'entregue',
     Cancelado: 'cancelado',
     pendente: 'pendente',
-    confirmado: 'confirmado',
     em_preparacao: 'em_preparacao',
     enviado: 'enviado',
     entregue: 'entregue',
@@ -18,7 +16,7 @@ const statusEntrada = {
 
 const statusSaida = {
     pendente: 'Em análise',
-    confirmado: 'Confirmado',
+    confirmado: 'Em preparação',
     em_preparacao: 'Em preparação',
     enviado: 'Enviado',
     entregue: 'Entregue',

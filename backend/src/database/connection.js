@@ -6,6 +6,13 @@ if (roleAplicacao !== 'adornatta_app') {
     throw new Error('DB_ROLE deve ser adornatta_app para o backend.');
 }
 
+const sslHabilitado =
+    process.env.DB_SSL === 'true' ||
+    (
+        process.env.NODE_ENV === 'production' &&
+        process.env.DB_SSL !== 'false'
+    );
+
 const pool = new Pool({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
@@ -13,6 +20,12 @@ const pool = new Pool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     options: '-c role=adornatta_app',
+    ssl: sslHabilitado
+        ? {
+            rejectUnauthorized:
+                process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+        }
+        : false,
 });
 
 // Identifica erros em conexões que estão ociosas no pool

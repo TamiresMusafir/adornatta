@@ -16,6 +16,13 @@ if (process.env.DB_MIGRATION_USER === process.env.DB_USER) {
     );
 }
 
+const sslHabilitado =
+    process.env.DB_SSL === 'true' ||
+    (
+        process.env.NODE_ENV === 'production' &&
+        process.env.DB_SSL !== 'false'
+    );
+
 const pool = new Pool({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
@@ -23,6 +30,12 @@ const pool = new Pool({
     user: process.env.DB_MIGRATION_USER,
     password: process.env.DB_MIGRATION_PASSWORD,
     max: 1,
+    ssl: sslHabilitado
+        ? {
+            rejectUnauthorized:
+                process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+        }
+        : false,
 });
 
 module.exports = pool;
