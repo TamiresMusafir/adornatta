@@ -234,31 +234,21 @@ Na página **Pedidos**, o administrador pode:
 
 ### 15.4 Gerenciamento de vendas
 
-Na página **Vendas**, o administrador pode consultar e registrar vendas.
+Na página **Vendas**, o administrador pode consultar vendas confirmadas
+pela integração de pagamento.
 
 A tela apresenta:
 
--   vendas realizadas;
+-   vendas confirmadas;
 -   vendas realizadas no mês;
 -   faturamento do mês;
 -   histórico de vendas;
 -   busca por vendas.
+-   itens, quantidade e valor de cada pedido confirmado.
 
-### Como registrar uma venda
-
-1.  Acesse **Vendas**.
-2.  Selecione **Registrar venda**.
-3.  Informe o cliente.
-4.  Informe a data.
-5.  Selecione o produto.
-6.  Informe a quantidade.
-7.  Selecione a forma de pagamento.
-8.  Confira o valor calculado.
-9.  Adicione observações, se necessário.
-10. Confirme o registro.
-
-Ao registrar a venda, o sistema verifica o estoque disponível e atualiza
-a quantidade do produto.
+Uma venda aparece após a aprovação do pagamento pelo Mercado Pago.
+A baixa de estoque relacionada ao pedido deve ocorrer automaticamente
+no fluxo da API.
 
 ## 16. Contato
 

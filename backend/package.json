@@ -10,7 +10,8 @@
     "db:seed": "node src/database/seeds/catalog.js",
     "test:http": "node scripts/test-http-routes.js",
     "test:mercado-pago": "node scripts/test-mercado-pago-orders.js",
-    "test:security": "node scripts/test-database-security.js"
+    "test:security": "node scripts/test-database-security.js",
+    "test:all": "npm run test:security && npm run test:http && npm run test:mercado-pago"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
